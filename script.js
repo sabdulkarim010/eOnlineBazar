@@ -1,90 +1,206 @@
+// ১. পণ্যের তথ্য (Database)
 const products = [
-    {id: 1, cat: 'grocery', name: 'Miniket Rice (5kg)', price: 490, img: '🍚', desc: 'বাছাইকৃত প্রিমিয়াম মিনিকেট চাল।'},
-    {id: 2, cat: 'grocery', name: 'Pure Honey (500g)', price: 450, img: '🍯', desc: 'সুন্দরবনের খাঁটি মধু।'},
-    {id: 3, cat: 'electronics', name: 'Smart Watch T800', price: 1500, img: '⌚', desc: 'আধুনিক স্মার্ট ওয়াচ।'},
-    {id: 4, cat: 'cosmetics', name: 'Face Wash', price: 250, img: '🧴', desc: 'ত্বকের যত্নে কার্যকরী ফেসওয়াশ।'}
+    {
+        id: 1, 
+        cat: 'grocery', 
+        name: 'Premium Miniket Rice (5kg)', 
+        price: 490, 
+        img: '🍚', 
+        desc: 'বাছাইকৃত প্রিমিয়াম মিনিকেট চাল। পরিষ্কার এবং ঝরঝরে ভাত হয়। সরাসরি মিল থেকে সংগৃহীত।'
+    },
+    {
+        id: 2, 
+        cat: 'grocery', 
+        name: 'Pure Honey (500g)', 
+        price: 450, 
+        img: '🍯', 
+        desc: 'সুন্দরবনের খাঁটি মধু। কোনো প্রকার ভেজাল বা চিনি মেশানো নেই। প্রাকৃতিক গুণাগুণে ভরপুর।'
+    },
+    {
+        id: 3, 
+        cat: 'electronics', 
+        name: 'Smart Watch T800 Ultra', 
+        price: 1500, 
+        img: '⌚', 
+        desc: 'আধুনিক ফিচারের স্মার্ট ওয়াচ। ব্লুটুথ কলিং, হার্ট রেট মনিটর এবং প্রিমিয়াম ডিসপ্লে সমৃদ্ধ।'
+    },
+    {
+        id: 4, 
+        cat: 'cosmetics', 
+        name: 'Natural Face Wash', 
+        price: 250, 
+        img: '🧴', 
+        desc: 'ত্বকের উজ্জ্বলতা বাড়াতে এবং গভীর থেকে ময়লা পরিষ্কার করতে এই ফেসওয়াশটি অত্যন্ত কার্যকরী।'
+    }
 ];
 
 let cart = [];
-let tempQty = 1;
+let selectedQty = 1;
 
-function render(items) {
+// ২. পেজ লোড হওয়ার সাথে সাথে পণ্যগুলো দেখানো
+window.onload = () => {
+    renderProducts(products);
+    updateCartCount();
+};
+
+// ৩. পণ্যগুলো ডিসপ্লে করার ফাংশন
+function renderProducts(items) {
     const list = document.getElementById('product-list');
+    if (!list) return; // যদি ID না পায় তবে কাজ করবে না
+    
     list.innerHTML = items.map(p => `
-        <div class="product-card" onclick="openP(${p.id})">
+        <div class="product-card" onclick="openProductModal(${p.id})">
             <span class="p-img">${p.img}</span>
-            <p class="p-title">${p.name}</p>
-            <p class="p-price">৳ ${p.price}</p>
+            <div class="p-title">${p.name}</div>
+            <div class="p-price">৳ ${p.price}</div>
         </div>
     `).join('');
 }
 
+// ৪. ক্যাটাগরি অনুযায়ী পণ্য ফিল্টার করা
 function filterCat(cat) {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    render(cat === 'all' ? products : products.filter(p => p.cat === cat));
+    // সব বাটন থেকে active ক্লাস সরানো
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    
+    // যে বাটনে ক্লিক করা হয়েছে তাতে active ক্লাস যোগ করা
+    if(event) event.target.classList.add('active');
+
+    const filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
+    renderProducts(filtered);
 }
 
-function openP(id) {
-    const p = products.find(i => i.id === id);
-    tempQty = 1;
-    document.getElementById('modal-data').innerHTML = `
+// ৫. পণ্যের বিস্তারিত পপ-আপ (Modal) খোলা
+function openProductModal(id) {
+    const p = products.find(item => item.id === id);
+    const modal = document.getElementById('productModal');
+    const modalData = document.getElementById('modal-data');
+    selectedQty = 1; // শুরুতে পরিমাণ ১ সেট করা
+
+    modalData.innerHTML = `
         <div class="m-img">${p.img}</div>
-        <h3>${p.name}</h3>
-        <p style="color: #B12704; font-weight:bold; font-size: 20px;">৳ ${p.price}</p>
-        <p style="font-size:14px; color:#666; margin: 10px 0;">${p.desc}</p>
+        <h2 class="m-title">${p.name}</h2>
+        <div class="m-price">৳ ${p.price}</div>
+        <p class="m-desc">${p.desc}</p>
         <div class="qty-ctrl">
-            <button onclick="changeQ(-1)">-</button>
-            <b id="q-val">1</b>
-            <button onclick="changeQ(1)">+</button>
+            <button onclick="updateQty(-1)">-</button>
+            <span id="modal-qty" style="font-weight:bold; font-size:20px;">1</span>
+            <button onclick="updateQty(1)">+</button>
         </div>
-        <button class="add-btn" onclick="addToCart(${p.id})">কার্টে যোগ করুন</button>
+        <button class="m-add-cart" onclick="addToCart(${p.id})">🛒 কার্টে যোগ করুন</button>
+        <button class="m-buy-now" onclick="buyNow(${p.id})">⚡ এখনই কিনুন</button>
     `;
-    document.getElementById('productModal').style.display = 'block';
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // ব্যাকগ্রাউন্ড স্ক্রল বন্ধ
 }
 
-function changeQ(v) {
-    if(tempQty + v >= 1) {
-        tempQty += v;
-        document.getElementById('q-val').innerText = tempQty;
+// ৬. পণ্যের পরিমাণ কমানো বা বাড়ানো
+function updateQty(val) {
+    if (selectedQty + val >= 1) {
+        selectedQty += val;
+        const qtyElement = document.getElementById('modal-qty');
+        if(qtyElement) qtyElement.innerText = selectedQty;
     }
 }
 
-function addToCart(id) {
-    const p = products.find(i => i.id === id);
-    cart.push({...p, q: tempQty});
-    document.getElementById('count').innerText = cart.length;
+// ৭. পপ-আপ বন্ধ করা
+function closeModal() {
     document.getElementById('productModal').style.display = 'none';
-    showToast(p.name + " কার্টে যোগ হয়েছে");
+    document.body.style.overflow = 'auto';
 }
 
+// ৮. কার্টে পণ্য যোগ করা
+function addToCart(id) {
+    const p = products.find(item => item.id === id);
+    const existingItem = cart.find(item => item.id === id);
+
+    if (existingItem) {
+        existingItem.q += selectedQty;
+    } else {
+        cart.push({ ...p, q: selectedQty });
+    }
+
+    updateCartCount();
+    closeModal();
+    showToast(p.name + " কার্টে যোগ হয়েছে!");
+}
+
+// ৯. সরাসরি কেনার ফাংশন
+function buyNow(id) {
+    addToCart(id);
+    showCheckout();
+}
+
+// ১০. কার্টের আইকন আপডেট
+function updateCartCount() {
+    const countElement = document.getElementById('count');
+    if(countElement) countElement.innerText = cart.length;
+}
+
+// ১১. চেকআউট স্ক্রিন দেখানো
 function showCheckout() {
-    const list = document.getElementById('cart-items');
+    const modal = document.getElementById('checkout-section');
+    const cartList = document.getElementById('cart-items');
     let total = 0;
-    list.innerHTML = cart.map(i => {
-        total += i.price * i.q;
-        return `<div style="display:flex; justify-content:space-between; padding:5px 0;">
-                    <span>${i.name} (x${i.q})</span>
-                    <span>৳${i.price * i.q}</span>
-                </div>`;
+
+    if (cart.length === 0) {
+        alert("আপনার কার্ট বর্তমানে খালি!");
+        return;
+    }
+
+    cartList.innerHTML = cart.map(item => {
+        total += (item.price * item.q);
+        return `
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee;">
+                <span>${item.name} (x${item.q})</span>
+                <span style="font-weight:bold;">৳ ${item.price * item.q}</span>
+            </div>
+        `;
     }).join('');
+
     document.getElementById('total-amount').innerText = total;
-    document.getElementById('checkout-section').style.display = 'block';
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
 
+// ১২. চেকআউট বন্ধ করা
+function closeCheckout() {
+    document.getElementById('checkout-section').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// ১৩. অর্ডার প্লেস করা
 function placeOrder() {
-    alert("ধন্যবাদ! আপনার অর্ডার সফল হয়েছে।");
+    const name = document.getElementById('custName').value;
+    const phone = document.getElementById('custPhone').value;
+    const addr = document.getElementById('custAddr').value;
+
+    if (!name || !phone || !addr) {
+        alert("অনুগ্রহ করে আপনার নাম, মোবাইল এবং ঠিকানা সঠিক ভাবে দিন।");
+        return;
+    }
+
+    alert(`ধন্যবাদ ${name}!\nআপনার অর্ডারটি সফল হয়েছে।\nমোট বিল: ৳ ${document.getElementById('total-amount').innerText}`);
+    
+    // অর্ডার শেষে কার্ট খালি করা
     cart = [];
-    document.getElementById('count').innerText = 0;
+    updateCartCount();
     closeCheckout();
 }
 
-function closeModal() { document.getElementById('productModal').style.display = 'none'; }
-function closeCheckout() { document.getElementById('checkout-section').style.display = 'none'; }
-function showToast(m) {
+// ১৪. ছোট নোটিফিকেশন (Toast) দেখানো
+function showToast(msg) {
     const t = document.getElementById('toast');
-    t.innerText = m; t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 2000);
+    if(t) {
+        t.innerText = msg;
+        t.style.display = 'block';
+        setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
 }
 
-window.onload = () => render(products);
+// ১৫. পপ-আপের বাইরে ক্লিক করলে বন্ধ হওয়া
+window.onclick = function(event) {
+    const pModal = document.getElementById('productModal');
+    const cModal = document.getElementById('checkout-section');
+    if (event.target == pModal) closeModal();
+    if (event.target == cModal) closeCheckout();
+}
