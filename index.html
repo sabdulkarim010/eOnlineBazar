@@ -3,50 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eOnlineBazar | Online Shopping</title>
+    <title>eOnlineBazar | Quality Meets Trust</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <div class="header-top">
+    <div class="container header-content">
         <a href="#" class="logo">eOnlineBazar</a>
-        <div class="cart-icon" onclick="showCheckout()">🛒<span id="count">0</span></div>
+        <div class="cart-box" onclick="showCheckout()">
+            <span class="cart-icon">🛒</span>
+            <span id="count">0</span>
+        </div>
     </div>
 </header>
 
-<div id="product-sections"></div>
-
-<div id="productModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div id="modal-body">
-            </div>
+<div class="search-area">
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Search for products...">
+            <button>Search</button>
+        </div>
+        <div class="category-scroll">
+            <button class="cat-btn active" onclick="filterCat('all')">🏠 Home</button>
+            <button class="cat-btn" onclick="filterCat('grocery')">🍏 Grocery</button>
+            <button class="cat-btn" onclick="filterCat('electronics')">🔌 Electronics</button>
+        </div>
     </div>
 </div>
 
-<div id="order-section" class="cart-view" style="display:none;">
-    <h3 style="text-align:center; border-bottom:1px solid #ddd; padding-bottom:10px;">🛒 Shopping Cart</h3>
-    <div id="cart-items-list" style="margin:15px 0;"></div>
-    <div class="total-bar">Total: ৳ <span id="total-price">0</span></div>
-    
-    <div class="checkout-form">
-        <h3>📍 Delivery Information</h3>
-        <input type="text" id="custName" placeholder="আপনার নাম">
-        <input type="tel" id="custPhone" placeholder="মোবাইল নাম্বার">
-        <textarea id="custAddr" placeholder="পুরো ঠিকানা (গ্রাম, থানা, জেলা)"></textarea>
-        <select id="payMethod">
-            <option value="cod">Cash on Delivery</option>
-            <option value="bkash">Bkash (পেমেন্ট: 0510870648)</option>
-        </select>
-        <button class="confirm-btn" onclick="confirmFinalOrder()">Confirm Order</button>
+<section class="coming-soon-banner">
+    <div class="container">
+        <div class="banner-content">
+            <h1>Coming Soon: A Revolution in Shopping!</h1>
+            <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<main class="container">
+    <div id="product-list" class="product-grid"></div>
+</main>
+
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modal-data"></div>
+    </div>
+</div>
+
+<div id="checkout-section" class="modal">
+    <div class="modal-content checkout-container">
+        <span class="close-btn" onclick="closeCheckout()">&times;</span>
+        <h2 class="section-title">🛒 Shopping Cart</h2>
+        <div id="cart-items"></div>
+        <div class="total-price">Total: ৳ <span id="total-amount">0</span></div>
+        
+        <div class="order-form">
+            <h3>🚚 Delivery Details</h3>
+            <input type="text" id="custName" placeholder="Full Name">
+            <input type="tel" id="custPhone" placeholder="Mobile Number">
+            <textarea id="custAddr" placeholder="Full Address"></textarea>
+            <select id="payMethod">
+                <option value="cod">Cash on Delivery</option>
+                <option value="bkash">Bkash (0510870648)</option>
+            </select>
+            <button class="order-btn" onclick="placeOrder()">Confirm Order</button>
+        </div>
     </div>
 </div>
 
 <div id="toast"></div>
 
 <footer>
-    <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+    <div class="container">
+        <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+    </div>
 </footer>
 
 <script src="script.js"></script>
