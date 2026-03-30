@@ -1,66 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eOnlineBazar | Quality Meets Trust</title>
+    <title>eOnlineBazar | Online Shopping</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header id="main-header">
+<header>
     <div class="header-top">
         <a href="#" class="logo">eOnlineBazar</a>
-        <button class="cart-icon" onclick="showCheckout()">🛒<span class="cart-count" id="count">0</span></button>
+        <div class="cart-icon" onclick="showCheckout()">🛒<span id="count">0</span></div>
     </div>
 </header>
 
-<nav class="nav-links">
-    <a href="#grocery">🍏 Grocery</a>
-    <a href="#electronics">🔌 Electronics</a>
-    <a href="#cosmetics">💄 Cosmetics</a>
-    <a href="#kids">🧸 Kids</a>
-</nav>
-
 <div id="product-sections"></div>
 
-<div id="order-section" style="display:none;">
-    <div class="cart-view" id="cart-area">
-        <h3 style="text-align: center;">🛒 Your Shopping Cart</h3>
-        <table>
-            <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
-            <tbody id="cart-items"></tbody>
-        </table>
-        <h3 style="text-align: right; padding: 15px;">Total: ৳ <span id="total-price">0</span></h3>
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modal-body">
+            </div>
     </div>
+</div>
 
-    <div class="cart-view">
-        <h3>📍 Checkout Information</h3>
-        <div class="input-box">
-            <label>Full Name *</label>
-            <input type="text" id="custName" placeholder="Enter your name">
-        </div>
-        <div class="input-box">
-            <label>Mobile Number *</label>
-            <input type="tel" id="custPhone" placeholder="01XXXXXXXXX">
-        </div>
-        <div class="input-box">
-            <label>Address *</label>
-            <textarea id="custAddr" rows="3" placeholder="Full Address"></textarea>
-        </div>
-        <div class="input-box">
-            <label>Payment Method</label>
-            <select id="payMethod">
-                <option value="cod">Cash on Delivery</option>
-                <option value="bkash">Bkash (01XXXXXXXXX)</option>
-            </select>
-        </div>
-        <button class="confirm-btn" onclick="confirmFinalOrder()">Confirm Order Now</button>
+<div id="order-section" class="cart-view" style="display:none;">
+    <h3 style="text-align:center; border-bottom:1px solid #ddd; padding-bottom:10px;">🛒 Shopping Cart</h3>
+    <div id="cart-items-list" style="margin:15px 0;"></div>
+    <div class="total-bar">Total: ৳ <span id="total-price">0</span></div>
+    
+    <div class="checkout-form">
+        <h3>📍 Delivery Information</h3>
+        <input type="text" id="custName" placeholder="আপনার নাম">
+        <input type="tel" id="custPhone" placeholder="মোবাইল নাম্বার">
+        <textarea id="custAddr" placeholder="পুরো ঠিকানা (গ্রাম, থানা, জেলা)"></textarea>
+        <select id="payMethod">
+            <option value="cod">Cash on Delivery</option>
+            <option value="bkash">Bkash (পেমেন্ট: 0510870648)</option>
+        </select>
+        <button class="confirm-btn" onclick="confirmFinalOrder()">Confirm Order</button>
     </div>
 </div>
 
 <div id="toast"></div>
-<footer><p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p></footer>
+
+<footer>
+    <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
