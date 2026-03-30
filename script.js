@@ -1,111 +1,147 @@
-const bkashNumber = "0510870648"; 
-
 const products = {
     grocery: [
-        {id: 'g1', n: 'Miniket Rice (5kg)', p: 490, i: '🍚', d: 'প্রিমিয়াম কোয়ালিটির মিনিকেট চাল, একদম পরিষ্কার ও ঝরঝরে।'},
-        {id: 'g2', n: 'Pure Honey (500g)', p: 450, i: '🍯', d: 'সুন্দরবনের খাঁটি মধু, কোনো প্রকার ভেজাল নেই।'}
+        {id: 'g1', n: 'Miniket Rice (5kg)', p: 490, i: '🍚', d: '১০০% বাছাইকৃত মিনিকেট চাল। রান্নার পর ভাত হয় সাদা ও ঝরঝরে। সরাসরি মিল থেকে সংগৃহীত।'},
+        {id: 'g2', n: 'Pure Honey (500g)', p: 450, i: '🍯', d: 'সুন্দরবনের খলিসা ফুলের খাঁটি মধু। কোনো প্রকার চিনি বা ফ্লেভার মেশানো হয়নি। স্বাস্থ্যসম্মত উপায়ে প্যাকিং করা।'}
     ],
     electronics: [
-        {id: 'e1', n: 'Smart Watch', p: 1500, i: '⌚', d: 'অত্যাধুনিক ফিচারের স্মার্ট ওয়াচ।'}
+        {id: 'e1', n: 'Smart Watch T800', p: 1500, i: '⌚', d: 'ব্লুটুথ কলিং সুবিধা এবং হার্ট রেট মনিটরসহ প্রিমিয়াম কোয়ালিটির স্মার্ট ওয়াচ। ফুল টাচ ডিসপ্লে।'}
+    ],
+    cosmetics: [
+        {id: 'c1', n: 'Facial Kit', p: 1200, i: '🧴', d: 'আপনার ত্বকের গভীর থেকে ময়লা পরিষ্কার করে উজ্জ্বলতা ফিরিয়ে আনতে কার্যকর এই ফেশিয়াল কিট।'}
     ]
 };
 
 let cart = [];
+let currentProduct = null; // বর্তমানে কোন প্রোডাক্টটি পপ-আপে আছে
 
-// প্রোডাক্টে ক্লিক করলে বিস্তারিত এবং অপশন দেখাবে
-function expandProduct(id) {
-    let detailBox = document.getElementById('detail-' + id);
-    if(detailBox.style.display === 'none') {
-        detailBox.style.display = 'block';
-    } else {
-        detailBox.style.display = 'none';
-    }
-}
-
-function qty(id, val) {
-    let el = document.getElementById('q-'+id);
-    let curr = parseInt(el.innerText);
-    if (curr + val >= 1) el.innerText = curr + val;
-}
-
-function addToCart(n, p, id) {
-    let q = parseInt(document.getElementById('q-'+id).innerText);
-    let item = cart.find(i => i.n === n);
-    if (item) item.q += q;
-    else cart.push({ n, p, q });
-    
-    updateCartDisplay();
-    showNotification(n + " কার্টে যোগ হয়েছে!");
-}
-
-function buyNow(n, p, id) {
-    addToCart(n, p, id);
-    showCheckout();
-}
-
-function showCheckout() {
-    if(cart.length === 0) {
-        alert("আগে পণ্য কার্টে যোগ করুন!");
-        return;
-    }
-    document.getElementById('order-section').style.display = 'block';
-    location.href = '#order-section';
-}
-
-function updateCartDisplay() {
-    let list = document.getElementById('cart-items');
-    let total = 0;
-    list.innerHTML = '';
-    cart.forEach(item => {
-        list.innerHTML += `<tr><td>${item.n}</td><td>${item.q}</td><td>৳${item.p * item.q}</td></tr>`;
-        total += item.p * item.q;
-    });
-    document.getElementById('total-price').innerText = total;
-    document.getElementById('count').innerText = cart.length;
-}
-
+// সব পণ্য হোমপেজে দেখানো
 function renderProducts() {
     let container = document.getElementById('product-sections');
     container.innerHTML = '';
     for (let cat in products) {
-        let html = `<div class="section-title" id="${cat}">${cat.toUpperCase()}</div><div class="product-grid">`;
+        let html = `<div class="section-title">${cat.toUpperCase()}</div><div class="product-grid">`;
         products[cat].forEach(p => {
             html += `
-            <div class="product-card">
-                <div class="product-img" onclick="expandProduct('${p.id}')">${p.i}</div>
+            <div class="product-card" onclick="openProduct('${cat}', '${p.id}')">
+                <div class="product-img">${p.i}</div>
                 <p class="p-name">${p.n}</p>
                 <span class="price">৳ ${p.p}</span>
-                
-                <div id="detail-${p.id}" class="product-details" style="display:none;">
-                    <p class="desc">${p.d}</p>
-                    <div class="qty-box">
-                        <button class="qty-btn" onclick="qty('${p.id}',-1)">-</button>
-                        <span id="q-${p.id}">1</span>
-                        <button class="qty-btn" onclick="qty('${p.id}',1)">+</button>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('${p.n}', ${p.p}, '${p.id}')">🛒 Add to Cart</button>
-                    <button class="buy-btn" onclick="buyNow('${p.n}', ${p.p}, '${p.id}')">⚡ Buy Now</button>
-                </div>
             </div>`;
         });
-        html += `</div>`;
-        container.innerHTML += html;
+        container.innerHTML += html + `</div>`;
     }
+}
+
+// প্রোডাক্ট পপ-আপ ওপেন করা
+function openProduct(cat, id) {
+    const p = products[cat].find(item => item.id === id);
+    currentProduct = p;
+    const modal = document.getElementById('productModal');
+    const body = document.getElementById('modal-body');
+    
+    body.innerHTML = `
+        <div class="modal-img">${p.i}</div>
+        <div class="modal-body">
+            <h2>${p.n}</h2>
+            <p class="modal-price">৳ ${p.p}</p>
+            <p class="modal-desc">${p.d}</p>
+            <div class="modal-qty">
+                <button onclick="changeModalQty(-1)">-</button>
+                <span id="m-qty" style="font-weight:bold; font-size:18px;">1</span>
+                <button onclick="changeModalQty(1)">+</button>
+            </div>
+            <button class="modal-add-btn" onclick="addToCart()">Add to Cart</button>
+            <button class="modal-buy-btn" onclick="buyNow()">Buy Now</button>
+        </div>
+    `;
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden"; // স্ক্রল বন্ধ করা
+}
+
+function changeModalQty(val) {
+    let q = document.getElementById('m-qty');
+    let curr = parseInt(q.innerText);
+    if(curr + val >= 1) q.innerText = curr + val;
+}
+
+function closeModal() {
+    document.getElementById('productModal').style.display = "none";
+    document.body.style.overflow = "auto";
+}
+
+// কার্টে পণ্য যোগ করা
+function addToCart() {
+    let q = parseInt(document.getElementById('m-qty').innerText);
+    let existingItem = cart.find(i => i.n === currentProduct.n);
+    
+    if(existingItem) {
+        existingItem.q += q;
+    } else {
+        cart.push({ n: currentProduct.n, p: currentProduct.p, q: q });
+    }
+    
+    updateCartCount();
+    closeModal();
+    showNotification(currentProduct.n + " কার্টে যোগ হয়েছে!");
+}
+
+function buyNow() {
+    addToCart();
+    showCheckout();
+}
+
+function updateCartCount() {
+    document.getElementById('count').innerText = cart.length;
+}
+
+// চেকআউট সেকশন দেখানো
+function showCheckout() {
+    if(cart.length === 0) {
+        alert("আপনার কার্ট খালি!");
+        return;
+    }
+    const section = document.getElementById('order-section');
+    const list = document.getElementById('cart-items-list');
+    let total = 0;
+    
+    list.innerHTML = '';
+    cart.forEach(item => {
+        list.innerHTML += `<div class="cart-item"><span>${item.n} (x${item.q})</span> <span>৳${item.p * item.q}</span></div>`;
+        total += item.p * item.q;
+    });
+    
+    document.getElementById('total-price').innerText = total;
+    section.style.display = 'block';
+    location.href = "#order-section";
 }
 
 function confirmFinalOrder() {
     const name = document.getElementById('custName').value;
-    if (!name) { alert("নাম দিন!"); return; }
-    alert("ধন্যবাদ " + name + "! আপনার অর্ডার রিসিভ করা হয়েছে।");
+    const phone = document.getElementById('custPhone').value;
+    const addr = document.getElementById('custAddr').value;
+    const total = document.getElementById('total-price').innerText;
+
+    if (!name || !phone || !addr) {
+        alert("দয়া করে সব তথ্য সঠিকভাবে দিন।");
+        return;
+    }
+    
+    alert(`অর্ডার সফল হয়েছে!\nনাম: ${name}\nমোট বিল: ৳${total}\n\nধন্যবাদ করিম ভাই!`);
     cart = [];
-    updateCartDisplay();
+    updateCartCount();
     document.getElementById('order-section').style.display = 'none';
 }
 
 function showNotification(msg) {
     let t = document.getElementById('toast');
     t.innerText = msg; t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
+    setTimeout(() => t.style.display = 'none', 2500);
+}
+
+// বাইরে ক্লিক করলে পপ-আপ বন্ধ হওয়া
+window.onclick = function(event) {
+    let modal = document.getElementById('productModal');
+    if (event.target == modal) closeModal();
 }
 
 window.onload = renderProducts;
