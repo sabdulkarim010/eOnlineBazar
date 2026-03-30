@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eOnlineBazar | Quality Meets Trust</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="main-header">
+    <div class="header-top">
+        <a href="#" class="logo">eOnlineBazar</a>
+        <button class="cart-icon" onclick="location.href='#cart-area'">🛒<span class="cart-count" id="count">0</span></button>
+    </div>
+    <div class="search-container">
+        <input type="text" placeholder="Search for products...">
+        <button class="search-btn">Search</button>
+    </div>
+</header>
+
+<nav class="nav-links">
+    <a href="#main-header" class="home-btn">🏠 Home</a>
+    <a href="#grocery">🍏 Grocery</a>
+    <a href="#electronics">🔌 Electronics</a>
+    <a href="#cosmetics">💄 Cosmetics</a>
+    <a href="#kids">🧸 Kids Care</a>
+</nav>
+
+<section class="hero">
+    <h1>Coming Soon: A Revolution in Shopping!</h1>
+    <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+    <div class="progress-box"><div class="line"></div></div>
+</section>
+
+<div id="product-sections"></div>
+
+<div class="cart-view" id="cart-area">
+    <h3 style="text-align: center; margin-bottom: 20px;">Shopping Cart</h3>
+    <table>
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+        <tbody id="cart-items"></tbody>
+    </table>
+    <h3 style="text-align: right; padding: 15px 0;">Total: ৳ <span id="total-price">0</span></h3>
+</div>
+
+<div class="cart-view">
+    <h3>Checkout Information</h3>
+    <div class="input-box">
+        <label>Full Name <span class="star">*</span></label>
+        <input type="text" id="custName" placeholder="Enter your name">
+    </div>
+    <div class="input-box">
+        <label>Mobile Number <span class="star">*</span></label>
+        <input type="tel" id="custPhone" placeholder="01XXXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+    </div>
+    <div class="input-box">
+        <label>Full Address <span class="star">*</span></label>
+        <textarea id="custAddr" rows="3" placeholder="Village, Post, Thana, District"></textarea>
+    </div>
+    <div class="input-box">
+        <label>Extra Note (Optional)</label>
+        <input type="text" id="custNote" placeholder="Identity or specific instruction">
+    </div>
+    <div class="input-box">
+        <label>Payment Method</label>
+        <select id="payMethod">
+            <option value="cod">Cash on Delivery</option>
+            <option value="bkash">Bkash (বিকাশ)</option>
+            <option value="nagad">Nagad (নগদ)</option>
+        </select>
+    </div>
+    <button class="add-btn" style="background:#f1c40f; color:#1a2a3a; padding: 18px; font-size: 16px;" onclick="confirmFinalOrder()">Confirm Order Now</button>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+    <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
