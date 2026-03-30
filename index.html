@@ -22,7 +22,7 @@
 <div class="search-area">
     <div class="container">
         <div class="search-box">
-            <input type="text" placeholder="Search products...">
+            <input type="text" placeholder="পণ্য খুঁজুন...">
             <button>Search</button>
         </div>
         <div class="category-scroll">
@@ -36,8 +36,10 @@
 <section class="coming-soon-banner">
     <div class="container">
         <h1>Coming Soon: A Revolution in Shopping!</h1>
-        <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
-        <div class="loading-bar-container"><div class="loading-bar"></div></div>
+        <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
     </div>
 </section>
 
@@ -50,26 +52,33 @@
 <div id="productModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="modal-data"></div>
+        <div id="modal-data">
+            </div>
     </div>
 </div>
 
 <div id="checkout-section" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeCheckout()">&times;</span>
-        <h2>🛒 আপনার শপিং কার্ট</h2>
+        <h2 style="margin-bottom:15px;">🛒 শপিং কার্ট</h2>
         <div id="cart-items"></div>
-        <p class="total-price">Total: ৳ <span id="total-amount">0</span></p>
-        <div class="order-form">
-            <input type="text" id="custName" placeholder="আপনার নাম">
-            <input type="tel" id="custPhone" placeholder="মোবাইল নাম্বার">
-            <textarea id="custAddr" placeholder="আপনার ঠিকানা"></textarea>
-            <button class="order-btn" onclick="placeOrder()">অর্ডার করুন</button>
+        <p class="total-price" style="font-size:20px; font-weight:bold; margin-top:15px;">মোট: ৳ <span id="total-amount">0</span></p>
+        
+        <div class="order-form" style="margin-top:20px;">
+            <h3>🚚 ডেলিভারি তথ্য</h3>
+            <input type="text" id="custName" placeholder="আপনার নাম" style="width:100%; padding:10px; margin-top:10px;">
+            <input type="tel" id="custPhone" placeholder="মোবাইল নাম্বার" style="width:100%; padding:10px; margin-top:10px;">
+            <textarea id="custAddr" placeholder="আপনার পুরো ঠিকানা" style="width:100%; padding:10px; margin-top:10px;"></textarea>
+            <button class="order-btn" onclick="placeOrder()" style="width:100%; padding:15px; background:#ff9900; border:none; color:#fff; font-weight:bold; cursor:pointer; margin-top:15px; border-radius:5px;">অর্ডার নিশ্চিত করুন</button>
         </div>
     </div>
 </div>
 
-<div id="toast"></div>
+<div id="toast" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 20px; border-radius:20px; z-index:9999;"></div>
+
+<footer style="text-align:center; padding:20px; color:#888; border-top:1px solid #ddd; margin-top:40px;">
+    <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
