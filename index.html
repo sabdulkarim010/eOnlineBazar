@@ -3,113 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eOnlineBazar | Premium Online Shop</title>
+    <title>eOnlineBazar | Your Trusted Marketplace</title>
+    
     <link rel="stylesheet" href="style.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        .required { color: red; font-weight: bold; }
-        .mandatory-msg { color: #f85606; font-size: 12px; margin-bottom: 10px; display: block; }
-    </style>
 </head>
 <body>
 
-<header>
-    <div class="container navbar">
-        <a href="#" class="logo">eOnlineBazar</a>
-        <div class="search-container">
-            <input type="text" placeholder="Search for products..." id="searchInput">
-            <button class="search-btn">Search</button>
-        </div>
-        <div class="cart-icon-container" onclick="showCheckout()">
-            <span class="cart-icon">🛒</span>
-            <span id="count">0</span>
-        </div>
-    </div>
-</header>
+    <div id="toast" class="toast-top"></div>
 
-<nav class="category-nav">
-    <div class="container cat-flex">
-        <button class="cat-item active" onclick="filterCat('all')">All Products</button>
-        <button class="cat-item" onclick="filterCat('grocery')">Grocery</button>
-        <button class="cat-item" onclick="filterCat('electronics')">Electronics</button>
-        <button class="cat-item" onclick="filterCat('cosmetics')">Cosmetics</button>
-        <button class="cat-item" onclick="filterCat('kids')">Kids Care</button>
-    </div>
-</nav>
-
-<div class="banner-section container">
-    <div class="main-banner">
-        <div class="banner-overlay">
-            <h1>Coming Soon: A Revolution in Shopping!</h1>
-            <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
+    <header>
+        <div class="container">
+            <div class="top-bar">
+                <div class="logo-area">
+                    <h1 class="main-logo">eOnlineBazar</h1>
+                </div>
+                <div class="cart-area" onclick="toggleCart()">
+                    <div class="cart-wrapper">
+                        <span class="cart-icon">🛒</span>
+                        <span id="cart-count">0</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<main class="container">
-    <h3 class="section-title">Just For You</h3>
-    <div id="product-list" class="product-grid">
-        </div>
-</main>
-
-<div id="productModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="modal-data"></div>
-    </div>
-</div>
-
-<div id="checkout-section" class="modal">
-    <div class="modal-content cart-modal">
-        <span class="close-btn" onclick="closeCheckout()">&times;</span>
-        <h2>🛒 Your Shopping Cart</h2>
-        
-        <div id="cart-items" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
-        
-        <div class="cart-footer">
-            <p style="font-size: 20px; font-weight: bold; margin: 15px 0; color: #f85606;">Total Bill: ৳ <span id="total-amount">0</span></p>
             
-            <div class="order-form">
-                <h3>Delivery & Payment Details</h3>
-                <span class="mandatory-msg">* Fields marked with red star are mandatory</span>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search for product..." onkeyup="searchProduct()">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-                <label>Full Name <span class="required">*</span></label>
-                <input type="text" id="custName" placeholder="Enter your full name">
+    <nav class="category-nav">
+        <div class="container cat-flex">
+            <button class="cat-btn active" onclick="filterCategory('all')">All</button>
+            <button class="cat-btn" onclick="filterCategory('grocery')">Grocery</button>
+            <button class="cat-btn" onclick="filterCategory('electronics')">Electronics</button>
+            <button class="cat-btn" onclick="filterCategory('cosmetics')">Cosmetics</button>
+            <button class="cat-btn" onclick="filterCategory('kids')">Kids Care</button>
+        </div>
+    </nav>
 
-                <label>Mobile Number (11 Digits) <span class="required">*</span></label>
-                <input type="tel" id="custPhone" placeholder="017XXXXXXXX" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-
-                <label>Delivery Address <span class="required">*</span></label>
-                <textarea id="custAddr" placeholder="Village/House, Thana, District"></textarea>
-                
-                <label>Extra Note (Optional)</label>
-                <textarea id="extraNote" placeholder="Any specific instructions for delivery?"></textarea>
-
-                <label>Select Payment Method <span class="required">*</span></label>
-                <select id="paymentMethod" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="cod" selected>Cash on Delivery</option>
-                    <option value="bkash">bKash (Manual Payment)</option>
-                    <option value="nagad">Nagad (Manual Payment)</option>
-                </select>
-
-                <button class="order-btn" onclick="placeOrder()">CONFIRM ORDER</button>
+    <div class="container">
+        <div class="coming-soon-banner">
+            <div class="banner-content">
+                <h2>Coming Soon: A Revolution in Shopping!</h2>
+                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। ওয়েবসাইট ডেভেলপমেন্ট এর কাজ চলছে...</p>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="toast"></div>
+    <main class="container">
+        <div id="product-grid" class="product-grid">
+            </div>
+    </main>
 
-<footer>
-    <div class="container" style="text-align:center; padding: 20px 0;">
-        <p>&copy; 2026 eOnlineBazar | Developed by Abdul Karim Sheikh</p>
+    <div id="productModal" class="modal">
+        <div class="modal-content temu-style">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                </div>
+        </div>
     </div>
-</footer>
 
-<script src="script.js"></script>
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-content">
+            <span class="close-modal" onclick="toggleCart()">&times;</span>
+            <h2 class="cart-title">Your Shopping Cart</h2>
+            
+            <div id="cart-items-container"></div>
+            
+            <div id="order-form-container" class="order-form">
+                <hr style="margin: 20px 0;">
+                <h3>Shipping Address</h3>
+                
+                <div class="input-group">
+                    <label>Name <span class="required">*</span></label>
+                    <input type="text" id="orderName" placeholder="Enter full name">
+                </div>
+                
+                <div class="input-group">
+                    <label>Mobile Number <span class="required">*</span></label>
+                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11">
+                </div>
+                
+                <div class="input-group">
+                    <label>Full Address <span class="required">*</span></label>
+                    <textarea id="orderAddress" placeholder="Village/House, Road, Area"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Extra Note (Optional)</label>
+                    <input type="text" id="orderNote" placeholder="Anything we should know?">
+                </div>
+                
+                <div class="input-group">
+                    <label>Payment Method <span class="required">*</span></label>
+                    <select id="paymentMethod">
+                        <option value="" disabled selected>-- Select Payment Method --</option>
+                        <option value="Cash on delivery">Cash on delivery</option>
+                        <option value="Bkash Payment">Bkash Payment</option>
+                        <option value="Nagad Payment">Nagad Payment</option>
+                    </select>
+                </div>
+                
+                <div class="total-section">
+                    <h4>Total Bill: ৳ <span id="cart-total">0</span></h4>
+                    <button class="confirm-btn" onclick="validateAndOrder()">Confirm Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="script.js"></script>
 </body>
 </html>
