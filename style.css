@@ -438,7 +438,7 @@ header {
     top: 50%; /* মাঝখানে দেখালে বেশি ভালো লাগে */
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.75); /* হালকা কালো এবং কিছুটা স্বচ্ছ (Glass Effect) */
+    background: rgba(0, 0, 0, 0.5); /* হালকা কালো এবং কিছুটা স্বচ্ছ (Glass Effect) */
     color: #fff;
     padding: 12px 24px;
     border-radius: 30px; /* গোলাকার বর্ডার দেখতে বেশি স্মার্ট */
