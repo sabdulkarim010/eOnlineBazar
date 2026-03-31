@@ -49,12 +49,9 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
-
-let discountPercent = 0; // এটি শুরুতে ০ থাকবে, কুপন দিলে আপডেট হবে
-
-
-
-let cart = []; // কার্ট লিস্ট
+// গ্লোবাল ভেরিয়েবল
+let cart = []; 
+let discountPercent = 0; 
 
 // ২. প্রোডাক্ট ডিসপ্লে ফাংশন
 function displayProducts(items) {
@@ -81,7 +78,6 @@ function updateCartUI() {
     
     let total = 0;
 
-    // ১. যদি কার্ট একদম খালি থাকে
     if (cart.length === 0) {
         container.innerHTML = `
             <div style="text-align:center; padding: 40px 20px;">
@@ -95,10 +91,8 @@ function updateCartUI() {
         return; 
     }
 
-    // ২. কার্টে পণ্য থাকলে শিপিং ফর্ম দেখাবে
     if (orderForm) orderForm.style.display = "block";
 
-    // ৩. প্রতিটি পণ্যের লিস্ট তৈরি এবং মোট দাম (Total) হিসাব করা
     cart.forEach((item, index) => {
         total += (item.price * item.quantity);
         const div = document.createElement('div');
@@ -116,16 +110,13 @@ function updateCartUI() {
         if (container) container.appendChild(div);
     });
 
-    // ৪. কুপন ডিসকাউন্ট হিসাব করা (discountPercent আগে গ্লোবাল ভেরিয়েবলে থাকতে হবে)
     let discountAmount = total * discountPercent;
     let finalTotal = total - discountAmount;
 
-    // ৫. সবশেষে স্ক্রিনে মোট বিল দেখানো
     if (totalSpan) {
         totalSpan.innerText = Math.round(finalTotal);
     }
 }
-
 
 // ৪. পরিমাণ পরিবর্তন
 function changeQty(index, delta) {
@@ -161,33 +152,25 @@ function validateAndOrder() {
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('orderAddress').value.trim();
     
-    // ১. আগের মতো ভ্যালিডেশন চেক (নাম, ফোন, ঠিকানা)
     if (!name || !phone || !address) {
         alert("Please fill in all required fields (Name, Phone, Address)");
         return;
     }
 
-    // ২. নতুন পেমেন্ট মেথড চেক (রেডিও বাটন থেকে ভ্যালু নেওয়া)
     const paymentOption = document.querySelector('input[name="payment"]:checked');
-    
     if (!paymentOption) {
         alert("Please select a payment method!");
         return;
     }
 
-    const paymentMethod = paymentOption.value;
-
-    // ৩. যদি বিকাশ সিলেক্ট করা থাকে (অপশনাল ডামি অ্যালার্ট)
-    if (paymentMethod === 'bkash') {
+    if (paymentOption.value === 'bkash') {
         alert("বিকাশ পেমেন্ট গেটওয়েতে পাঠানো হচ্ছে... (নিশ্চিত করতে ওকে চাপুন)");
     }
 
-    // ৪. সব ঠিক থাকলে কনফার্ম বক্স দেখানো
     document.getElementById('confirmBox').style.display = "block";
 }
 
-
-// ৯. ফাইনাল অর্ডার এবং সাকসেস মেসেজ
+// ৮. ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
     document.getElementById('confirmBox').style.display = "none";
     const orderID = "#00" + (Math.floor(Math.random() * 900) + 100); 
@@ -208,22 +191,17 @@ function finalOrderProcess() {
     
     setTimeout(() => {
         successBox.style.display = "none";
-        
-        // --- ঘরগুলো খালি করার অংশ ---
         cart = [];
         document.getElementById('orderName').value = "";
         document.getElementById('orderPhone').value = "";
         document.getElementById('orderAddress').value = "";
         document.getElementById('orderNote').value = "";
-        document.getElementById('paymentMethod').value = "";
-        
         updateCartUI();
         toggleCart();
     }, 4000);
 }
 
-
-// মডাল ও সার্চ লজিক
+// ৯. মডাল ও সার্চ লজিক
 function openModal(id) {
     const p = products.find(prod => prod.id === id);
     document.getElementById('modal-body').innerHTML = `
@@ -243,19 +221,17 @@ function searchProduct() {
     displayProducts(filtered);
 }
 
-// ফিল্টার ফাংশন (ব্যানার কন্ট্রোল সহ)
 function filterCategory(cat) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     if (event) event.target.classList.add('active');
     
     const banner = document.querySelector('.coming-soon-banner');
-    
     if (cat === 'all') {
         displayProducts(products);
-        if (banner) banner.style.display = 'block'; // 'All' এ ব্যানার দেখাবে
+        if (banner) banner.style.display = 'block';
     } else {
         displayProducts(products.filter(p => p.category === cat));
-        if (banner) banner.style.display = 'none'; // অন্য ক্যাটাগরিতে ব্যানার হাইড হবে
+        if (banner) banner.style.display = 'none';
     }
 }
 
@@ -267,23 +243,13 @@ function toggleCart() {
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
 function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; }
 
-// পেজ লোড হওয়া
-window.onload = () => {
-    displayProducts(products);
-    updateCartUI();
-};
-
-
-
-let discountPercent = 0; // শুরুতে কোনো ডিসকাউন্ট নেই
-
-// কুপন অ্যাপ্লাই ফাংশন
+// ১০. কুপন লজিক
 function applyCoupon() {
     const couponCode = document.getElementById('couponInput').value.trim();
     const message = document.getElementById('couponMessage');
     
     if (couponCode === "SAVE10") {
-        discountPercent = 0.10; // ১০% ছাড়
+        discountPercent = 0.10;
         message.innerText = "Success! 10% discount applied.";
         message.style.color = "#28a745";
     } else {
@@ -292,26 +258,28 @@ function applyCoupon() {
         message.style.color = "#dc3545";
     }
     message.style.display = "block";
-    updateCartUI(); // দাম আপডেট করার জন্য
+    updateCartUI();
 }
 
-// পেমেন্ট বাটন সিলেক্ট করার ডিজাইন পরিবর্তন
+// ১১. পেমেন্ট সিলেকশন
 function selectPayment(method) {
     const bkashLabel = document.getElementById('label-bkash');
     const codLabel = document.getElementById('label-cod');
     
-    // সব বর্ডার আগে সাধারণ করা
-    bkashLabel.style.borderColor = "#ddd";
-    bkashLabel.style.background = "white";
-    codLabel.style.borderColor = "#ddd";
-    codLabel.style.background = "white";
+    if(bkashLabel) { bkashLabel.style.borderColor = "#ddd"; bkashLabel.style.background = "white"; }
+    if(codLabel) { codLabel.style.borderColor = "#ddd"; codLabel.style.background = "white"; }
     
-    // সিলেক্ট করা বাটনকে হাইলাইট করা
     const selected = document.getElementById('label-' + method);
-    selected.style.borderColor = "#f85606";
-    selected.style.background = "#fffaf7";
+    if(selected) {
+        selected.style.borderColor = "#f85606";
+        selected.style.background = "#fffaf7";
+    }
     
-    // রেডিও বাটন চেক করা
-    document.getElementById('pay-' + method).checked = true;
+    const radio = document.getElementById('pay-' + method);
+    if(radio) radio.checked = true;
 }
 
+window.onload = () => {
+    displayProducts(products);
+    updateCartUI();
+};
