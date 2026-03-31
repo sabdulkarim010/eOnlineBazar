@@ -208,10 +208,10 @@ function filterCategory(cat) {
     
     if (cat === 'all') {
         displayProducts(products);
-        if (banner) banner.style.display = 'block'; 
+        if (banner) banner.style.display = 'block'; // 'All' এ ব্যানার দেখাবে
     } else {
         displayProducts(products.filter(p => p.category === cat));
-        if (banner) banner.style.display = 'none'; 
+        if (banner) banner.style.display = 'none'; // অন্য ক্যাটাগরিতে ব্যানার হাইড হবে
     }
 }
 
