@@ -432,26 +432,22 @@ header {
 
 
 /* প্রফেশনাল কাস্টম টোস্ট স্টাইল */
+/* প্রফেশনাল এবং হালকা ওজনের কাস্টম টোস্ট */
 .custom-toast {
     position: fixed;
-    top: 20px;
+    top: 50%; /* মাঝখানে দেখালে বেশি ভালো লাগে */
     left: 50%;
-    transform: translateX(-50%);
-    background: #333;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.75); /* হালকা কালো এবং কিছুটা স্বচ্ছ (Glass Effect) */
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 30px; /* গোলাকার বর্ডার দেখতে বেশি স্মার্ট */
     font-size: 14px;
+    font-weight: 500;
     z-index: 10000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none; /* শুরুতে লুকানো থাকবে */
-    white-space: nowrap; /* লেখা অনুযায়ী বক্স বড়-ছোট হবে */
-    animation: fadeInOut 3s ease-in-out;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; top: 10px; }
-    15% { opacity: 1; top: 20px; }
-    85% { opacity: 1; top: 20px; }
-    100% { opacity: 0; top: 10px; }
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* হালকা শ্যাডো */
+    display: none;
+    white-space: nowrap;
+    backdrop-filter: blur(5px); /* ব্যাকগ্রাউন্ড কিছুটা ব্লার করবে */
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
