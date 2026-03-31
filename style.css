@@ -85,10 +85,9 @@ header {
 /* --- ৫. ক্যাটাগরি মেনু --- */
 .category-nav {
     background: white;
-    padding: 8px 0;
-    border-bottom: none; /* এই লাইনটি 'none' করে দিন */
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
 }
-
 
 .cat-flex {
     display: flex;
@@ -110,11 +109,12 @@ header {
     color: white;
 }
 
-/* --- ৬. ব্যানার এবং প্রোগ্রেস বার স্টাইল --- */
+/* --- ৬. নতুন যুক্ত করা: Coming Soon ব্যানার স্টাইল --- */
+/* --- Modern Coming Soon Banner (Full Replace) --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Hind+Siliguri:wght@400;600&display=swap');
 
 .hero-banner {
-    background: #1a1a1a; 
+    background: #1a1a1a; /* আপনার পছন্দের Black-Gray শেড */
     padding: 80px 20px;
     text-align: center;
     border-bottom: 2px solid #f050d6;
@@ -142,11 +142,73 @@ header {
     margin: 0 auto;
 }
 
+/* Animation for Fade In Effect */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .hero-banner h1 { font-size: 35px; }
+    .hero-banner p { font-size: 16px; }
+}
+
+
+/* Progress Bar Animation */
+.progress-container {
+    width: 250px;
+    height: 6px;
+    background: #222;
+    border-radius: 10px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #f050d6, #ff94e5);
+    animation: loadProgress 3s forwards ease-in-out;
+}
+
+.launch-badge {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 5px 15px;
+    border: 1px solid #f050d6;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #f050d6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes loadProgress {
+    0% { width: 0%; }
+    100% { width: 85%; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .hero-banner h1 { font-size: 32px; }
+    .welcome-msg { font-size: 15px; }
+    .hero-banner { height: 400px; }
+}
+
+
+/* প্রোগ্রেস বার এনিমেশন */
 .progress-container {
     width: 140px;
     height: 6px;
     background: #333;
-    margin: 20px auto;
+    margin: 0 auto;
     border-radius: 10px;
     position: relative;
     overflow: hidden;
@@ -165,11 +227,6 @@ header {
     0% { left: -60px; }
     50% { left: 40px; }
     100% { left: 140px; }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- ৭. প্রোডাক্ট কার্ড গ্রিড --- */
@@ -192,7 +249,49 @@ header {
 .p-name { font-size: 14px; height: 40px; overflow: hidden; }
 .p-price { color: #f85606; font-weight: bold; font-size: 18px; margin-top: 5px; }
 
-/* --- ৮. মডাল এবং ফর্ম স্টাইল --- */
+/* --- ৮. কার্ট এবং মডাল স্টাইল (অপরিবর্তিত) --- */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.qty-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.qty-count {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.toast-top {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    z-index: 9999;
+    font-weight: bold;
+    border: 2px solid #f85606;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -222,6 +321,33 @@ header {
     font-size: 15px;
 }
 
+.input-error {
+    border: 2px solid #ff4d4d !important;
+    background-color: #fff9f9 !important;
+}
+
+.error-text {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.success-box {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    z-index: 3000;
+    width: 85%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
 .confirm-btn {
     width: 100%;
     padding: 15px;
@@ -234,11 +360,22 @@ header {
     margin-top: 10px;
 }
 
-/* --- ৯. ফুটার স্টাইল --- */
+.confirm-btn:active { transform: scale(0.98); }
+
+.close-modal {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+}
+
+
+/* Updated Compact Footer Styles */
+/* Simple & Shortcut Footer Styles */
 .site-footer {
-    background-color: #EEEEEE; 
+    background-color: #EEEEEE; /* Black-Gray Background */
     color: #ffffff;
-    padding: 20px 0;
+    padding: 5px 0;
     text-align: center;
     border-top: 0.5px solid #333;
     font-family: Arial, sans-serif;
@@ -247,7 +384,7 @@ header {
 .footer-logo {
     color: #000000;
     font-size: 18px;
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
 }
 
 .footer-content p {
@@ -262,7 +399,6 @@ header {
     font-size: 11px;
 }
 
-/* মোবাইল রেসপন্সিভ */
-@media (max-width: 600px) {
-    .hero-banner h1 { font-size: 32px; }
+.footer-links a:hover {
+    color: #f050d6;
 }
