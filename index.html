@@ -8,15 +8,12 @@
     <link rel="stylesheet" href="style.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-    
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-    
     <style>
         /* ব্যানার স্টাইল */
         .coming-soon-banner {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); /* আপনার দেওয়া ইমেজের নাম অনুযায়ী */
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); 
             background-size: cover;
             background-position: center;
             color: white;
@@ -27,7 +24,7 @@
 
         .banner-content h2 {
             font-size: 28px;
-            color: #fdb913; /* গোল্ডেন কালার টেক্সট */
+            color: #fdb913; 
             margin-bottom: 15px;
             font-weight: bold;
         }
@@ -63,6 +60,15 @@
         @keyframes moveProgress {
             0% { left: -50px; }
             100% { left: 150px; }
+        }
+
+        /* এরর টেক্সট স্টাইল */
+        .error-text {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -139,7 +145,8 @@
                 <div class="input-group">
                     <label>Full Name <span class="required" style="color:red;">*</span></label>
                     <input type="text" id="orderName" placeholder="Enter full name">
-                    <span id="nameError" class="error-text"></span> </div>
+                    <span id="nameError" class="error-text"></span>
+                </div>
                 
                 <div class="input-group">
                     <label>Mobile Number <span class="required" style="color:red;">*</span></label>
@@ -153,45 +160,44 @@
                     <span id="addressError" class="error-text"></span>
                 </div>
                 
-    
-     <div class="input-group">
-    <label>Note for Courier * </label>
-    <textarea id="orderNote" placeholder="Extra instructions for delivery (Optional)" rows="2"></textarea>
-    </div>
-
-
-                
                 <div class="input-group">
-                    <label>Payment Method <span class="required" style="color:red;">*</span></label>
-                    <div class="input-group" style="margin-bottom: 20px;">
-    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 12px;">Payment Method <span style="color:red;">*</span></label>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        
-        <label id="label-bkash" style="border: 2px solid #ddd; padding: 15px; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('bkash')">
-            <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
-            <span style="font-size: 20px;">📱</span><br>
-            <span style="font-weight:bold; font-size:14px;">bKash</span>
-        </label>
-        
-        <label id="label-cod" style="border: 2px solid #f85606; padding: 15px; background: #fffaf7; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('cod')">
-            <input type="radio" name="payment" id="pay-cod" value="cod" checked style="display:none;">
-            <span style="font-size: 20px;">🚚</span><br>
-            <span style="font-weight:bold; font-size:14px;">Cash on Delivery</span>
-        </label>
-    </div>
-</div>
+                    <label>Note for Courier (Optional)</label>
+                    <textarea id="orderNote" placeholder="Extra instructions for delivery" rows="2"></textarea>
+                </div>
 
+                <div class="input-group">
+                    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 12px;">Payment Method <span style="color:red;">*</span></label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                        
+                        <label id="label-bkash" style="border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('bkash')">
+                            <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
+                            <span style="font-size: 18px;">📱</span><br>
+                            <span style="font-weight:bold; font-size:13px;">bKash</span>
+                        </label>
 
-     <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
-    <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
-    <div style="display: flex; gap: 8px;">
-        <input type="text" id="couponInput" placeholder="Enter (SAVE10)" style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
-        <button onclick="applyCoupon()" style="padding: 10px 15px; background: #232f3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Apply</button>
-    </div>
-    <p id="couponMessage" style="font-size: 12px; margin-top: 5px; display: none; font-weight: bold;"></p>
-     </div>
+                        <label id="label-nagad" style="border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('nagad')">
+                            <input type="radio" name="payment" id="pay-nagad" value="nagad" style="display:none;">
+                            <span style="font-size: 18px;">💸</span><br>
+                            <span style="font-weight:bold; font-size:13px;">Nagad</span>
+                        </label>
+                        
+                        <label id="label-cod" style="border: 2px solid #f85606; padding: 12px; background: #fffaf7; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('cod')">
+                            <input type="radio" name="payment" id="pay-cod" value="cod" checked style="display:none;">
+                            <span style="font-size: 18px;">🚚</span><br>
+                            <span style="font-weight:bold; font-size:13px;">COD</span>
+                        </label>
+                    </div>
+                </div>
 
-                
+                <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
+                    <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="couponInput" placeholder="Enter (SAVE10)" style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
+                        <button onclick="applyCoupon()" style="padding: 10px 15px; background: #232f3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Apply</button>
+                    </div>
+                    <p id="couponMessage" style="font-size: 12px; margin-top: 5px; display: none; font-weight: bold;"></p>
+                </div>
+
                 <div class="total-section" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #eee;">
                     <h4 style="font-size: 20px; margin-bottom: 15px; display: flex; justify-content: space-between;">
                         <span>Total Bill:</span> <span>৳ <span id="cart-total">0</span></span>
@@ -220,18 +226,15 @@
     <script src="script.js"></script>
     
     <footer class="site-footer">
-    <div class="footer-content">
-        <h3 class="footer-logo">eOnlineBazar</h3>
-        <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a> | 
-            <a href="#">Terms of Service</a>
+        <div class="footer-content">
+            <h3 class="footer-logo">eOnlineBazar</h3>
+            <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a> | 
+                <a href="#">Terms of Service</a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
-
-    
-    
 </body>
 </html>
