@@ -197,16 +197,21 @@ function validateAndOrder() {
     }
 
     // সব ঠিক থাকলে পরবর্তী ধাপে যাবে
-    if (isValid) {
-        if (paymentOption.value === 'bkash') {
-    alert("বিকাশ গেটওয়েতে পাঠানো হচ্ছে...");
-} else if (paymentOption.value === 'nagad') {
-    alert("নগদ পেমেন্ট গেটওয়েতে পাঠানো হচ্ছে...");
-}
-
-        document.getElementById('confirmBox').style.display = "block";
+    // সব ঠিক থাকলে পরবর্তী ধাপে যাবে (isValid === true হলে)
+if (isValid) {
+    if (paymentOption.value === 'bkash') {
+        showToast("Redirecting to bKash Gateway..."); // English Message
+    } else if (paymentOption.value === 'nagad') {
+        showToast("Redirecting to Nagad Gateway..."); // English Message
+    } else {
+        showToast("Processing your order..."); 
     }
-}
+
+    // আগের মতো কনফার্ম বক্স দেখাবে
+    document.getElementById('confirmBox').style.display = "block";
+   }
+
+   }
 
 
 // ৮. ফাইনাল অর্ডার প্রসেস
@@ -325,5 +330,30 @@ function selectPayment(method) {
 
 window.onload = () => {
     displayProducts(products);
+
+
+// প্রফেশনাল পপ-আপ (Toast) ফাংশন
+function showToast(message) {
+    let toast = document.getElementById('custom-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'custom-toast';
+        toast.className = 'custom-toast';
+        document.body.appendChild(toast);
+    }
+    toast.innerText = message;
+    
+    // পপ-আপ দেখানোর জন্য স্টাইল সেট করা
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+
+    // ৩ সেকেন্ড পর নিজে থেকেই চলে যাবে
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => { toast.style.display = 'none'; }, 500);
+    }, 3000);
+}
+
+    
     updateCartUI();
 };
