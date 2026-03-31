@@ -1,14 +1,14 @@
-/* --- ১. গ্লোবাল স্টাইল: পুরো ওয়েবসাইটের ফন্ট এবং মার্জিন ঠিক করার জন্য --- */
+/* --- ১. গ্লোবাল স্টাইল --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', 'Hind Siliguri', sans-serif; /* ইংরেজি ও বাংলা ফন্ট */
-    -webkit-tap-highlight-color: transparent; /* মোবাইলে ক্লিক করলে নীল দাগ হবে না */
+    font-family: 'Roboto', 'Hind Siliguri', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: #f7f8fa; /* হালকা ধূসর ব্যাকগ্রাউন্ড */
+    background-color: #f7f8fa;
     color: #333;
 }
 
@@ -20,7 +20,7 @@ body {
 
 /* --- ২. হেডার এবং লোগো স্টাইল --- */
 header {
-    background-color: #232f3e; /* আমাজন স্টাইল গাঢ় নীল */
+    background-color: #232f3e;
     padding: 12px 0;
     position: sticky;
     top: 0;
@@ -39,7 +39,7 @@ header {
     font-size: 22px;
 }
 
-/* --- ৩. শপিং কার্ট আইকন স্টাইল --- */
+/* --- ৩. শপিং কার্ট আইকন --- */
 .cart-wrapper {
     position: relative;
     cursor: pointer;
@@ -52,7 +52,7 @@ header {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: #f85606; /* কমলা রঙের কাউন্টার */
+    background: #f85606;
     color: white;
     font-size: 11px;
     padding: 2px 6px;
@@ -82,7 +82,7 @@ header {
     cursor: pointer;
 }
 
-/* --- ৫. ক্যাটাগরি মেনু স্টাইল --- */
+/* --- ৫. ক্যাটাগরি মেনু --- */
 .category-nav {
     background: white;
     padding: 12px 0;
@@ -92,7 +92,7 @@ header {
 .cat-flex {
     display: flex;
     gap: 10px;
-    overflow-x: auto; /* মোবাইলে ডানে-বামে টানা যাবে */
+    overflow-x: auto;
 }
 
 .cat-btn {
@@ -109,7 +109,61 @@ header {
     color: white;
 }
 
-/* --- ৬. প্রোডাক্ট কার্ড গ্রিড স্টাইল --- */
+/* --- ৬. নতুন যুক্ত করা: Coming Soon ব্যানার স্টাইল --- */
+.coming-soon-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 50px 15px;
+    margin-bottom: 20px;
+    border-bottom: 4px solid #fdb913;
+}
+
+.banner-content h2 {
+    font-size: 26px;
+    color: #fdb913; /* সোনালী হলুদ টেক্সট */
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.banner-content p {
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 550px;
+    margin: 0 auto 25px;
+    color: #e0e0e0;
+}
+
+/* প্রোগ্রেস বার এনিমেশন */
+.progress-container {
+    width: 140px;
+    height: 6px;
+    background: #333;
+    margin: 0 auto;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 60px;
+    height: 100%;
+    background: #fdb913;
+    border-radius: 10px;
+    position: absolute;
+    animation: slideProgress 2.5s infinite ease-in-out;
+}
+
+@keyframes slideProgress {
+    0% { left: -60px; }
+    50% { left: 40px; }
+    100% { left: 140px; }
+}
+
+/* --- ৭. প্রোডাক্ট কার্ড গ্রিড --- */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -129,7 +183,7 @@ header {
 .p-name { font-size: 14px; height: 40px; overflow: hidden; }
 .p-price { color: #f85606; font-weight: bold; font-size: 18px; margin-top: 5px; }
 
-/* --- ৭. কার্ট আইটেম এবং বড় (+ -) বাটন --- */
+/* --- ৮. কার্ট এবং মডাল স্টাইল (অপরিবর্তিত) --- */
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -139,7 +193,7 @@ header {
 }
 
 .qty-btn {
-    width: 38px;  /* বড় সাইজ যাতে মোবাইলে ক্লিক করা সহজ হয় */
+    width: 38px;
     height: 38px;
     border: 1px solid #ccc;
     background: #fff;
@@ -155,25 +209,23 @@ header {
     margin: 0 10px;
 }
 
-/* --- ৮. পপ-আপ (Toast) মেসেজ: একদম স্ক্রিনের মাঝখানে --- */
 .toast-top {
     display: none;
     position: fixed;
-    top: 50%;         /* স্ক্রিনের মাঝখানে */
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* নিখুঁত সেন্টারিং */
+    transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.9);
     color: #fff;
     padding: 15px 30px;
     border-radius: 50px;
     z-index: 9999;
     font-weight: bold;
-    border: 2px solid #f85606; /* উজ্জ্বল কমলা বর্ডার */
+    border: 2px solid #f85606;
     box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     text-align: center;
 }
 
-/* --- ৯. মডাল এবং শিপিং ফর্ম স্টাইল --- */
 .modal {
     display: none;
     position: fixed;
@@ -203,7 +255,6 @@ header {
     font-size: 15px;
 }
 
-/* ভুল ইনপুটের জন্য লাল বর্ডার স্টাইল */
 .input-error {
     border: 2px solid #ff4d4d !important;
     background-color: #fff9f9 !important;
@@ -216,7 +267,6 @@ header {
     display: block;
 }
 
-/* --- ১০. কনফার্মেশন ও সাকসেস বক্স --- */
 .success-box {
     display: none;
     position: fixed;
