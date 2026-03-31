@@ -210,15 +210,25 @@ function validateAndOrder() {
         // ফর্ম হাইড করে রিভিউ বক্স দেখানো (ডাবল পপ-আপ বন্ধ করতে)
         document.getElementById('order-form-container').style.display = "none";
         document.getElementById('confirmBox').style.display = "block";
+    
+
     }
 }
 
+// এই ফাংশনটি রিভিউ বক্স বন্ধ করবে এবং ফর্মটি আবার ফিরিয়ে আনবে
+function closeConfirm() {
+    // ১. রিভিউ বক্স হাইড করা
+    document.getElementById('confirmBox').style.display = "none";
+    
+    // ২. অর্ডার ফর্মটি আবার ফিরিয়ে আনা (ডাবল পপ-আপ সমস্যা সমাধানের জন্য)
+    document.getElementById('order-form-container').style.display = "block";
+}
 
-
-// ৮. ফাইনাল অর্ডার প্রসেস
+// ৮. ফাইনাল অর্ডার প্রসেস শুরু
 function finalOrderProcess() {
     document.getElementById('confirmBox').style.display = "none";
-    const orderID = "#00" + (Math.floor(Math.random() * 900) + 100); 
+    const orderID = "#00" + (Math.floor(Math.random() * 900) + 100);
+
     
     const successBox = document.getElementById('successBox');
     document.getElementById('successMessage').innerHTML = `
