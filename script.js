@@ -157,38 +157,35 @@ function showToast(msg) {
 
 // ৭. অর্ডার ভ্যালিডেশন
 function validateAndOrder() {
-    document.querySelectorAll('.error-text').forEach(e => e.innerText = "");
-    document.querySelectorAll('input, textarea, select').forEach(i => i.classList.remove('input-error'));
-
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('orderAddress').value.trim();
-
-    // এই লাইনটি অন্য ভেরিয়েবলগুলোর (নাম, ফোন) সাথে যোগ করুন
-     note = document.getElementById('orderNote').value.trim();
-
-    const payment = document.getElementById('paymentMethod').value;
-
-    let isValid = true;
-
-    if (!name) { showError('orderName', 'nameError', "Full name is required"); isValid = false; }
     
-    const phoneRegex = /^(013|014|015|016|017|018|019)\d{8}$/;
-    if (!phone) { showError('orderPhone', 'phoneError', "Mobile number is required"); isValid = false; }
-    else if (!phoneRegex.test(phone)) { showError('orderPhone', 'phoneError', "Invalid mobile number"); isValid = false; }
+    // ১. আগের মতো ভ্যালিডেশন চেক (নাম, ফোন, ঠিকানা)
+    if (!name || !phone || !address) {
+        alert("Please fill in all required fields (Name, Phone, Address)");
+        return;
+    }
 
-    if (!address) { showError('orderAddress', 'addressError', "Address is required"); isValid = false; }
-    if (!payment) { showError('paymentMethod', 'paymentError', "Select payment method"); isValid = false; }
+    // ২. নতুন পেমেন্ট মেথড চেক (রেডিও বাটন থেকে ভ্যালু নেওয়া)
+    const paymentOption = document.querySelector('input[name="payment"]:checked');
     
-    if (cart.length === 0) { alert("Please add products to cart!"); return; }
+    if (!paymentOption) {
+        alert("Please select a payment method!");
+        return;
+    }
 
-    if (isValid) { document.getElementById('confirmBox').style.display = "block"; }
+    const paymentMethod = paymentOption.value;
+
+    // ৩. যদি বিকাশ সিলেক্ট করা থাকে (অপশনাল ডামি অ্যালার্ট)
+    if (paymentMethod === 'bkash') {
+        alert("বিকাশ পেমেন্ট গেটওয়েতে পাঠানো হচ্ছে... (নিশ্চিত করতে ওকে চাপুন)");
+    }
+
+    // ৪. সব ঠিক থাকলে কনফার্ম বক্স দেখানো
+    document.getElementById('confirmBox').style.display = "block";
 }
 
-function showError(id, errId, msg) {
-    document.getElementById(id).classList.add('input-error');
-    document.getElementById(errId).innerText = msg;
-}
 
 // ৯. ফাইনাল অর্ডার এবং সাকসেস মেসেজ
 function finalOrderProcess() {
