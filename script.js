@@ -199,8 +199,11 @@ function validateAndOrder() {
     // সব ঠিক থাকলে পরবর্তী ধাপে যাবে
     if (isValid) {
         if (paymentOption.value === 'bkash') {
-            alert("Redirecting to bKash Gateway...");
-        }
+    alert("বিকাশ গেটওয়েতে পাঠানো হচ্ছে...");
+} else if (paymentOption.value === 'nagad') {
+    alert("নগদ পেমেন্ট গেটওয়েতে পাঠানো হচ্ছে...");
+}
+
         document.getElementById('confirmBox').style.display = "block";
     }
 }
@@ -300,17 +303,22 @@ function applyCoupon() {
 // ১১. পেমেন্ট সিলেকশন
 function selectPayment(method) {
     const bkashLabel = document.getElementById('label-bkash');
+    const nagadLabel = document.getElementById('label-nagad');
     const codLabel = document.getElementById('label-cod');
     
+    // সব বর্ডার আগে সাধারণ করা
     if(bkashLabel) { bkashLabel.style.borderColor = "#ddd"; bkashLabel.style.background = "white"; }
+    if(nagadLabel) { nagadLabel.style.borderColor = "#ddd"; nagadLabel.style.background = "white"; }
     if(codLabel) { codLabel.style.borderColor = "#ddd"; codLabel.style.background = "white"; }
     
+    // সিলেক্ট করা বাটন হাইলাইট করা
     const selected = document.getElementById('label-' + method);
     if(selected) {
         selected.style.borderColor = "#f85606";
         selected.style.background = "#fffaf7";
     }
     
+    // রেডিও বাটন চেক করা
     const radio = document.getElementById('pay-' + method);
     if(radio) radio.checked = true;
 }
