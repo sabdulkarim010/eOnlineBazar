@@ -304,12 +304,18 @@ header {
     background: white;
     width: 90%;
     max-width: 450px;
-    margin: 50px auto;
+    margin: 0 auto; /* আগের ৫০ পিক্সেল মার্জিন তুলে দেওয়া হলো */
     padding: 20px;
     border-radius: 15px;
     max-height: 85vh;
     overflow-y: auto;
+    
+    /* নিচের ৩টি লাইন যোগ করুন একদম মাঝখানে আনার জন্য */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
+
 
 .input-group { margin-bottom: 15px; }
 
