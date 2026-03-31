@@ -49,6 +49,11 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
+
+let discountPercent = 0; // এটি শুরুতে ০ থাকবে, কুপন দিলে আপডেট হবে
+
+
+
 let cart = []; // কার্ট লিস্ট
 
 // ২. প্রোডাক্ট ডিসপ্লে ফাংশন
