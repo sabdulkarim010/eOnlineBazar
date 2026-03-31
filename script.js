@@ -148,27 +148,63 @@ function showToast(msg) {
 
 // ৭. অর্ডার ভ্যালিডেশন
 function validateAndOrder() {
-    const name = document.getElementById('orderName').value.trim();
-    const phone = document.getElementById('orderPhone').value.trim();
-    const address = document.getElementById('orderAddress').value.trim();
+    // ইনপুট এবং এরর মেসেজ দেখানোর জায়গাগুলো ধরা
+    const name = document.getElementById('orderName');
+    const phone = document.getElementById('orderPhone');
+    const address = document.getElementById('orderAddress');
     
-    if (!name || !phone || !address) {
-        alert("Please fill in all required fields (Name, Phone, Address)");
-        return;
+    const nameError = document.getElementById('nameError');
+    const phoneError = document.getElementById('phoneError');
+    const addressError = document.getElementById('addressError');
+
+    // শুরুতে সব এরর পরিষ্কার করা এবং লাল বর্ডার সরানো
+    let isValid = true;
+    [name, phone, address].forEach(el => el.style.borderColor = "#ddd");
+    [nameError, phoneError, addressError].forEach(el => el.innerText = "");
+
+    // ১. নাম ভ্যালিডেশন
+    if (name.value.trim() === "") {
+        name.style.borderColor = "red";
+        nameError.innerText = "Please enter your full name";
+        isValid = false;
     }
 
+    // ২. মোবাইল নম্বর ভ্যালিডেশন (১১ ডিজিট এবং বিডি ফরম্যাট)
+    const phoneValue = phone.value.trim();
+    const phonePattern = /^(013|014|015|016|017|018|019)\d{8}$/;
+    if (phoneValue === "") {
+        phone.style.borderColor = "red";
+        phoneError.innerText = "Please enter your mobile number";
+        isValid = false;
+    } else if (!phonePattern.test(phoneValue)) {
+        phone.style.borderColor = "red";
+        phoneError.innerText = "Enter a valid 11-digit BD number (e.g. 017...)";
+        isValid = false;
+    }
+
+    // ৩. ঠিকানা ভ্যালিডেশন
+    if (address.value.trim() === "") {
+        address.style.borderColor = "red";
+        addressError.innerText = "Please enter your full address";
+        isValid = false;
+    }
+
+    // ৪. পেমেন্ট মেথড চেক
     const paymentOption = document.querySelector('input[name="payment"]:checked');
     if (!paymentOption) {
         alert("Please select a payment method!");
-        return;
+        isValid = false;
     }
 
-    if (paymentOption.value === 'bkash') {
-        alert("বিকাশ পেমেন্ট গেটওয়েতে পাঠানো হচ্ছে... (নিশ্চিত করতে ওকে চাপুন)");
+    // সব ঠিক থাকলে পরবর্তী ধাপে যাবে
+    if (isValid) {
+        if (paymentOption.value === 'bkash') {
+            alert("Redirecting to bKash Gateway...");
+        }
+        document.getElementById('confirmBox').style.display = "block";
     }
-
-    document.getElementById('confirmBox').style.display = "block";
 }
+
 
 // ৮. ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
