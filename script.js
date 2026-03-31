@@ -1,5 +1,4 @@
-// ১. প্রোডাক্ট লিস্ট: এখানে সব ক্যাটাগরির পণ্য সাজানো আছে
-// ১. পণ্য তালিকা (পুরো ৪০টি প্রোডাক্ট এখানে আছে)
+// ১. পণ্য তালিকা (৪০টি প্রোডাক্ট)
 const products = [
     // Grocery (মুদি সওদা)
     { id: 1, name: "Premium Miniket Rice (5kg)", price: 490, category: "grocery", img: "🍚", desc: "Pure and clean long-grain miniket rice." },
@@ -50,10 +49,9 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
+let cart = []; // কার্ট লিস্ট
 
-let cart = []; // কার্টে থাকা পণ্য জমা রাখার লিস্ট
-
-// ২. মেইন ডিসপ্লে ফাংশন: ওয়েবসাইটে পণ্যগুলো দেখানোর জন্য
+// ২. প্রোডাক্ট ডিসপ্লে ফাংশন
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -66,14 +64,14 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ৩. কার্ট আপডেট ফাংশন: এখানে বড় প্লাস (+) ও মাইনাস (−) বাটনের লজিক আছে
+// ৩. কার্ট আপডেট (UI)
 function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const totalSpan = document.getElementById('cart-total');
     
-    count.innerText = cart.length; // কার্ট আইকনে সংখ্যা আপডেট
-    container.innerHTML = "";
+    if (count) count.innerText = cart.length;
+    if (container) container.innerHTML = "";
     let total = 0;
 
     cart.forEach((item, index) => {
@@ -85,23 +83,24 @@ function updateCartUI() {
                 <b style="font-size:15px; color:#232f3e;">${item.name}</b><br>
                 <span style="color:#666;">৳ ${item.price} x ${item.quantity}</span>
             </div>
-            <div style="display:flex; align-items:center; gap:15px;"> <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+            <div style="display:flex; align-items:center; gap:15px;"> 
+                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
                 <span class="qty-count">${item.quantity}</span>
                 <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
             </div>`;
-        container.appendChild(div);
+        if (container) container.appendChild(div);
     });
-    totalSpan.innerText = total; // মোট বিল আপডেট
+    if (totalSpan) totalSpan.innerText = total;
 }
 
-// ৪. পরিমাণ পরিবর্তন ফাংশন: পণ্য বাড়ানো বা কমানোর জন্য
+// ৪. পরিমাণ পরিবর্তন
 function changeQty(index, delta) {
     cart[index].quantity += delta;
-    if (cart[index].quantity < 1) cart.splice(index, 1); // ১ এর নিচে গেলে রিমুভ হবে
+    if (cart[index].quantity < 1) cart.splice(index, 1);
     updateCartUI();
 }
 
-// ৫. কার্টে যোগ করার ফাংশন
+// ৫. কার্টে যোগ করা
 function addToCart(id) {
     const p = products.find(prod => prod.id === id);
     const existing = cart.find(item => item.id === id);
@@ -110,24 +109,20 @@ function addToCart(id) {
     
     updateCartUI();
     closeModal();
-    showToast("Added to cart successfully!"); // সফল হলে পপ-আপ মেসেজ দেখাবে
+    showToast("Added to cart successfully!");
 }
 
-// ৬. পপ-আপ মেসেজ (Toast): এটিকে একদম সেন্টারে দেখানোর লজিক
+// ৬. টোস্ট মেসেজ
 function showToast(msg) {
     const t = document.getElementById('toast');
+    if (!t) return;
     t.innerText = msg;
-    t.style.display = "block"; // মেসেজটি দেখাবে
-    
-    // ৩ সেকেন্ড পর মেসেজটি অটোমেটিক চলে যাবে
-    setTimeout(() => {
-        t.style.display = "none";
-    }, 3000);
+    t.style.display = "block"; 
+    setTimeout(() => { t.style.display = "none"; }, 3000);
 }
 
-// ৭. ভ্যালিডেশন: ফরম ঠিকমতো পূরণ না করলে লাল এরর দেখাবে
+// ৭. অর্ডার ভ্যালিডেশন
 function validateAndOrder() {
-    // এরর মেসেজগুলো রিসেট করা
     document.querySelectorAll('.error-text').forEach(e => e.innerText = "");
     document.querySelectorAll('input, textarea, select').forEach(i => i.classList.remove('input-error'));
 
@@ -138,34 +133,29 @@ function validateAndOrder() {
 
     let isValid = true;
 
-    // নাম চেক করা
     if (!name) { showError('orderName', 'nameError', "Full name is required"); isValid = false; }
     
-    // মোবাইল নাম্বার চেক (১১ ডিজিট ও সঠিক অপারেটর কোড)
     const phoneRegex = /^(013|014|015|016|017|018|019)\d{8}$/;
     if (!phone) { showError('orderPhone', 'phoneError', "Mobile number is required"); isValid = false; }
     else if (!phoneRegex.test(phone)) { showError('orderPhone', 'phoneError', "Invalid mobile number"); isValid = false; }
 
-    // ঠিকানা এবং পেমেন্ট চেক
     if (!address) { showError('orderAddress', 'addressError', "Address is required"); isValid = false; }
     if (!payment) { showError('paymentMethod', 'paymentError', "Select payment method"); isValid = false; }
     
     if (cart.length === 0) { alert("Please add products to cart!"); return; }
 
-    // সব ঠিক থাকলে কনফার্মেশন বক্স দেখাবে
     if (isValid) { document.getElementById('confirmBox').style.display = "block"; }
 }
 
-// ৮. এরর হাইলাইট করার ফাংশন
 function showError(id, errId, msg) {
     document.getElementById(id).classList.add('input-error');
     document.getElementById(errId).innerText = msg;
 }
 
-// ৯. ফাইনাল অর্ডার প্রসেস: সফল হলে অভিনন্দন মেসেজ ও আইডি দেখাবে
+// ৯. ফাইনাল অর্ডার এবং সাকসেস মেসেজ
 function finalOrderProcess() {
     document.getElementById('confirmBox').style.display = "none";
-    const orderID = "#00" + (Math.floor(Math.random() * 900) + 100); // র‍্যান্ডম আইডি জেনারেট
+    const orderID = "#00" + (Math.floor(Math.random() * 900) + 100); 
     
     const successBox = document.getElementById('successBox');
     document.getElementById('successMessage').innerHTML = `
@@ -181,7 +171,6 @@ function finalOrderProcess() {
 
     successBox.style.display = "block";
     
-    // ৪ সেকেন্ড পর সবকিছু ক্লিয়ার করে হোমপেজে ফিরবে
     setTimeout(() => {
         successBox.style.display = "none";
         cart = [];
@@ -190,7 +179,7 @@ function finalOrderProcess() {
     }, 4000);
 }
 
-// ইউটিলিটি ফাংশনগুলো (মডাল খোলা, বন্ধ, সার্চ এবং ফিল্টার)
+// মডাল ও সার্চ লজিক
 function openModal(id) {
     const p = products.find(prod => prod.id === id);
     document.getElementById('modal-body').innerHTML = `
@@ -206,13 +195,24 @@ function openModal(id) {
 
 function searchProduct() {
     const query = document.getElementById('searchInput').value.toLowerCase();
-    displayProducts(products.filter(p => p.name.toLowerCase().includes(query)));
+    const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+    displayProducts(filtered);
 }
 
+// ফিল্টার ফাংশন (ব্যানার কন্ট্রোল সহ)
 function filterCategory(cat) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-    displayProducts(cat === 'all' ? products : products.filter(p => p.category === cat));
+    if (event) event.target.classList.add('active');
+    
+    const banner = document.querySelector('.coming-soon-banner');
+    
+    if (cat === 'all') {
+        displayProducts(products);
+        if (banner) banner.style.display = 'block'; // 'All' এ ব্যানার দেখাবে
+    } else {
+        displayProducts(products.filter(p => p.category === cat));
+        if (banner) banner.style.display = 'none'; // অন্য ক্যাটাগরিতে ব্যানার হাইড হবে
+    }
 }
 
 function toggleCart() {
@@ -223,5 +223,8 @@ function toggleCart() {
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
 function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; }
 
-// পেজ লোড হওয়ার সাথে সাথে পণ্যগুলো দেখাবে
-window.onload = () => displayProducts(products);
+// পেজ লোড হওয়া
+window.onload = () => {
+    displayProducts(products);
+    updateCartUI();
+};
