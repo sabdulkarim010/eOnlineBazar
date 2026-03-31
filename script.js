@@ -192,26 +192,27 @@ function validateAndOrder() {
     // ৪. পেমেন্ট মেথড চেক
     const paymentOption = document.querySelector('input[name="payment"]:checked');
     if (!paymentOption) {
-        alert("Please select a payment method!");
+        showToast("Please select a payment method!");
         isValid = false;
     }
 
     // সব ঠিক থাকলে পরবর্তী ধাপে যাবে
-    // সব ঠিক থাকলে পরবর্তী ধাপে যাবে (isValid === true হলে)
-if (isValid) {
-    if (paymentOption.value === 'bkash') {
-        showToast("Redirecting to bKash Gateway..."); // English Message
-    } else if (paymentOption.value === 'nagad') {
-        showToast("Redirecting to Nagad Gateway..."); // English Message
-    } else {
-        showToast("Processing your order..."); 
+    if (isValid) {
+        // পেমেন্ট গেটওয়ে মেসেজ (প্রফেশনাল টোস্ট)
+        if (paymentOption.value === 'bkash') {
+            showToast("Redirecting to bKash Gateway...");
+        } else if (paymentOption.value === 'nagad') {
+            showToast("Redirecting to Nagad Gateway...");
+        } else {
+            showToast("Processing your order...");
+        }
+
+        // ফর্ম হাইড করে রিভিউ বক্স দেখানো (ডাবল পপ-আপ বন্ধ করতে)
+        document.getElementById('order-form-container').style.display = "none";
+        document.getElementById('confirmBox').style.display = "block";
     }
+}
 
-    // আগের মতো কনফার্ম বক্স দেখাবে
-    document.getElementById('confirmBox').style.display = "block";
-   }
-
-   }
 
 
 // ৮. ফাইনাল অর্ডার প্রসেস
