@@ -8,6 +8,59 @@
     <link rel="stylesheet" href="style.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ব্যানার স্টাইল */
+        .coming-soon-banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); /* আপনার দেওয়া ইমেজের নাম অনুযায়ী */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 20px;
+        }
+
+        .banner-content h2 {
+            font-size: 28px;
+            color: #fdb913; /* গোল্ডেন কালার টেক্সট */
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .banner-content p {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        /* প্রোগ্রেস বার অ্যানিমেশন */
+        .progress-container {
+            width: 150px;
+            height: 4px;
+            background: #444;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 50px;
+            height: 100%;
+            background: #fdb913;
+            border-radius: 10px;
+            position: absolute;
+            animation: moveProgress 2s linear infinite;
+        }
+
+        @keyframes moveProgress {
+            0% { left: -50px; }
+            100% { left: 150px; }
+        }
+    </style>
 </head>
 <body>
 
@@ -45,6 +98,18 @@
             <button class="cat-btn" onclick="filterCategory('kids')">Kids Care</button>
         </div>
     </nav>
+
+    <section class="coming-soon-banner">
+        <div class="container">
+            <div class="banner-content">
+                <h2>Coming Soon: A Revolution in Shopping!</h2>
+                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <main class="container">
         <div id="product-grid" class="product-grid"></div>
