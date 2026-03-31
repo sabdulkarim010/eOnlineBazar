@@ -148,6 +148,10 @@ function validateAndOrder() {
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('orderAddress').value.trim();
+
+    // এই লাইনটি অন্য ভেরিয়েবলগুলোর (নাম, ফোন) সাথে যোগ করুন
+     note = document.getElementById('orderNote').value.trim();
+
     const payment = document.getElementById('paymentMethod').value;
 
     let isValid = true;
