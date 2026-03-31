@@ -196,11 +196,20 @@ function finalOrderProcess() {
     
     setTimeout(() => {
         successBox.style.display = "none";
+        
+        // --- ঘরগুলো খালি করার অংশ ---
         cart = [];
+        document.getElementById('orderName').value = "";
+        document.getElementById('orderPhone').value = "";
+        document.getElementById('orderAddress').value = "";
+        document.getElementById('orderNote').value = "";
+        document.getElementById('paymentMethod').value = "";
+        
         updateCartUI();
         toggleCart();
     }, 4000);
 }
+
 
 // মডাল ও সার্চ লজিক
 function openModal(id) {
