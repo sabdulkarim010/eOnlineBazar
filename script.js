@@ -260,3 +260,46 @@ window.onload = () => {
     displayProducts(products);
     updateCartUI();
 };
+
+
+
+let discountPercent = 0; // শুরুতে কোনো ডিসকাউন্ট নেই
+
+// কুপন অ্যাপ্লাই ফাংশন
+function applyCoupon() {
+    const couponCode = document.getElementById('couponInput').value.trim();
+    const message = document.getElementById('couponMessage');
+    
+    if (couponCode === "SAVE10") {
+        discountPercent = 0.10; // ১০% ছাড়
+        message.innerText = "Success! 10% discount applied.";
+        message.style.color = "#28a745";
+    } else {
+        discountPercent = 0;
+        message.innerText = "Invalid Coupon!";
+        message.style.color = "#dc3545";
+    }
+    message.style.display = "block";
+    updateCartUI(); // দাম আপডেট করার জন্য
+}
+
+// পেমেন্ট বাটন সিলেক্ট করার ডিজাইন পরিবর্তন
+function selectPayment(method) {
+    const bkashLabel = document.getElementById('label-bkash');
+    const codLabel = document.getElementById('label-cod');
+    
+    // সব বর্ডার আগে সাধারণ করা
+    bkashLabel.style.borderColor = "#ddd";
+    bkashLabel.style.background = "white";
+    codLabel.style.borderColor = "#ddd";
+    codLabel.style.background = "white";
+    
+    // সিলেক্ট করা বাটনকে হাইলাইট করা
+    const selected = document.getElementById('label-' + method);
+    selected.style.borderColor = "#f85606";
+    selected.style.background = "#fffaf7";
+    
+    // রেডিও বাটন চেক করা
+    document.getElementById('pay-' + method).checked = true;
+}
+
