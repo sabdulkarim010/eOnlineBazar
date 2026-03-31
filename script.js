@@ -69,13 +69,14 @@ function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const totalSpan = document.getElementById('cart-total');
-    const orderForm = document.getElementById('order-form-container'); // ফর্মটি সিলেক্ট করা হলো
+    const orderForm = document.getElementById('order-form-container');
     
     if (count) count.innerText = cart.length;
     if (container) container.innerHTML = "";
+    
     let total = 0;
 
-    // যদি কার্ট খালি থাকে
+    // ১. যদি কার্ট একদম খালি থাকে
     if (cart.length === 0) {
         container.innerHTML = `
             <div style="text-align:center; padding: 40px 20px;">
@@ -84,14 +85,15 @@ function updateCartUI() {
                 <p style="color: #888; font-size: 14px;">No items have been added to your cart yet.</p>
                 <button class="confirm-btn" style="margin-top: 20px; background: #232f3e;" onclick="toggleCart()">Start Shopping</button>
             </div>`;
-        if (orderForm) orderForm.style.display = "none"; // কার্ট খালি থাকলে ফর্ম হাইড হবে
+        if (orderForm) orderForm.style.display = "none";
         if (totalSpan) totalSpan.innerText = "0";
-        return; // ফাংশন এখানেই শেষ
+        return; 
     }
 
-    // যদি কার্টে পণ্য থাকে, তবে ফর্ম দেখাবে
+    // ২. কার্টে পণ্য থাকলে শিপিং ফর্ম দেখাবে
     if (orderForm) orderForm.style.display = "block";
 
+    // ৩. প্রতিটি পণ্যের লিস্ট তৈরি এবং মোট দাম (Total) হিসাব করা
     cart.forEach((item, index) => {
         total += (item.price * item.quantity);
         const div = document.createElement('div');
@@ -108,7 +110,15 @@ function updateCartUI() {
             </div>`;
         if (container) container.appendChild(div);
     });
-    if (totalSpan) totalSpan.innerText = total;
+
+    // ৪. কুপন ডিসকাউন্ট হিসাব করা (discountPercent আগে গ্লোবাল ভেরিয়েবলে থাকতে হবে)
+    let discountAmount = total * discountPercent;
+    let finalTotal = total - discountAmount;
+
+    // ৫. সবশেষে স্ক্রিনে মোট বিল দেখানো
+    if (totalSpan) {
+        totalSpan.innerText = Math.round(finalTotal);
+    }
 }
 
 
