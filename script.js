@@ -69,10 +69,28 @@ function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const totalSpan = document.getElementById('cart-total');
+    const orderForm = document.getElementById('order-form-container'); // ফর্মটি সিলেক্ট করা হলো
     
     if (count) count.innerText = cart.length;
     if (container) container.innerHTML = "";
     let total = 0;
+
+    // যদি কার্ট খালি থাকে
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding: 40px 20px;">
+                <div style="font-size: 60px; margin-bottom: 15px;">🛒</div>
+                <h3 style="color: #555; margin-bottom: 10px;">Your cart is empty!</h3>
+                <p style="color: #888; font-size: 14px;">No items have been added to your cart yet.</p>
+                <button class="confirm-btn" style="margin-top: 20px; background: #232f3e;" onclick="toggleCart()">Start Shopping</button>
+            </div>`;
+        if (orderForm) orderForm.style.display = "none"; // কার্ট খালি থাকলে ফর্ম হাইড হবে
+        if (totalSpan) totalSpan.innerText = "0";
+        return; // ফাংশন এখানেই শেষ
+    }
+
+    // যদি কার্টে পণ্য থাকে, তবে ফর্ম দেখাবে
+    if (orderForm) orderForm.style.display = "block";
 
     cart.forEach((item, index) => {
         total += (item.price * item.quantity);
@@ -92,6 +110,7 @@ function updateCartUI() {
     });
     if (totalSpan) totalSpan.innerText = total;
 }
+
 
 // ৪. পরিমাণ পরিবর্তন
 function changeQty(index, delta) {
