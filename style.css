@@ -85,9 +85,10 @@ header {
 /* --- ৫. ক্যাটাগরি মেনু --- */
 .category-nav {
     background: white;
-    padding: 08px 0;
-    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+    border-bottom: none; /* এই লাইনটি 'none' করে দিন */
 }
+
 
 .cat-flex {
     display: flex;
