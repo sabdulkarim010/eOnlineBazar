@@ -49,96 +49,132 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
-// গ্লোবাল ভেরিয়েবল
-let cart = []; 
-let discountPercent = 0; 
 
-// ২. প্রোডাক্ট ডিসপ্লে ফাংশন
+// ২. প্রোডাক্টগুলো স্ক্রিনে দেখানোর মেইন ফাংশন
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
-    grid.innerHTML = items.map(p => `
-        <div class="product-card">
-            <button class="add-fast-btn" onclick="addToCart(${p.id})">+</button>
-            
-            <div onclick="openModal(${p.id})">
-                <span class="p-img">${p.img}</span>
-                <div class="p-name">${p.name}</div>
-                <div class="p-price">৳ ${p.price}</div>
+    grid.innerHTML = "";
+    items.forEach(product => {
+        grid.innerHTML += `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p class="price">৳${product.price}</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                </div>
             </div>
+        `;
+    });
+}
+
+// ৩. কার্টে পণ্য যোগ করা
+function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(item => item.id === id);
+    if (existing) {
+        existing.quantity++;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
+    updateCartUI();
+    showToast("পণ্যটি কার্টে যোগ করা হয়েছে!");
+}
+
+// ৪. কার্ট আপডেট এবং টাকার হিসাব
+function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const container = document.getElementById('cart-items-container');
+    if (!container) return;
+    
+    container.innerHTML = cart.map(item => `
+        <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:10px; border-bottom:1px solid #eee;">
+            <span>${item.name} (x${item.quantity})</span>
+            <span>৳${item.price * item.quantity}</span>
         </div>
     `).join('');
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    document.getElementById('cart-total').innerText = total;
 }
 
+// ৫. গুগল শিটে অর্ডার পাঠানো (এটিই আপনার মেইন কাজ)
+function finalOrderProcess() {
+    const name = document.getElementById('orderName').value;
+    const phone = document.getElementById('orderPhone').value;
+    const address = document.getElementById('orderAddress').value;
+    const note = document.getElementById('orderNote')?.value || "No Note";
+    const total = document.getElementById('cart-total').innerText;
+    const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
+    const items = cart.map(i => `${i.name} (x${i.quantity})`).join(", ");
 
-// ৩. কার্ট আপডেট (UI)
-function updateCartUI() {
-    const count = document.getElementById('cart-count');
-    const container = document.getElementById('cart-items-container');
-    const totalSpan = document.getElementById('cart-total');
-    const orderForm = document.getElementById('order-form-container');
-    
-    if (count) count.innerText = cart.length;
-    if (container) container.innerHTML = "";
-    
-    let total = 0;
-
-    if (cart.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding: 40px 20px;">
-                <div style="font-size: 60px; margin-bottom: 15px;">🛒</div>
-                <h3 style="color: #555; margin-bottom: 10px;">Your cart is empty!</h3>
-                <p style="color: #888; font-size: 14px;">No items have been added to your cart yet.</p>
-                <button class="confirm-btn" style="margin-top: 20px; background: #232f3e;" onclick="toggleCart()">Start Shopping</button>
-            </div>`;
-        if (orderForm) orderForm.style.display = "none";
-        if (totalSpan) totalSpan.innerText = "0";
-        return; 
+    if(!name || !phone || !address) {
+        alert("অনুগ্রহ করে লাল তারকা চিহ্নিত ঘরগুলো পূরণ করুন।");
+        return;
     }
 
-    if (orderForm) orderForm.style.display = "block";
+    const orderData = { orderID, name, phone, address, note, items, total };
 
-    cart.forEach((item, index) => {
-        total += (item.price * item.quantity);
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
-            <div style="flex:1">
-                <b style="font-size:15px; color:#232f3e;">${item.name}</b><br>
-                <span style="color:#666;">৳ ${item.price} x ${item.quantity}</span>
+    // আপনার গুগল অ্যাপস স্ক্রিপ্ট এর Web App URL এখানে বসান
+    const scriptURL = 'আপনার_Web_App_URL_এখানে_পেস্ট_করুন';
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(orderData)
+    }).then(() => {
+        document.getElementById('cartModal').style.display = "none";
+        document.getElementById('successBox').style.display = "block";
+        document.getElementById('successMessage').innerHTML = `
+            <div style="padding:20px;">
+                <h2 style="color:#28a745;">অর্ডার সফল হয়েছে!</h2>
+                <p>ধন্যবাদ <b>${name}</b>, আপনার অর্ডার আইডি: <b>${orderID}</b></p>
+                <button onclick="location.reload()" style="margin-top:15px; padding:10px 20px; background:#f85606; color:#fff; border:none; border-radius:5px; cursor:pointer;">ঠিক আছে</button>
             </div>
-            <div style="display:flex; align-items:center; gap:15px;"> 
-                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-                <span class="qty-count">${item.quantity}</span>
-                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-            </div>`;
-        if (container) container.appendChild(div);
-    });
+        `;
+        cart = [];
+        updateCartUI();
+    }).catch(err => alert("Error: " + err));
+}
 
-    let discountAmount = total * discountPercent;
-    let finalTotal = total - discountAmount;
+// ৬. সার্চ এবং ফিল্টার ফাংশন
+function searchProduct() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+    displayProducts(filtered);
+}
 
-    if (totalSpan) {
-        totalSpan.innerText = Math.round(finalTotal);
+function filterCategory(cat) {
+    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+    displayProducts(filtered);
+    
+    // বাটন অ্যাক্টিভ করা
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+// ৭. কার্ট মোডাল খোলা/বন্ধ
+function toggleCart() {
+    const modal = document.getElementById('cartModal');
+    modal.style.display = modal.style.display === "block" ? "none" : "block";
+}
+
+// ৮. পেজ লোড হলে প্রোডাক্ট দেখানো (এটি না থাকলে আইটেম আসবে না)
+window.onload = () => {
+    displayProducts(products);
+};
+
+// ৯. টোস্ট নোটিফিকেশন
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    if(toast) {
+        toast.innerText = msg;
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 3000);
     }
 }
 
-// ৪. পরিমাণ পরিবর্তন
-function changeQty(index, delta) {
-    cart[index].quantity += delta;
-    if (cart[index].quantity < 1) cart.splice(index, 1);
-    updateCartUI();
-}
-
-// ৫. কার্টে যোগ করা
-function addToCart(id) {
-    const btn = event.target;
-    const cartIcon = document.querySelector('.cart-area');
-    const productCard = btn.closest('.product-card') || btn.closest('.modal-content');
-
-    if (productCard && cartIcon) {
-        // ১. ছবি বা ইমোজি কন্টেইনার খুঁজে বের করা
-        const targetElement = productCard.querySelector('img') || productCard.querySelector('.p-img') || productCard.querySelector('span');
 
         if (targetElement) {
             const flyingItem = document.createElement(targetElement.tagName === 'IMG' ? 'img' : 'span');
