@@ -298,35 +298,59 @@ function closeConfirm() {
 
 // ৮. ফাইনাল অর্ডার প্রসেস শুরু
 function finalOrderProcess() {
+    // ১. ডাটাগুলো সংগ্রহ করা
+    const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000); // অটো আইডি
+    const name = document.getElementById('orderName').value;
+    const phone = document.getElementById('orderPhone').value;
+    const address = document.getElementById('orderAddress').value;
+    const note = document.getElementById('orderNote')?.value || "No Note"; // Extra Note
+    const total = document.getElementById('cart_total').innerText;
+    
+    // কার্টের সব আইটেম এক লাইনে আনা
+    const items = cart.map(i => `${i.name} (${i.quantity})`).join(", ");
+
+    const orderData = {
+        orderID, name, phone, address, note, items, total
+    };
+
+    // ২. আপনার কপি করা লিঙ্কটি নিচের দুই উদ্ধৃতি চিহ্নের (' ') মাঝে বসান
+    const scriptURL = '  ';
+
+
+
+    
+
+    // ৩. গুগল শিটে ডাটা পাঠানো
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(orderData)
+    }).then(() => {
+        console.log("Success! Data sent to Google Sheet.");
+    }).catch(error => {
+        console.error("Error!", error);
+    });
+
+    // ৪. কাস্টমারকে সাকসেস মেসেজ দেখানো (আপনার আগের কোড অনুযায়ী)
     document.getElementById('confirmBox').style.display = "none";
-    const orderID = "#00" + (Math.floor(Math.random() * 900) + 100);
-
-    
     const successBox = document.getElementById('successBox');
-    document.getElementById('successMessage').innerHTML = `
-        <div style="padding:10px;">
-            <div style="font-size:50px; margin-bottom:10px;">✅</div>
-            <h2 style="color:#28a745; margin-bottom:10px;">Congratulations!</h2>
-            <p>Your order has been placed.</p>
-            <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin:15px 0;">
-                Order ID: <b style="color:#f85606; font-size:18px;">${orderID}</b>
+    if(successBox) {
+        successBox.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <h2 style="color:#28a745;">অর্ডার সফল হয়েছে!</h2>
+                <p>ধন্যবাদ <b>${name}</b>, আপনার অর্ডার আইডি: <b>${orderID}</b></p>
+                <p>শীঘ্রই আপনার সাথে যোগাযোগ করা হবে।</p>
+                <button onclick="location.reload()" style="padding:10px 20px; background:#ff9800; color:#fff; border:none; border-radius:5px; cursor:pointer;">ঠিক আছে</button>
             </div>
-            <p style="font-size:12px; color:#777;">Thank you for shopping with us.</p>
-        </div>`;
+        `;
+        successBox.style.display = "block";
+    }
 
-    successBox.style.display = "block";
-    
-    setTimeout(() => {
-        successBox.style.display = "none";
-        cart = [];
-        document.getElementById('orderName').value = "";
-        document.getElementById('orderPhone').value = "";
-        document.getElementById('orderAddress').value = "";
-        document.getElementById('orderNote').value = "";
-        updateCartUI();
-        toggleCart();
-    }, 4000);
+    // ৫. কার্ট খালি করা
+    cart = [];
+    updateCartUI();
 }
+
 
 // ৯. মডাল ও সার্চ লজিক
 function openModal(id) {
