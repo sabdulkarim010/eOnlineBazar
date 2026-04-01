@@ -275,16 +275,20 @@ function searchProduct() {
     const products = document.querySelectorAll('.product-card');
     
     products.forEach(product => {
+        // এইচ৩ (h3) ট্যাগ থেকে টাইটেল নেওয়া হচ্ছে
         const title = product.querySelector('h3').innerText.toLowerCase();
-        // টাইপ করার সাথে সাথে স্মুথলি হাইড বা শো হবে
-        if(title.includes(term)) {
+        
+        if (title.includes(term)) {
             product.style.display = "block";
-            product.style.animation = "fadeIn 0.5s";
+            // এনিমেশনটি তখনই কাজ করবে যখন CSS এ fadeIn থাকবে
+            product.style.animation = "fadeIn 0.5s ease forwards";
         } else {
             product.style.display = "none";
+            product.style.animation = "none"; // হাইড হলে এনিমেশন বন্ধ
         }
     });
 }
+
 
 
 function filterCategory(cat) {
@@ -306,8 +310,11 @@ function toggleCart() {
     modal.style.display = (modal.style.display === "block") ? "none" : "block";
 }
 
+
+
+
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
-function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; }
+
 
 // ১০. কুপন লজিক
 function applyCoupon() {
