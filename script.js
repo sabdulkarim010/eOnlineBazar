@@ -345,7 +345,7 @@ function showPopup(msg) {
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (ফাইনাল ফিক্স)
 function finalOrderProcess() {
     // আপনার স্ক্রিপ্ট URL (এটি পরিবর্তন করার প্রয়োজন নেই যদি না নতুন করে Deploy করেন)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwgvNY9iEhkdMdcfXl67JIfpa4ZVix1DvlA6yy-i-C3kNKhX94p3-H_gpWtHEfDS856sg/exec'; 
 
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
