@@ -210,14 +210,12 @@
 
     
 
-    <div id="confirmBox" class="success-box" style="display:none;">
-    <div class="success-content">
+    <div id="confirmBox" style="display:none;">
+    <div class="popup-card">
         <h3>Review Your Order</h3>
         <p>Please make sure your phone number and address are correct before proceeding.</p>
-        <div style="display:flex; gap:10px;">
-            <button onclick="closeConfirm()">Edit</button>
-            <button onclick="finalOrderProcess()">Confirm Now</button> 
-        </div>
+        <button class="edit-btn" onclick="closeConfirm()">Edit</button>
+        <button class="confirm-now-btn" onclick="finalOrderProcess()">Confirm Now</button>
     </div>
 </div>
 
