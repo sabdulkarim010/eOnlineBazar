@@ -339,9 +339,11 @@ function showPopup(msg) {
 
 
 
+
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; // <--- এটি চেক করুন
+    // আপনার Web App URL নিশ্চিত করুন
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
 
     // বাটন লোডিং দেখানো
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
@@ -349,30 +351,41 @@ function finalOrderProcess() {
     confirmBtn.innerText = "Sending...";
     confirmBtn.disabled = true;
 
+    // ডাটা সংগ্রহ
     const formData = new URLSearchParams();
     formData.append('name', document.getElementById('orderName').value.trim());
     formData.append('phone', document.getElementById('orderPhone').value.trim());
     formData.append('address', document.getElementById('orderAddress').value.trim());
-    formData.append('note', document.getElementById('orderNote').value.trim());
+    
+    // নোট ফিল্ড চেক (যদি থাকে তবেই ডাটা নিবে)
+    const noteEl = document.getElementById('orderNote');
+    formData.append('note', noteEl ? noteEl.value.trim() : "");
+    
     formData.append('items', JSON.stringify(cart));
     formData.append('total', document.getElementById('cart-total').innerText);
     
-    // পেমেন্ট মেথড চেক
     const paymentEl = document.querySelector('input[name="payment"]:checked');
     formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    fetch(scriptURL, { method: 'POST', body: formData })
-    .then(response => {
-        // অর্ডার সফল হলে
+    // ডাটা পাঠানো (CORS সমস্যা সমাধানের জন্য mode: 'no-cors' যুক্ত করা হয়েছে)
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: formData,
+        mode: 'no-cors' 
+    })
+    .then(() => {
+        // no-cors মোডে সাকসেস মেসেজ সরাসরি দেখানো হয়
         document.getElementById('confirmBox').style.display = 'none';
         alert("Order Placed Successfully!");
+        
+        // কার্ট খালি করা এবং UI আপডেট
         cart = [];
         updateCartUI();
-        toggleCart();
+        if(typeof toggleCart === 'function') toggleCart();
     })
     .catch(error => {
-        // এরর হলে
-        alert("Network Error! Please check your Script URL.");
+        console.error('Error!', error.message);
+        alert("Network Error! Please check your internet or Script URL.");
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
     });
