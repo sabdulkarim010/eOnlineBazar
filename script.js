@@ -376,43 +376,53 @@ function showPopup(msg) {
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    // ফর্ম থেকে সব ডাটা সংগ্রহ করা
+    // ফর্ম থেকে ডাটা সংগ্রহ
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('orderAddress').value.trim();
-    
-    // এই লাইনটি নিশ্চিত করুন: এটি নোটের বক্স থেকে লেখাটি সংগ্রহ করবে
     const note = document.getElementById('orderNote').value.trim(); 
 
-    const cartData = JSON.stringify(cart); // কার্টের পণ্যসমূহ
     const total = document.getElementById('cart-total').innerText;
     const payment = document.querySelector('input[name="payment"]:checked').value;
+    const cartData = JSON.stringify(cart); 
 
-    // গুগল শিটে পাঠানোর জন্য ডাটা তৈরি করা
+    // ডাটা পাঠানোর প্রস্তুতি
     const formData = new URLSearchParams();
     formData.append('name', name);
     formData.append('phone', phone);
     formData.append('address', address);
-    formData.append('note', note); // এখানে 'note' কি-ওয়ার্ডটি ডাটাবেসে তথ্য পাঠাবে
+    formData.append('note', note);
     formData.append('items', cartData);
     formData.append('total', total);
     formData.append('payment', payment);
 
-    // আপনার গুগল অ্যাপ স্ক্রিপ্ট ইউআরএল (এখানে আপনার নিজের URL টি বসবে)
-    const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    // বাটনটিকে সাময়িকভাবে ডিজেবল করা যাতে ডাবল ক্লিক না হয়
+    const confirmBtn = document.querySelector("#confirmBox button:last-child");
+    confirmBtn.disabled = true;
+    confirmBtn.innerText = "Processing...";
+
+    // আপনার গুগল শিট স্ক্রিপ্ট ইউআরএল
+    const scriptURL = 'আপনার_গুগল_স্ক্রিপ্ট_ইউআরএল_এখানে_দিন';
 
     fetch(scriptURL, {
         method: 'POST',
         body: formData
     })
     .then(response => {
-        // অর্ডার সফল হলে সাকসেস মেসেজ দেখানো
-        showSuccessMessage();
+        // সফল হলে মেসেজ দেখানো এবং কার্ট খালি করা
+        document.getElementById('confirmBox').style.display = 'none';
+        showSuccessMessage(); 
+        cart = []; 
+        updateCartUI();
+        toggleCart();
     })
     .catch(error => {
-        console.error('Error!', error.message);
+        alert('Error! Please try again.');
+        confirmBtn.disabled = false;
+        confirmBtn.innerText = "Confirm Now";
     });
 }
+
 
 
 // কুপন, সার্চ এবং অন্যান্য
