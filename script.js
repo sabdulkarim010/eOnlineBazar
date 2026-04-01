@@ -224,92 +224,19 @@ function selectPayment(method) {
 
 
 // ৬. সিরিয়াল ভ্যালিডেশন এবং রিয়েল-টাইম ক্লিয়ার
-function setupValidation() {
-    const inputs = ['orderName', 'orderPhone', 'orderAddress'];
-    inputs.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('input', () => {
-                const err = document.getElementById(id + 'Error');
-                if (id === 'orderName') {
-                    // নাম ২ শব্দ হলে এরর মুছবে
-                    if (el.value.trim().split(/\s+/).filter(w => w.length > 0).length >= 2) {
-                        el.style.borderColor = "#ddd";
-                        if (err) err.innerText = "";
-                    }
-                } else if (id === 'orderPhone') {
-                    const phonePattern = /^(013|014|015|016|017|018|019)\d{8}$/;
-                    if (phonePattern.test(el.value.trim())) {
-                        el.style.borderColor = "#ddd";
-                        if (err) err.innerText = "";
-                    }
-                } else {
-                    if (el.value.trim() !== "") {
-                        el.style.borderColor = "#ddd";
-                        if (err) err.innerText = "";
-                    }
-                }
-            });
-        }
-    });
-}
+// ==========================================
+// সেকশন: ভ্যালিডেশন এবং ইউজার ফিডব্যাক
+// ==========================================
 
-// কনফার্ম বাটন ফাংশন (সিরিয়াল অনুযায়ী মেসেজ আসবে)
-// ১. মেইন ফাংশন: কনফার্ম অর্ডার বাটনে ক্লিক করলে এটি আগে কাজ করবে
-function validateAndOrder() {
-    const name = document.getElementById('orderName');
-    const phone = document.getElementById('orderPhone');
-    const address = document.getElementById('orderAddress');
-    
-    let isValid = true;
-    let errorMsg = "";
-
-    // জাঙ্ক টেক্সট বা আজেবাজে টাইপিং (যেমন: gggggg বা jjjjj) চেক করার লজিক
-    const isJunk = (str) => /(.)\1{4,}/.test(str);
-
-    // নাম চেক (কমপক্ষে ২ শব্দ এবং জাঙ্ক ফিল্টার)
-    if (name.value.trim().split(' ').length < 2 || isJunk(name.value.trim())) {
-        name.style.border = "2px solid red";
-        name.style.backgroundColor = "#ffe6e6";
-        if(!errorMsg) errorMsg = "Please enter your valid full name!";
-        isValid = false;
-    }
-
-    // ফোন চেক (সঠিক ১১ ডিজিট বিডি নাম্বার)
-    if (!/^01[3-9]\d{8}$/.test(phone.value.trim())) {
-        phone.style.border = "2px solid red";
-        phone.style.backgroundColor = "#ffe6e6";
-        if(!errorMsg) errorMsg = "Please enter a valid mobile number!";
-        isValid = false;
-    }
-
-    // ঠিকানা চেক (কমপক্ষে ৩টি শব্দ থাকতে হবে)
-    if (address.value.trim().split(' ').length < 3 || isJunk(address.value.trim())) {
-        address.style.border = "2px solid red";
-        address.style.backgroundColor = "#ffe6e6";
-        if(!errorMsg) errorMsg = "Please provide a complete address!";
-        isValid = false;
-    }
-
-    // কোনো একটি ঘর ভুল থাকলে সেন্টারে পপ-আপ মেসেজ আসবে
-    if (!isValid) {
-        showPopup(errorMsg);
-        return;
-    }
-
-    // সব ঠিক থাকলে রিভিউ বক্স ওপেন হবে
-    document.getElementById('confirmBox').style.display = 'flex';
-}
-
-// ২. টাইপ করার সময় রিয়েল-টাইম কালার চেঞ্জ (সবুজ/লাল) করার লজিক
-const inputs = ['orderName', 'orderPhone', 'orderAddress'];
-inputs.forEach(id => {
+// ১. রিয়েল-টাইম কালার চেঞ্জ লজিক (টাইপ করার সময় কাজ করবে)
+const orderInputs = ['orderName', 'orderPhone', 'orderAddress'];
+orderInputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
         el.addEventListener('input', function() {
-            const value = this.trim ? this.value.trim() : this.value;
-            
-            // ঘর খালি থাকলে ডিফল্ট স্টাইল
+            const value = this.value.trim();
+            const isJunk = /(.)\1{4,}/.test(value); // জাঙ্ক টেক্সট চেক (যেমন: ggggg)
+
             if (value === "") {
                 this.style.border = "1px solid #ddd";
                 this.style.backgroundColor = "#fff";
@@ -318,26 +245,66 @@ inputs.forEach(id => {
 
             let isCorrect = false;
             if (id === 'orderName') {
-                isCorrect = /^[a-zA-Z\s]{4,}$/.test(value) && value.split(' ').length >= 2 && !/(.)\1{4,}/.test(value);
+                isCorrect = /^[a-zA-Z\s\u0980-\u09FF]{4,}$/.test(value) && value.split(/\s+/).length >= 2 && !isJunk;
             } else if (id === 'orderPhone') {
-                isCorrect = /^01[3-9]\d{8}$/.test(value);
+                isCorrect = /^(013|014|015|016|017|018|019)\d{8}$/.test(value);
             } else if (id === 'orderAddress') {
-                isCorrect = value.split(' ').length >= 3 && !/(.)\1{4,}/.test(value);
+                isCorrect = value.split(/\s+/).length >= 3 && !isJunk;
             }
 
-            // সঠিক হলে সবুজ, ভুল হলে লাল বর্ডার ও হাইলাইট
+            // রেজাল্ট অনুযায়ী বর্ডার কালার পরিবর্তন
             if (isCorrect) {
-                this.style.border = "2px solid #28a745";
+                this.style.border = "2px solid #28a745"; // সবুজ
                 this.style.backgroundColor = "#f0fff0";
             } else {
-                this.style.border = "2px solid #dc3545";
+                this.style.border = "2px solid #dc3545"; // লাল
                 this.style.backgroundColor = "#fff5f5";
             }
         });
     }
 });
 
-// ৩. সেন্টারে (Center) পপ-আপ মেসেজ দেখানোর ফাংশন
+// ২. মেইন ফাংশন (বাটনে ক্লিক করলে যা হবে)
+function validateAndOrder() {
+    const name = document.getElementById('orderName');
+    const phone = document.getElementById('orderPhone');
+    const address = document.getElementById('orderAddress');
+    
+    let isValid = true;
+    let errorMsg = "";
+    const isJunk = (str) => /(.)\1{4,}/.test(str);
+
+    // নাম চেক
+    if (name.value.trim().split(/\s+/).length < 2 || isJunk(name.value.trim())) {
+        name.style.border = "2px solid red";
+        if(!errorMsg) errorMsg = "Please enter your valid full name!";
+        isValid = false;
+    }
+
+    // ফোন চেক
+    if (!/^(013|014|015|016|017|018|019)\d{8}$/.test(phone.value.trim())) {
+        phone.style.border = "2px solid red";
+        if(!errorMsg) errorMsg = "Please enter a valid mobile number!";
+        isValid = false;
+    }
+
+    // ঠিকানা চেক
+    if (address.value.trim().split(/\s+/).length < 3 || isJunk(address.value.trim())) {
+        address.style.border = "2px solid red";
+        if(!errorMsg) errorMsg = "Please provide a complete address!";
+        isValid = false;
+    }
+
+    if (!isValid) {
+        showPopup(errorMsg);
+        return;
+    }
+
+    // সব ঠিক থাকলে রিভিউ বক্স দেখাবে
+    document.getElementById('confirmBox').style.display = 'flex';
+}
+
+// ৩. সাহায্যকারী ফাংশন (সেন্টারে পপ-আপ মেসেজ)
 function showPopup(msg) {
     let toast = document.getElementById('toast');
     if(!toast) {
@@ -347,7 +314,6 @@ function showPopup(msg) {
     }
     
     toast.innerText = msg;
-    // স্টাইল যা মেসেজটিকে স্ক্রিনের একদম মাঝখানে আনবে
     Object.assign(toast.style, {
         display: 'block',
         position: 'fixed',
@@ -360,16 +326,15 @@ function showPopup(msg) {
         borderRadius: '10px',
         zIndex: '10001',
         textAlign: 'center',
-        boxShadow: '0 5px 20px rgba(0,0,0,0.3)',
+        boxShadow: '0 5px 20px rgba(0,0,0,0.5)',
         fontSize: '16px',
         fontWeight: 'bold',
         minWidth: '280px'
     });
 
-    // ২ সেকেন্ড পর অটো হাইড হয়ে যাবে
     setTimeout(() => {
         toast.style.display = 'none';
-    }, 2000);
+    }, 2500);
 }
 
 
