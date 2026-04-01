@@ -266,21 +266,38 @@ orderInputs.forEach(id => {
 
 // ২. মেইন ফাংশন (বাটনে ক্লিক করলে যা হবে)
 function validateAndOrder() {
+    // ইনপুট ফিল্ড থেকে ডাটা নেওয়া
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('orderAddress').value.trim();
     
-    // ভ্যালিডেশন চেক
-    if (name.split(' ').length < 2) { showToast("Enter full name!"); return; }
-    if (!/^01[3-9]\d{8}$/.test(phone)) { showToast("Invalid phone number!"); return; }
-    if (address.length < 5) { showToast("Enter full address!"); return; }
+    // ১. ভ্যালিডেশন চেক (ভুল থাকলে এখানেই আটকে দেবে)
+    if (name.split(' ').length < 2) { 
+        showToast("Please enter your full name!"); 
+        return; 
+    }
+    if (!/^01[3-9]\d{8}$/.test(phone)) { 
+        showToast("Please enter a valid 11-digit phone number!"); 
+        return; 
+    }
+    if (address.length < 5) { 
+        showToast("Please enter your full address!"); 
+        return; 
+    }
 
-    // নিচের লাইনটি আপনার ডাবল পপ-আপ সমস্যা দূর করবে
+    // ২. কার্ট মডালটি বন্ধ করা
     const cartModal = document.getElementById('cartModal');
-    if(cartModal) cartModal.style.display = 'none'; 
+    if (cartModal) {
+        cartModal.style.display = 'none';
+    }
 
-    // এবার রিভিউ বক্স দেখান
-    document.getElementById('confirmBox').style.display = 'flex';
+    // ৩. রিভিউ বক্সটি (Confirm Box) দেখানো
+    const confirmBox = document.getElementById('confirmBox');
+    if (confirmBox) {
+        confirmBox.style.display = 'flex'; // এটি নিশ্চিত করবে যে বক্সটি সামনে আসবে
+    } else {
+        console.error("confirmBox element not found!");
+    }
 }
 
 
