@@ -376,7 +376,7 @@ function showPopup(msg) {
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    const scriptURL = 'এখানে_আপনার_আসল_গুগল_স্ক্রিপ্ট_লিংক_দিন'; // <--- এটি চেক করুন
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; // <--- এটি চেক করুন
 
     // বাটন লোডিং দেখানো
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
