@@ -51,18 +51,18 @@ const products = [
 
 
 
-// --- গ্লোবাল ভেরিয়েবল ---
+// ১. গ্লোবাল ভেরিয়েবল
 let cart = []; 
 let discountPercent = 0; 
 
-// ১. পেজ লোড হলে পণ্য প্রদর্শন
+// ২. প্রোডাক্ট ডিসপ্লে (Item এ ক্লিক করলে সরাসরি কার্টে যোগ হবে এবং কার্ট ওপেন হবে)
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
     grid.innerHTML = items.map(p => `
-        <div class="product-card">
-            <button class="add-fast-btn" onclick="addToCart(${p.id})">+</button>
-            <div onclick="openModal(${p.id})">
+        <div class="product-card" onclick="addToCartAndOpen(${p.id})">
+            <button class="add-fast-btn">+</button>
+            <div>
                 <span class="p-img">${p.img}</span>
                 <div class="p-name">${p.name}</div>
                 <div class="p-price">৳ ${p.price}</div>
@@ -71,51 +71,31 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ২. ওড়ার অ্যানিমেশন সহ কার্টে যোগ (Flying Animation)
+// ৩. অটো ডিরেক্ট কার্ট ফাংশন (নির্দেশনা ১ অনুযায়ী)
+function addToCartAndOpen(id) {
+    addToCart(id); // কার্টে যোগ করবে
+    setTimeout(() => {
+        const modal = document.getElementById('cartModal');
+        if (modal) modal.style.display = "block"; // অটো কার্ট ওপেন হবে
+    }, 500);
+}
+
+// ৪. কার্টে যোগ করার মূল লজিক এবং অ্যানিমেশন
 function addToCart(id) {
-    const btn = event.target;
-    const cartIcon = document.querySelector('.cart-wrapper'); 
-    const productCard = btn.closest('.product-card') || btn.closest('.modal-content');
-
-    if (productCard && cartIcon) {
-        const targetElement = productCard.querySelector('.p-img') || productCard.querySelector('span');
-        if (targetElement) {
-            const flyingItem = document.createElement('span');
-            flyingItem.innerText = targetElement.innerText;
-            const rect = targetElement.getBoundingClientRect();
-            const cartRect = cartIcon.getBoundingClientRect();
-
-            flyingItem.style.cssText = `
-                position: fixed; z-index: 9999; top: ${rect.top}px; left: ${rect.left}px;
-                width: ${rect.width}px; height: ${rect.height}px; font-size: 40px;
-                transition: all 0.9s cubic-bezier(0.24, 1.05, 0.72, 1.1); pointer-events: none;
-            `;
-            document.body.appendChild(flyingItem);
-
-            setTimeout(() => {
-                flyingItem.style.top = cartRect.top + 'px';
-                flyingItem.style.left = cartRect.left + 'px';
-                flyingItem.style.width = '15px';
-                flyingItem.style.height = '15px';
-                flyingItem.style.opacity = '0.4';
-                flyingItem.style.transform = 'rotate(360deg)';
-            }, 50);
-
-            setTimeout(() => { flyingItem.remove(); }, 900);
-        }
-    }
-
     const product = products.find(p => p.id === id);
     if (product) {
         let existing = cart.find(item => item.id === id);
-        if (existing) { existing.quantity++; } 
-        else { cart.push({ ...product, quantity: 1 }); }
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
         updateCartUI();
-        showToast(product.name + " added!");
+        showToast(product.name + " added successfully!");
     }
 }
 
-// ৩. কার্ট UI আপডেট
+// ৫. কার্ট UI (ইংরেজিতে প্রফেশনাল লুক - নির্দেশনা ২ ও ৪ অনুযায়ী)
 function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
@@ -127,7 +107,7 @@ function updateCartUI() {
     
     let total = 0;
     if (cart.length === 0) {
-        if (container) container.innerHTML = "<p style='text-align:center; padding:30px;'>Your cart is empty!</p>";
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:#888;">Your cart is empty!</p>`;
         if (orderForm) orderForm.style.display = "none";
         if (totalSpan) totalSpan.innerText = "0";
         return; 
@@ -140,11 +120,14 @@ function updateCartUI() {
         const div = document.createElement('div');
         div.className = 'cart-item';
         div.innerHTML = `
-            <div style="flex:1"><b>${item.name}</b><br>৳ ${item.price} x ${item.quantity}</div>
+            <div style="flex:1">
+                <b style="color:#232f3e;">${item.name}</b><br>
+                <span style="color:#666;">৳ ${item.price} x ${item.quantity}</span>
+            </div>
             <div style="display:flex; align-items:center; gap:10px;">
-                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(${index}, -1)">−</button>
                 <span>${item.quantity}</span>
-                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(${index}, 1)">+</button>
             </div>`;
         container.appendChild(div);
     });
@@ -159,94 +142,68 @@ function changeQty(index, delta) {
     updateCartUI();
 }
 
-// ৪. কুপন এবং পেমেন্ট সিলেকশন
-function applyCoupon() {
-    const val = document.getElementById('couponInput').value.trim();
-    const msg = document.getElementById('couponMessage');
-    if (val === "SAVE10") {
-        discountPercent = 0.10; msg.innerText = "Success! 10% applied."; msg.style.color = "green";
-    } else {
-        discountPercent = 0; msg.innerText = "Invalid Coupon!"; msg.style.color = "red";
-    }
-    msg.style.display = "block"; updateCartUI();
-}
-
-function selectPayment(method) {
-    ['bkash', 'nagad', 'cod'].forEach(m => {
-        const label = document.getElementById('label-' + m);
-        if (label) { label.style.borderColor = "#ddd"; label.style.background = "white"; }
-    });
-    const active = document.getElementById('label-' + method);
-    if (active) { active.style.borderColor = "#f85606"; active.style.background = "#fffaf7"; }
-    const radio = document.getElementById('pay-' + method);
-    if (radio) radio.checked = true;
-}
-
-// ৫. সার্চ এবং ফিল্টার
-function searchProduct() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
-    });
-}
-
-// ৬. প্রফেশনাল ভ্যালিডেশন (ইংরেজিতে এরর মেসেজ ও রেড বর্ডার)
+// ৬. প্রফেশনাল ভ্যালিডেশন (নির্দেশনা ৩ অনুযায়ী - সম্পূর্ণ ইংরেজিতে)
 function validateAndOrder() {
     const name = document.getElementById('orderName');
     const phone = document.getElementById('orderPhone');
     const address = document.getElementById('orderAddress');
+    const payment = document.querySelector('input[name="payment"]:checked');
     
     const nameError = document.getElementById('nameError');
     const phoneError = document.getElementById('phoneError');
     const addressError = document.getElementById('addressError');
 
     let isValid = true;
-
-    // রিসেট স্টাইল
     [name, phone, address].forEach(el => el.style.borderColor = "#ddd");
     [nameError, phoneError, addressError].forEach(el => el.innerText = "");
 
     if (!name.value.trim()) {
         name.style.borderColor = "red";
-        nameError.innerText = "Please enter your full name";
+        nameError.innerText = "Full name is required";
         isValid = false;
     }
 
     const phonePattern = /^(013|014|015|016|017|018|019)\d{8}$/;
     if (!phone.value.trim() || !phonePattern.test(phone.value.trim())) {
         phone.style.borderColor = "red";
-        phoneError.innerText = "Enter a valid 11-digit BD number";
+        phoneError.innerText = "Valid 11-digit BD number required";
         isValid = false;
     }
 
     if (!address.value.trim()) {
         address.style.borderColor = "red";
-        addressError.innerText = "Please enter your full address";
+        addressError.innerText = "Shipping address is required";
         isValid = false;
     }
 
-    const payment = document.querySelector('input[name="payment"]:checked');
     if (!payment) {
-        showToast("Please select a payment method!");
+        showToast("Please select a Payment Method!");
         isValid = false;
     }
 
     if (isValid) {
+        // পেমেন্ট মেথড ডিটেইলস শো করা (নির্দেশনা ৪)
+        const method = payment.value.toUpperCase();
+        showToast("Selected Payment: " + method);
+        
         document.getElementById('order-form-container').style.display = "none";
         document.getElementById('confirmBox').style.display = "block";
     }
 }
 
-// ৭. ডেটাবেস (গুগল শিট) প্রসেস
+// ৭. ফাইনাল অর্ডার ও সাকসেস মেসেজ (নির্দেশনা ৫ অনুযায়ী - ইংরেজিতে ধন্যবাদ)
 function finalOrderProcess() {
     const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
+    
+    const payment = document.querySelector('input[name="payment"]:checked').value;
 
     const orderData = {
         orderID,
         name: document.getElementById('orderName').value,
         phone: document.getElementById('orderPhone').value,
         address: document.getElementById('orderAddress').value,
+        paymentMethod: payment,
         items: cart.map(i => `${i.name} (${i.quantity})`).join(", "),
         total: document.getElementById('cart-total').innerText
     };
@@ -255,38 +212,43 @@ function finalOrderProcess() {
 
     document.getElementById('confirmBox').style.display = "none";
     const success = document.getElementById('successBox');
+    
+    // ইংরেজিতে প্রফেশনাল ধন্যবাদ মেসেজ (নির্দেশনা ৫)
     success.innerHTML = `
-        <div style="text-align:center; padding:20px;">
-            <h2 style="color:#28a745;">ধন্যবাদ!</h2>
-            <p>অর্ডার সফল হয়েছে। আইডি: <b>${orderID}</b></p>
-            <button onclick="location.reload()" style="margin-top:15px; padding:10px 20px; background:#f85606; color:white; border:none; border-radius:5px; cursor:pointer;">ঠিক আছে</button>
+        <div style="text-align:center; padding:30px;">
+            <div style="font-size:50px; color:#28a745;">✔</div>
+            <h2 style="color:#232f3e; margin:15px 0;">Thank You!</h2>
+            <p style="color:#555;">Your order has been placed successfully.</p>
+            <p style="font-size:18px; margin:10px 0;">Order ID: <b>${orderID}</b></p>
+            <p style="font-size:14px; color:#888;">Payment Method: ${payment.toUpperCase()}</p>
+            <button onclick="location.reload()" style="margin-top:20px; padding:12px 25px; background:#f85606; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">BACK TO SHOP</button>
         </div>`;
+    
     success.style.display = "block";
     cart = []; updateCartUI();
 }
 
-// ৮. অন্যান্য লজিক
-function openModal(id) {
-    const p = products.find(prod => prod.id === id);
-    document.getElementById('modal-body').innerHTML = `
-        <div style="text-align:center;">
-            <span style="font-size:70px;">${p.img}</span>
-            <h2>${p.name}</h2><p>${p.desc}</p><h3>৳ ${p.price}</h3>
-            <button class="confirm-btn" onclick="addToCart(${p.id})">ADD TO CART</button>
-        </div>`;
-    document.getElementById('productModal').style.display = "block";
-}
-
+// ৮. অন্যান্য দরকারি ফাংশন
 function toggleCart() {
     const m = document.getElementById('cartModal');
     m.style.display = (m.style.display === "block") ? "none" : "block";
 }
-function closeModal() { document.getElementById('productModal').style.display = "none"; }
-function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; document.getElementById('order-form-container').style.display = "block"; }
-
-window.onload = () => { displayProducts(products); updateCartUI(); };
 
 function showToast(msg) {
     let t = document.getElementById('toast');
-    if(t) { t.innerText = msg; t.style.display = "block"; setTimeout(() => { t.style.display = "none"; }, 2500); }
+    if(t) { 
+        t.innerText = msg; t.style.display = "block"; 
+        setTimeout(() => { t.style.display = "none"; }, 3000); 
+    }
 }
+
+function selectPayment(method) {
+    document.querySelectorAll('.payment-label').forEach(el => {
+        el.style.borderColor = "#ddd"; el.style.background = "white";
+    });
+    const active = document.getElementById('label-' + method);
+    if (active) { active.style.borderColor = "#f85606"; active.style.background = "#fffaf7"; }
+    document.getElementById('pay-' + method).checked = true;
+}
+
+window.onload = () => { displayProducts(products); updateCartUI(); };
