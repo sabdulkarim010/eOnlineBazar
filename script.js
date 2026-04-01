@@ -304,7 +304,7 @@ function finalOrderProcess() {
     const phone = document.getElementById('orderPhone').value;
     const address = document.getElementById('orderAddress').value;
     const note = document.getElementById('orderNote')?.value || "No Note"; // Extra Note
-    const total = document.getElementById('cart_total').innerText;
+    const total = document.getElementById('cart-total').innerText;
     
     // কার্টের সব আইটেম এক লাইনে আনা
     const items = cart.map(i => `${i.name} (${i.quantity})`).join(", ");
