@@ -199,21 +199,29 @@ function updateCartUI() {
 }
 
 // ৫. পেমেন্ট হাইলাইট (কোনোটিই ডিফল্ট হাইলাইট থাকবে না)
+// পেমেন্ট মেথড সিলেক্ট করার ফাংশন
 function selectPayment(method) {
-    document.querySelectorAll('.payment-label').forEach(label => {
-        label.style.borderColor = "#ddd";
-        label.style.background = "white";
+    // প্রথমে সব লেবেল থেকে হাইলাইট স্টাইল সরিয়ে ফেলুন
+    const labels = ['label-bkash', 'label-nagad', 'label-cod'];
+    labels.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.style.border = "2px solid #ddd"; // ডিফল্ট বর্ডার
+            element.style.background = "none";       // ব্যাকগ্রাউন্ড রিমুভ
+        }
     });
 
-    const activeLabel = document.getElementById('label-' + method);
-    if (activeLabel) {
-        activeLabel.style.borderColor = "#f85606"; 
-        activeLabel.style.background = "#fffaf7"; 
+    // এখন যেটিতে ক্লিক করা হয়েছে সেটিকে হাইলাইট করুন
+    const selectedLabel = document.getElementById('label-' + method);
+    const selectedRadio = document.getElementById('pay-' + method);
+    
+    if (selectedLabel && selectedRadio) {
+        selectedLabel.style.border = "2px solid #f85606"; // হাইলাইট কালার
+        selectedLabel.style.background = "#fff5f0";      // হালকা ব্যাকগ্রাউন্ড
+        selectedRadio.checked = true;                    // রেডিও বাটন সিলেক্ট
     }
-
-    const radio = document.getElementById('pay-' + method);
-    if (radio) radio.checked = true;
 }
+
 
 // ৬. সিরিয়াল ভ্যালিডেশন এবং রিয়েল-টাইম ক্লিয়ার
 function setupValidation() {
