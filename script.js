@@ -341,77 +341,113 @@ function showPopup(msg) {
 
 
 
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (সম্পূর্ণ আপডেট ভার্সন)
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (ফাইনাল ফিক্স)
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    // আপনার স্ক্রিপ্ট URL (এটি পরিবর্তন করার প্রয়োজন নেই যদি না নতুন করে Deploy করেন)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwgvNY9iEhkdMdcfXl67JIfpa4ZVix1DvlA6yy-i-C3kNKhX94p3-H_gpWtHEfDS856sg/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
-    
-    // প্রফেশনাল লোডিং স্টাইল
-    confirmBtn.innerText = "Sending...";
+    confirmBtn.innerText = "Processing...";
     confirmBtn.disabled = true;
 
-    // ডাটা সংগ্রহ
+    // ১. ইউনিক অর্ডার আইডি জেনারেট করা (যেমন: #00109)
+    const orderId = "#" + Math.floor(10000 + Math.random() * 90000).toString().substring(0, 5);
+
     const formData = new URLSearchParams();
-    formData.append('name', document.getElementById('orderName').value.trim());
-    formData.append('phone', document.getElementById('orderPhone').value.trim());
-    formData.append('address', document.getElementById('orderAddress').value.trim());
+    formData.append('Order ID', orderId); // এক্সেলে 'Order ID' কলামে জমা হবে
+    formData.append('Name', document.getElementById('orderName').value.trim());
+    formData.append('Phone', document.getElementById('orderPhone').value.trim());
+    formData.append('Address', document.getElementById('orderAddress').value.trim());
     
-    // আপনার এক্সেলে যেহেতু 'Note' লেখা, তাই এখানে 'note' কি (key) ব্যবহার করা হয়েছে
     const noteEl = document.getElementById('orderNote');
-    formData.append('note', noteEl ? noteEl.value.trim() : "");
+    formData.append('Note', noteEl ? noteEl.value.trim() : "");
     
-    formData.append('items', JSON.stringify(cart));
-    formData.append('total', document.getElementById('cart-total').innerText);
+    formData.append('Items', JSON.stringify(cart));
+    formData.append('Total', document.getElementById('cart-total').innerText);
     
     const paymentEl = document.querySelector('input[name="payment"]:checked');
-    formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
+    formData.append('Payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    // fetch এর মাধ্যমে ডাটা পাঠানো (Network Error সমাধান করার জন্য mode: 'no-cors' মাস্ট)
+    // ডাটা পাঠানো
     fetch(scriptURL, { 
         method: 'POST', 
         body: formData,
         mode: 'no-cors' 
     })
     .then(() => {
-        // অর্ডার সফল হওয়ার পর কাজ
+        // অর্ডার সফল হলে কনফার্ম বক্স বন্ধ করা
         document.getElementById('confirmBox').style.display = 'none';
         
-        // সুন্দর পপ-আপ মেসেজ
-        if(typeof showPopup === 'function') {
-            showPopup("✅ Order Placed Successfully!");
-        } else {
-            alert("Order Placed Successfully!");
-        }
-        
-        // কার্ট এবং UI রিসেট
+        // ২. সুন্দর প্রফেশনাল পপ-আপ দেখানো
+        showSuccessPopup(orderId);
+
+        // কার্ট ও ফর্ম ক্লিয়ার করা
         cart = [];
         updateCartUI();
+        if(typeof toggleCart === 'function') {
+            const m = document.getElementById('cartModal');
+            if(m) m.style.display = "none";
+        }
         
-        // যদি কার্ট খোলা থাকে তবে তা বন্ধ করা
-        const cartModal = document.getElementById('cartModal');
-        if(cartModal) cartModal.style.display = 'none';
-
-        // ফর্ম ক্লিয়ার করা
+        // ফর্ম রিসেট
         document.getElementById('orderName').value = "";
         document.getElementById('orderPhone').value = "";
         document.getElementById('orderAddress').value = "";
         if(noteEl) noteEl.value = "";
         
-        // বাটন আগের অবস্থায় আনা
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
     })
     .catch(error => {
-        console.error('Error!', error.message);
-        alert("Something went wrong! Please check your internet or try again.");
+        alert("Network Error! Please check your connection.");
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
     });
 }
+
+// ৮. প্রফেশনাল সাকসেস পপ-আপ ফাংশন (১০ সেকেন্ড থাকবে)
+function showSuccessPopup(orderId) {
+    // আগের কোনো পপ-আপ থাকলে সরিয়ে ফেলা
+    const oldPopup = document.getElementById('success-popup');
+    if(oldPopup) oldPopup.remove();
+
+    const popup = document.createElement('div');
+    popup.id = 'success-popup';
+    
+    // পপ-আপ এর ভিতরের কন্টেন্ট (আপনার স্ক্রিনশটের মতো ডিজাইন)
+    popup.innerHTML = `
+        <div class="popup-content">
+            <div class="check-icon">✅</div>
+            <h2>Congratulations!</h2>
+            <p>Thank you for your purchase. Your order has been placed.</p>
+            <div class="order-id-box">
+                Order ID: <span>${orderId}</span>
+            </div>
+            <p class="footer-msg">We will call you shortly for confirmation.</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="close-popup-btn">Close</button>
+        </div>
+    `;
+
+    // পপ-আপ স্টাইল
+    Object.assign(popup.style, {
+        position: 'fixed',
+        top: '0', left: '0', width: '100%', height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: '10005',
+        fontFamily: 'Arial, sans-serif'
+    });
+
+    document.body.appendChild(popup);
+
+    // ১০ সেকেন্ড পর অটোমেটিক রিমুভ হওয়া
+    setTimeout(() => {
+        if(document.getElementById('success-popup')) {
+            popup.remove();
+        }
+    }, 10000); 
+}
+
 
 
 
