@@ -405,48 +405,85 @@ function finalOrderProcess() {
     });
 }
 
-// ৮. প্রফেশনাল সাকসেস পপ-আপ ফাংশন (১০ সেকেন্ড থাকবে)
+
+// ৮. প্রফেশনাল সাকসেস পপ-আপ (স্মুথ এনিমেশন ও মডার্ন ডিজাইন)
 function showSuccessPopup(orderId) {
     // আগের কোনো পপ-আপ থাকলে সরিয়ে ফেলা
     const oldPopup = document.getElementById('success-popup');
     if(oldPopup) oldPopup.remove();
 
+    // ১. মেইন কন্টেইনার তৈরি
     const popup = document.createElement('div');
     popup.id = 'success-popup';
     
-    // পপ-আপ এর ভিতরের কন্টেন্ট (আপনার স্ক্রিনশটের মতো ডিজাইন)
+    // ২. পপ-আপ এর জন্য প্রয়োজনীয় স্টাইল (জাভাস্ক্রিপ্টের মাধ্যমেই সরাসরি)
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #success-popup {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: flex; align-items: center;
+            justify-content: center; z-index: 99999; animation: fadeIn 0.4s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .popup-card {
+            background: white; padding: 40px 20px; border-radius: 25px;
+            text-align: center; max-width: 380px; width: 90%;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .success-icon svg {
+            width: 80px; height: 80px; stroke: #4caf50; stroke-width: 3;
+            stroke-linecap: round; stroke-linejoin: round; margin-bottom: 20px;
+        }
+        .order-id-display {
+            background: #f1f2f6; padding: 15px; border-radius: 12px;
+            margin: 20px 0; font-size: 18px; font-weight: bold;
+            border: 2px dashed #dfe6e9; color: #2d3436;
+        }
+        .order-id-display span { color: #f85606; }
+        .popup-close-btn {
+            background: #f85606; color: white; border: none;
+            padding: 12px 35px; border-radius: 30px; font-weight: bold;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+        .popup-close-btn:hover { background: #d44a05; transform: scale(1.05); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    `;
+    document.head.appendChild(style);
+
+    // ৩. পপ-আপ এর ভিতরের কন্টেন্ট (আপনার স্ক্রিনশটের মতো)
     popup.innerHTML = `
-        <div class="popup-content">
-            <div class="check-icon">✅</div>
-            <h2>Congratulations!</h2>
-            <p>Thank you for your purchase. Your order has been placed.</p>
-            <div class="order-id-box">
+        <div class="popup-card">
+            <div class="success-icon">
+                <svg viewBox="0 0 52 52">
+                    <circle cx="26" cy="26" r="25" fill="none" stroke="#4caf50" stroke-width="3"/>
+                    <path fill="none" stroke="#4caf50" stroke-width="3" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h2 style="margin:0; color:#2d3436;">Congratulations!</h2>
+            <p style="color:#636e72; margin: 15px 0;">Thank you for your purchase.<br>Your order has been placed.</p>
+            <div class="order-id-display">
                 Order ID: <span>${orderId}</span>
             </div>
-            <p class="footer-msg">We will call you shortly for confirmation.</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="close-popup-btn">Close</button>
+            <p style="font-size:14px; color:#b2bec3; margin-bottom:20px;">We will call you shortly for confirmation.</p>
+            <button onclick="document.getElementById('success-popup').remove()" class="popup-close-btn">Close</button>
         </div>
     `;
 
-    // পপ-আপ স্টাইল
-    Object.assign(popup.style, {
-        position: 'fixed',
-        top: '0', left: '0', width: '100%', height: '100%',
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        zIndex: '10005',
-        fontFamily: 'Arial, sans-serif'
-    });
-
     document.body.appendChild(popup);
 
-    // ১০ সেকেন্ড পর অটোমেটিক রিমুভ হওয়া
+    // ৪. ১০ সেকেন্ড পর স্মুথলি ফিকে হয়ে চলে যাবে
     setTimeout(() => {
-        if(document.getElementById('success-popup')) {
-            popup.remove();
+        const p = document.getElementById('success-popup');
+        if(p) {
+            p.style.opacity = '0';
+            p.style.transition = 'opacity 1s ease';
+            setTimeout(() => p.remove(), 1000);
         }
     }, 10000); 
 }
+
 
 
 
