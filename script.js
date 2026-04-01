@@ -1,11 +1,6 @@
-/* Project: eOnlineBazar - Integrated Data & UI Fix 
-   Updated by: Gemini 
-   Date: April 2026 
-*/
-
-// ১. পণ্য তালিকা (৪০টি প্রোডাক্ট)
+// ১. পণ্য তালিকা (৪০টি প্রোডাক্ট - আপনার দেয়া ডাটা অনুযায়ী)
 const products = [
-    // Grocery (মুদি সওদা)
+    // Grocery
     { id: 1, name: "Premium Miniket Rice (5kg)", price: 490, category: "grocery", img: "🍚", desc: "Pure and clean long-grain miniket rice." },
     { id: 2, name: "Pure Mustard Oil (1L)", price: 280, category: "grocery", img: "🧴", desc: "Traditionally pressed pungent mustard oil." },
     { id: 3, name: "Natural Flower Honey (500g)", price: 550, category: "grocery", img: "🍯", desc: "100% organic honey from natural sources." },
@@ -16,8 +11,7 @@ const products = [
     { id: 8, name: "Iodized Salt (1kg)", price: 45, category: "grocery", img: "🧂", desc: "Pure vacuum evaporated salt." },
     { id: 9, name: "Spices Combo Pack", price: 220, category: "grocery", img: "🌶️", desc: "Chilli, Turmeric, and Cumin set." },
     { id: 10, name: "Black Tea (200g)", price: 120, category: "grocery", img: "☕", desc: "Strong blend for tea lovers." },
-
-    // Electronics (ইলেকট্রনিক্স)
+    // Electronics
     { id: 11, name: "Smart Watch T800 Ultra", price: 1250, category: "electronics", img: "⌚", desc: "Calling feature with health tracking." },
     { id: 12, name: "Wireless Bluetooth Earbuds", price: 850, category: "electronics", img: "🎧", desc: "High bass with long battery life." },
     { id: 13, name: "Power Bank 20,000mAh", price: 1850, category: "electronics", img: "🔋", desc: "Fast charging portable power." },
@@ -28,8 +22,7 @@ const products = [
     { id: 18, name: "WiFi Router 300Mbps", price: 1450, category: "electronics", img: "📶", desc: "Stable internet coverage." },
     { id: 19, name: "Digital Kitchen Scale", price: 420, category: "electronics", img: "⚖️", desc: "Precise food weight measurement." },
     { id: 20, name: "Multi-plug 5 Socket", price: 350, category: "electronics", img: "🔌", desc: "Surge protected power strip." },
-
-    // Cosmetics (প্রসাধন সামগ্রী)
+    // Cosmetics
     { id: 21, name: "Matte Lipstick Set", price: 750, category: "cosmetics", img: "💄", desc: "Long-lasting vibrant shades." },
     { id: 22, name: "Face Wash Brightening", price: 320, category: "cosmetics", img: "🧼", desc: "Deep cleaning skin care." },
     { id: 23, name: "Sunscreen SPF 50", price: 650, category: "cosmetics", img: "☀️", desc: "Ultimate UV protection." },
@@ -40,8 +33,7 @@ const products = [
     { id: 28, name: "Nail Polish Combo", price: 280, category: "cosmetics", img: "💅", desc: "Multi-color nail art set." },
     { id: 29, name: "Aloe Vera Gel 99%", price: 220, category: "cosmetics", img: "🌵", desc: "Pure soothing skin gel." },
     { id: 30, name: "Makeup Brush Set", price: 550, category: "cosmetics", img: "🖌️", desc: "Soft professional brushes." },
-
-    // Kids Care (বাচ্চাদের যত্ন)
+    // Kids Care
     { id: 31, name: "Baby Diapers (Large)", price: 1150, category: "kids", img: "👶", desc: "Extra absorbent soft diapers." },
     { id: 32, name: "Baby Lotion 200ml", price: 350, category: "kids", img: "🧴", desc: "Gentle care for baby skin." },
     { id: 33, name: "Soft Plush Toy Bear", price: 550, category: "kids", img: "🧸", desc: "Cuddly and safe for kids." },
@@ -54,15 +46,10 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
+let cart = []; 
+let discountPercent = 0; 
 
-
-
-
-
-let cart = [];
-let discountPercent = 0;
-
-// ২. ডিসপ্লে ফাংশন (প্রডাক্ট না আসার সমাধান)
+// ১. ডিসপ্লে ফাংশন
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -76,7 +63,26 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ৩. কার্টে যোগ করা
+// ২. বিবরণ দেখার মডাল
+function openModal(id) {
+    const p = products.find(prod => prod.id === id);
+    const modalBody = document.getElementById('modal-body');
+    const modal = document.getElementById('productModal');
+    if (p && modalBody) {
+        modalBody.innerHTML = `
+            <div style="text-align:center; padding: 20px;">
+                <span style="font-size:80px;">${p.img}</span>
+                <h2>${p.name}</h2>
+                <p>${p.desc}</p>
+                <h3 style="color:#f85606;">৳ ${p.price}</h3>
+                <button class="confirm-btn" style="width:100%;" onclick="addToCart(${p.id}, event); closeModal();">ADD TO CART</button>
+            </div>`;
+        modal.style.display = "block";
+    }
+}
+function closeModal() { document.getElementById('productModal').style.display = "none"; }
+
+// ৩. ওড়ার অ্যানিমেশন ও কার্টে যোগ
 function addToCart(id, event) {
     if(event) event.stopPropagation();
     const product = products.find(p => p.id === id);
@@ -89,11 +95,11 @@ function addToCart(id, event) {
     showToast(product.name + " added!");
 }
 
-// ৪. কার্ট UI আপডেট
+// ৪. কার্ট UI
 function updateCartUI() {
+    const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const totalSpan = document.getElementById('cart-total');
-    const count = document.getElementById('cart-count');
     
     if (count) count.innerText = cart.length;
     if (container) container.innerHTML = "";
@@ -112,10 +118,12 @@ function updateCartUI() {
             </div>`;
         container.appendChild(div);
     });
-    if (totalSpan) totalSpan.innerText = Math.round(total - (total * discountPercent));
+
+    let finalTotal = total - (total * discountPercent);
+    if (totalSpan) totalSpan.innerText = Math.round(finalTotal);
 }
 
-// ৫. ভ্যালিডেশন এবং রিভিউ বক্স (Edit Button কালার ফিক্স)
+// ৫. ভ্যালিডেশন এবং রিভিউ বক্স (EDIT BUTTON FIX সহ)
 function validateAndOrder() {
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
@@ -128,18 +136,19 @@ function validateAndOrder() {
     document.getElementById('cartModal').style.display = 'none';
     const confirmBox = document.getElementById('confirmBox');
     
+    // এখানে Edit বাটনকে গ্রে কালার করা হয়েছে
     confirmBox.innerHTML = `
-        <div class="popup-card" style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 350px; margin: auto;">
-            <h3 style="color:#333;">Review Order</h3>
-            <p style="font-size:13px; color:#666;">সঠিক ডাটা চেক করে কনফার্ম করুন।</p>
-            <div style="text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin:15px 0; font-size:14px;">
+        <div class="popup-card" style="background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 350px; width: 90%; margin: auto;">
+            <h3 style="margin-bottom:10px;">Review Your Order</h3>
+            <p style="font-size:14px; color:#666; margin-bottom:15px;">সঠিক তথ্য আছে কি না মিলিয়ে নিন।</p>
+            <div style="text-align:left; background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:20px; font-size:14px; border: 1px solid #eee;">
                 <b>Name:</b> ${name}<br>
                 <b>Phone:</b> ${phone}<br>
                 <b>Address:</b> ${address}
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="closeConfirm()" style="background:#808080; color:white; border:none; padding:12px; border-radius:8px; flex:1; cursor:pointer; font-weight:bold;">Edit</button>
-                <button onclick="finalOrderProcess()" class="confirm-now-btn" style="background:#f85606; color:white; border:none; padding:12px; border-radius:8px; flex:1; cursor:pointer; font-weight:bold;">Confirm Now</button>
+                <button onclick="closeConfirm()" style="background:#8e8e8e; color:white; border:none; padding:12px; border-radius:10px; flex:1; font-weight:bold; cursor:pointer;">Edit</button>
+                <button onclick="finalOrderProcess()" class="confirm-now-btn" style="background:#f85606; color:white; border:none; padding:12px; border-radius:10px; flex:1; font-weight:bold; cursor:pointer;">Confirm Now</button>
             </div>
         </div>
     `;
@@ -151,8 +160,8 @@ function closeConfirm() {
     document.getElementById('cartModal').style.display = "block"; 
 }
 
-// ৬. গুগল শিটে ডাটা পাঠানো (Data Sending Fix)
-async function finalOrderProcess() {
+// ৬. ফাইনাল অর্ডার প্রসেস
+function finalOrderProcess() {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
     const confirmBtn = document.querySelector(".confirm-now-btn");
     confirmBtn.innerText = "Wait...";
@@ -163,52 +172,40 @@ async function finalOrderProcess() {
 
     const data = {
         'Order_ID': orderId,
-        'Name': document.getElementById('orderName').value.trim(),
-        'Phone': document.getElementById('orderPhone').value.trim(),
-        'Address': document.getElementById('orderAddress').value.trim(),
+        'Name': document.getElementById('orderName').value,
+        'Phone': document.getElementById('orderPhone').value,
+        'Address': document.getElementById('orderAddress').value,
         'Items': itemsSummary,
         'Total': document.getElementById('cart-total').innerText,
-        'Payment': document.querySelector('input[name="payment"]:checked').value
+        'Payment': document.querySelector('input[name="payment"]:checked')?.value || "COD"
     };
 
-    try {
-        await fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: new URLSearchParams(data)
-        });
-
+    fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) })
+    .then(() => {
         document.getElementById('confirmBox').style.display = 'none';
         showSuccessPopup(orderId);
         cart = [];
         updateCartUI();
-    } catch (e) {
-        alert("Error sending order!");
-    } finally {
-        confirmBtn.disabled = false;
-        confirmBtn.innerText = "Confirm Now";
-    }
+    }).catch(() => alert("Error!"));
 }
 
-// ৭. সাকসেস পপ-আপ
-function showSuccessPopup(orderId) {
-    const popup = document.createElement('div');
-    popup.className = 'modal-overlay';
-    popup.innerHTML = `
-        <div style="background:white; padding:40px; border-radius:20px; text-align:center;">
-            <h2 style="color:green;">Congratulations!</h2>
-            <p>Order ID: <b>${orderId}</b></p>
-            <button onclick="this.parentElement.parentElement.remove()" style="background:#f85606; color:white; border:none; padding:10px 25px; border-radius:20px; cursor:pointer;">Close</button>
-        </div>`;
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 10000);
+// ৭. অন্যান্য ইউটিলিটি ফাংশন
+function searchProduct() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
+    });
 }
 
-// অন্যান্য ফাংশন
 function changeQty(index, delta) {
     cart[index].quantity += delta;
     if (cart[index].quantity < 1) cart.splice(index, 1);
     updateCartUI();
+}
+
+function toggleCart() {
+    const m = document.getElementById('cartModal');
+    m.style.display = (m.style.display === "block") ? "none" : "block";
 }
 
 function showToast(msg) {
@@ -218,4 +215,15 @@ function showToast(msg) {
     setTimeout(() => t.style.display = "none", 3000);
 }
 
-window.onload = () => { displayProducts(products); };
+function showSuccessPopup(orderId) {
+    const popup = document.createElement('div');
+    popup.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:9999;";
+    popup.innerHTML = `<div style="background:white; padding:30px; border-radius:20px; text-align:center;">
+        <h2 style="color:green;">Placed!</h2>
+        <p>Order ID: ${orderId}</p>
+        <button onclick="this.parentElement.parentElement.remove()" style="background:#f85606; color:white; border:none; padding:10px 20px; border-radius:10px;">OK</button>
+    </div>`;
+    document.body.appendChild(popup);
+}
+
+window.onload = () => { displayProducts(products); updateCartUI(); };
