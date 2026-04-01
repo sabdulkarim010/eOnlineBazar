@@ -451,3 +451,22 @@ header {
     backdrop-filter: blur(5px); /* ব্যাকগ্রাউন্ড কিছুটা ব্লার করবে */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+
+/* সার্চের সময় প্রোডাক্টগুলো স্মুথলি দেখানোর জন্য অ্যানিমেশন */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px); /* নিচ থেকে উপরে আসবে */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* প্রোডাক্ট কার্ডে এই অ্যানিমেশনটি সেট করা */
+.product-card {
+    transition: all 0.3s ease;
+}
+
