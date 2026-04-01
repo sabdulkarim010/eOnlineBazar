@@ -93,44 +93,73 @@ function openModal(id) {
 }
 
 // ৩. ওড়ার অ্যানিমেশন ও কার্টে যোগ
+// ওড়ার অ্যানিমেশন এবং কার্টে যোগ করার মূল ফাংশন
 function addToCart(id, event) {
+    // ইভেন্ট বাবলিং বন্ধ করা
     if(event) event.stopPropagation();
-    const cartIcon = document.querySelector('.cart-wrapper');
-    const productCard = event ? event.target.closest('.product-card') : null;
-    let sourceEl = productCard ? productCard.querySelector('.p-img') : null;
 
-    if (sourceEl && cartIcon) {
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    const cartIcon = document.querySelector('.cart-wrapper');
+    
+    // অ্যানিমেশনের জন্য সোর্স এলিমেন্ট নির্ধারণ
+    let sourceImg = null;
+    
+    // চেক করা হচ্ছে ক্লিক কি মডাল (পপ-আপ) থেকে হয়েছে নাকি মেইন পেজ থেকে
+    const modal = document.getElementById('productModal');
+    if (modal && modal.style.display === "block") {
+        // মডালের ভেতরের বড় ইমেজ/ইমোজিটি নিবে
+        sourceImg = modal.querySelector('span[style*="font-size:80px"]');
+    } else {
+        // মেইন পেজের কার্ডের ভেতরের ইমেজ/ইমোজিটি নিবে
+        const card = event ? event.target.closest('.product-card') : null;
+        sourceImg = card ? card.querySelector('.p-img') : null;
+    }
+
+    // যদি সোর্স ইমেজ এবং কার্ট আইকন পাওয়া যায়, তবেই অ্যানিমেশন হবে
+    if (sourceImg && cartIcon) {
         const flyingItem = document.createElement('div');
-        flyingItem.innerHTML = sourceEl.innerHTML; 
-        const rect = sourceEl.getBoundingClientRect();
+        flyingItem.innerHTML = sourceImg.innerHTML; 
+        const rect = sourceImg.getBoundingClientRect();
         const cartRect = cartIcon.getBoundingClientRect();
 
         flyingItem.style.cssText = `
-            position: fixed; z-index: 9999; top: ${rect.top}px; left: ${rect.left}px;
-            width: ${rect.width}px; height: ${rect.height}px; font-size: 30px;
-            transition: all 0.8s ease; pointer-events: none;
+            position: fixed; z-index: 10000; 
+            top: ${rect.top}px; left: ${rect.left}px;
+            width: ${rect.width}px; height: ${rect.height}px; 
+            font-size: ${rect.width > 50 ? '60px' : '30px'};
+            transition: all 0.9s cubic-bezier(0.42, 0, 0.58, 1); 
+            pointer-events: none;
             display: flex; align-items: center; justify-content: center;
         `;
         document.body.appendChild(flyingItem);
 
         setTimeout(() => {
-            flyingItem.style.top = (cartRect.top + 10) + 'px';
-            flyingItem.style.left = (cartRect.left + 10) + 'px';
-            flyingItem.style.transform = 'scale(0.2) rotate(360deg)';
-            flyingItem.style.opacity = '0.2';
+            flyingItem.style.top = (cartRect.top + 5) + 'px';
+            flyingItem.style.left = (cartRect.left + 5) + 'px';
+            flyingItem.style.width = '20px';
+            flyingItem.style.height = '20px';
+            flyingItem.style.fontSize = '12px';
+            flyingItem.style.opacity = '0.4';
+            flyingItem.style.transform = 'scale(0.1) rotate(450deg)';
         }, 50);
-        setTimeout(() => { flyingItem.remove(); }, 850);
+
+        setTimeout(() => { flyingItem.remove(); }, 950);
     }
 
-    const product = products.find(p => p.id === id);
-    if (product) {
-        let existing = cart.find(item => item.id === id);
-        if (existing) { existing.quantity++; } 
-        else { cart.push({ ...product, quantity: 1 }); }
-        updateCartUI();
-        showToast(product.name + " added!");
+    // কার্টে ডেটা পুশ করা
+    let existing = cart.find(item => item.id === id);
+    if (existing) {
+        existing.quantity++;
+    } else {
+        cart.push({ ...product, quantity: 1 });
     }
+
+    updateCartUI();
+    showToast(product.name + " added successfully!");
 }
+
 
 // ৪. কার্ট UI
 function updateCartUI() {
