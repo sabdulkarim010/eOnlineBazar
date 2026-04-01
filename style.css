@@ -582,3 +582,52 @@ header {
     color: white;
 }
 
+
+
+/* সাকসেস পপ-আপ মেইন কন্টেইনার */
+#success-popup {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* ডার্ক ব্যাকগ্রাউন্ড */
+    display: flex; align-items: center; justify-content: center;
+    z-index: 99999; animation: fadeIn 0.4s ease;
+}
+
+/* পপ-আপ কার্ড ডিজাইন */
+.popup-card {
+    background: white; padding: 40px 20px; border-radius: 25px;
+    text-align: center; max-width: 380px; width: 90%;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+    animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* সাকসেস আইকন এনিমেশন */
+.success-icon svg {
+    width: 80px; height: 80px; stroke: #4caf50; stroke-width: 3;
+    stroke-linecap: round; stroke-linejoin: round;
+    margin-bottom: 20px;
+}
+.success-icon circle { stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s forwards; }
+.success-icon path { stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s 0.6s forwards; }
+
+.popup-card h2 { color: #2d3436; font-size: 28px; margin-bottom: 10px; }
+.popup-card p { color: #636e72; line-height: 1.5; font-size: 16px; }
+
+.order-id-display {
+    background: #f1f2f6; padding: 15px; border-radius: 12px;
+    margin: 25px 0; font-size: 18px; font-weight: bold;
+    border: 2px dashed #dfe6e9;
+}
+.order-id-display span { color: #f85606; }
+
+.call-msg { font-size: 14px !important; color: #b2bec3 !important; }
+
+.popup-close-btn {
+    background: #f85606; color: white; border: none;
+    padding: 12px 35px; border-radius: 30px; font-weight: bold;
+    cursor: pointer; margin-top: 20px; transition: 0.3s;
+}
+
+/* এনিমেশন কি-ফ্রেমস */
+@keyframes stroke { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
