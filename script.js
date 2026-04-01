@@ -259,45 +259,97 @@ function validateAndOrder() {
     const name = document.getElementById('orderName');
     const phone = document.getElementById('orderPhone');
     const address = document.getElementById('orderAddress');
-    const payment = document.querySelector('input[name="payment"]:checked');
     
-    // ১. নাম চেক (মিনিমাম ২ শব্দ)
-    const nameWords = name.value.trim().split(/\s+/).filter(w => w.length > 0);
-    if (nameWords.length < 2) {
-        name.style.borderColor = "red";
-        document.getElementById('nameError').innerText = "Please write your full name (at least 2 words)";
-        return; // এখানেই থেমে যাবে, পরেরটা দেখাবে না
+    let isValid = true;
+    let errorMessage = "";
+
+    // সব এরর রিমুভ করার ফাংশন
+    const resetStyle = (el) => {
+        el.style.border = "1px solid #ddd";
+        el.style.backgroundColor = "#fff";
+    };
+
+    const setErrorStyle = (el) => {
+        el.style.border = "2px solid red";
+        el.style.backgroundColor = "#ffe6e6"; // হালকা লাল
+        isValid = false;
+    };
+
+    const setSuccessStyle = (el) => {
+        el.style.border = "2px solid green";
+        el.style.backgroundColor = "#f0fff0"; // হালকা সবুজ
+    };
+
+    // ১. নাম ভ্যালিডেশন (কমপক্ষে ২ শব্দ এবং জাঙ্ক টেক্সট চেক)
+    const nameValue = name.value.trim();
+    const nameRegex = /^[a-zA-Z\s]{4,}$/; // শুধু অক্ষর এবং কমপক্ষে ৪ ক্যারেক্টার
+    if (nameValue === "" || nameValue.split(' ').length < 2 || !nameRegex.test(nameValue)) {
+        setErrorStyle(name);
+        errorMessage = "Please enter your full name (at least 2 words).";
+    } else {
+        setSuccessStyle(name);
     }
 
-    // ২. ফোন চেক
-    const phonePattern = /^(013|014|015|016|017|018|019)\d{8}$/;
-    if (!phonePattern.test(phone.value.trim())) {
-        phone.style.borderColor = "red";
-        document.getElementById('phoneError').innerText = "Please enter a valid 11-digit BD number";
+    // ২. ফোন নাম্বার ভ্যালিডেশন (সঠিক ১১ ডিজিট)
+    const phoneValue = phone.value.trim();
+    const phoneRegex = /^01[3-9]\d{8}$/;
+    if (!phoneRegex.test(phoneValue)) {
+        setErrorStyle(phone);
+        if (!errorMessage) errorMessage = "Please enter a valid 11-digit BD mobile number.";
+    } else {
+        setSuccessStyle(phone);
+    }
+
+    // ৩. ঠিকানা ভ্যালিডেশন (কমপক্ষে ৩টি শব্দ থাকতে হবে জাঙ্ক এড়াতে)
+    const addressValue = address.value.trim();
+    if (addressValue === "" || addressValue.split(' ').length < 3) {
+        setErrorStyle(address);
+        if (!errorMessage) errorMessage = "Please provide a complete and valid address.";
+    } else {
+        setSuccessStyle(address);
+    }
+
+    // যদি কোনো ভুল থাকে তবে পপ-আপ দেখানো
+    if (!isValid) {
+        showPopup(errorMessage);
         return;
     }
 
-    // ৩. এড্রেস চেক
-    if (!address.value.trim()) {
-        address.style.borderColor = "red";
-        document.getElementById('addressError').innerText = "Please enter your full address";
-        return;
-    }
-
-    // ৪. পেমেন্ট মেথড চেক
-    if (!payment) {
-        showToast("Please select a Payment Method!");
-        return;
-    }
-
-    // সব ঠিক থাকলে পেমেন্ট মেথড নোটিফিকেশন দেখিয়ে পরের ধাপে যাবে
-    showToast("Selected Payment: " + payment.value.toUpperCase());
-    
-    setTimeout(() => {
-        document.getElementById('order-form-container').style.display = "none";
-        document.getElementById('confirmBox').style.display = "block";
-    }, 1000);
+    // সব ঠিক থাকলে কনফার্ম বক্স দেখানো
+    document.getElementById('confirmBox').style.display = 'flex';
 }
+
+// সুন্দর পপ-আপ মেসেজ ফাংশন (২ সেকেন্ড পর চলে যাবে)
+function showPopup(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    toast.style.backgroundColor = '#ff4d4d';
+    toast.style.color = 'white';
+    toast.style.padding = '15px';
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.borderRadius = '8px';
+    toast.style.zIndex = '10000';
+    toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 2000);
+}
+
+// ইনপুট দেওয়ার সাথে সাথে লাল বর্ডার সরানোর জন্য ইভেন্ট লিসেনার
+['orderName', 'orderPhone', 'orderAddress'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+        if(this.value.trim() !== "") {
+            this.style.border = "2px solid green";
+            this.style.backgroundColor = "#f0fff0";
+        }
+    });
+});
+
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
