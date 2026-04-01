@@ -314,11 +314,8 @@ function finalOrderProcess() {
     };
 
     // ২. আপনার কপি করা লিঙ্কটি নিচের দুই উদ্ধৃতি চিহ্নের (' ') মাঝে বসান
-    const scriptURL = '  ';
-
-
-
-    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec
+';
 
     // ৩. গুগল শিটে ডাটা পাঠানো
     fetch(scriptURL, {
