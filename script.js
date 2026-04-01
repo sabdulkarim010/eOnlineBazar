@@ -266,43 +266,23 @@ orderInputs.forEach(id => {
 
 // ২. মেইন ফাংশন (বাটনে ক্লিক করলে যা হবে)
 function validateAndOrder() {
-    const name = document.getElementById('orderName');
-    const phone = document.getElementById('orderPhone');
-    const address = document.getElementById('orderAddress');
+    const name = document.getElementById('orderName').value.trim();
+    const phone = document.getElementById('orderPhone').value.trim();
+    const address = document.getElementById('orderAddress').value.trim();
     
-    let isValid = true;
-    let errorMsg = "";
-    const isJunk = (str) => /(.)\1{4,}/.test(str);
+    // ভ্যালিডেশন চেক
+    if (name.split(' ').length < 2) { showToast("Enter full name!"); return; }
+    if (!/^01[3-9]\d{8}$/.test(phone)) { showToast("Invalid phone number!"); return; }
+    if (address.length < 5) { showToast("Enter full address!"); return; }
 
-    // নাম চেক
-    if (name.value.trim().split(/\s+/).length < 2 || isJunk(name.value.trim())) {
-        name.style.border = "2px solid red";
-        if(!errorMsg) errorMsg = "Please enter your valid full name!";
-        isValid = false;
-    }
+    // নিচের লাইনটি আপনার ডাবল পপ-আপ সমস্যা দূর করবে
+    const cartModal = document.getElementById('cartModal');
+    if(cartModal) cartModal.style.display = 'none'; 
 
-    // ফোন চেক
-    if (!/^(013|014|015|016|017|018|019)\d{8}$/.test(phone.value.trim())) {
-        phone.style.border = "2px solid red";
-        if(!errorMsg) errorMsg = "Please enter a valid mobile number!";
-        isValid = false;
-    }
-
-    // ঠিকানা চেক
-    if (address.value.trim().split(/\s+/).length < 3 || isJunk(address.value.trim())) {
-        address.style.border = "2px solid red";
-        if(!errorMsg) errorMsg = "Please provide a complete address!";
-        isValid = false;
-    }
-
-    if (!isValid) {
-        showPopup(errorMsg);
-        return;
-    }
-
-    // সব ঠিক থাকলে রিভিউ বক্স দেখাবে
+    // এবার রিভিউ বক্স দেখান
     document.getElementById('confirmBox').style.display = 'flex';
 }
+
 
 // ৩. সাহায্যকারী ফাংশন (সেন্টারে পপ-আপ মেসেজ)
 function showPopup(msg) {
