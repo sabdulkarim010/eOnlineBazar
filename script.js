@@ -272,22 +272,23 @@ function openModal(id) {
 
 function searchProduct() {
     const term = document.getElementById('searchInput').value.toLowerCase();
-    const products = document.querySelectorAll('.product-card');
-    
+    // আপনার প্রোডাক্টগুলো যে বক্সের ভেতরে থাকে সেটির ক্লাস '.product-card'
+    const products = document.querySelectorAll('.product-card'); 
+
     products.forEach(product => {
-        // এইচ৩ (h3) ট্যাগ থেকে টাইটেল নেওয়া হচ্ছে
-        const title = product.querySelector('h3').innerText.toLowerCase();
+        // এখানে আমরা প্রোডাক্টের ভেতরের সব টেক্সট (নাম, দাম ইত্যাদি) চেক করছি
+        const text = product.innerText.toLowerCase();
         
-        if (title.includes(term)) {
+        if (text.includes(term)) {
             product.style.display = "block";
-            // এনিমেশনটি তখনই কাজ করবে যখন CSS এ fadeIn থাকবে
+            // অ্যানিমেশন থাকলে সেটিও কাজ করবে
             product.style.animation = "fadeIn 0.5s ease forwards";
         } else {
             product.style.display = "none";
-            product.style.animation = "none"; // হাইড হলে এনিমেশন বন্ধ
         }
     });
 }
+
 
 
 
