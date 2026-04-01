@@ -58,13 +58,18 @@ function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
     grid.innerHTML = items.map(p => `
-        <div class="product-card" onclick="openModal(${p.id})">
-            <span class="p-img">${p.img}</span>
-            <div class="p-name">${p.name}</div>
-            <div class="p-price">৳ ${p.price}</div>
+        <div class="product-card">
+            <button class="add-fast-btn" onclick="addToCart(${p.id})">+</button>
+            
+            <div onclick="openModal(${p.id})">
+                <span class="p-img">${p.img}</span>
+                <div class="p-name">${p.name}</div>
+                <div class="p-price">৳ ${p.price}</div>
+            </div>
         </div>
     `).join('');
 }
+
 
 // ৩. কার্ট আপডেট (UI)
 function updateCartUI() {
