@@ -470,3 +470,28 @@ header {
     transition: all 0.3s ease;
 }
 
+
+/* Fly to Cart Animation */
+.flying-item {
+    position: fixed;
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1); /* স্মুথ ওড়ার জন্য */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+@keyframes cart-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.cart-bounce {
+    animation: cart-bounce 0.4s ease-in-out;
+}
+
