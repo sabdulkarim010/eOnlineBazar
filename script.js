@@ -376,33 +376,44 @@ function showPopup(msg) {
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
+    // ফর্ম থেকে সব ডাটা সংগ্রহ করা
+    const name = document.getElementById('orderName').value.trim();
+    const phone = document.getElementById('orderPhone').value.trim();
+    const address = document.getElementById('orderAddress').value.trim();
     
-    const orderData = {
-        orderID: orderID,
-        name: document.getElementById('orderName').value,
-        phone: document.getElementById('orderPhone').value,
-        address: document.getElementById('orderAddress').value,
-        items: cart.map(i => `${i.name} (${i.quantity})`).join(", "),
-        total: document.getElementById('cart-total').innerText,
-        payment: document.querySelector('input[name="payment"]:checked').value.toUpperCase()
-    };
+    // এই লাইনটি নিশ্চিত করুন: এটি নোটের বক্স থেকে লেখাটি সংগ্রহ করবে
+    const note = document.getElementById('orderNote').value.trim(); 
 
-    fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(orderData) });
+    const cartData = JSON.stringify(cart); // কার্টের পণ্যসমূহ
+    const total = document.getElementById('cart-total').innerText;
+    const payment = document.querySelector('input[name="payment"]:checked').value;
 
-    document.getElementById('confirmBox').style.display = "none";
-    const success = document.getElementById('successBox');
-    success.innerHTML = `
-        <div style="text-align:center; padding:30px;">
-            <div style="font-size:60px; color:#28a745;">✔</div>
-            <h2 style="margin:15px 0;">Thank You!</h2>
-            <p>Your order has been placed. Order ID: <b>${orderID}</b></p>
-            <button onclick="location.reload()" style="margin-top:20px; padding:10px 25px; background:#f85606; color:white; border:none; border-radius:5px; cursor:pointer;">Continue Shopping</button>
-        </div>`;
-    success.style.display = "block";
-    cart = []; updateCartUI();
+    // গুগল শিটে পাঠানোর জন্য ডাটা তৈরি করা
+    const formData = new URLSearchParams();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('address', address);
+    formData.append('note', note); // এখানে 'note' কি-ওয়ার্ডটি ডাটাবেসে তথ্য পাঠাবে
+    formData.append('items', cartData);
+    formData.append('total', total);
+    formData.append('payment', payment);
+
+    // আপনার গুগল অ্যাপ স্ক্রিপ্ট ইউআরএল (এখানে আপনার নিজের URL টি বসবে)
+    const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        // অর্ডার সফল হলে সাকসেস মেসেজ দেখানো
+        showSuccessMessage();
+    })
+    .catch(error => {
+        console.error('Error!', error.message);
+    });
 }
+
 
 // কুপন, সার্চ এবং অন্যান্য
 function applyCoupon() {
