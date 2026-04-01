@@ -51,13 +51,12 @@ const products = [
 
 
 
-// ১. আপনার আগের পণ্য তালিকা (products array) এখানে যেমন আছে তেমনি থাকবে
 
-// গ্লোবাল ভেরিয়েবল
+// ২. গ্লোবাল ভেরিয়েবল
 let cart = []; 
 let discountPercent = 0; 
 
-// ২. প্রোডাক্ট ডিসপ্লে ফাংশন (আইটেম ফিরিয়ে আনার মূল অংশ)
+// ৩. প্রোডাক্ট ডিসপ্লে ফাংশন (পেজ লোড হলে আইটেম দেখাবে)
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -73,7 +72,7 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ৩. কার্ট আপডেট (UI)
+// ৪. কার্ট আপডেট এবং টোটাল হিসাব
 function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
@@ -86,7 +85,7 @@ function updateCartUI() {
     let total = 0;
 
     if (cart.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding: 40px 20px;"><div style="font-size: 60px; margin-bottom: 15px;">🛒</div><h3 style="color: #555;">Your cart is empty!</h3></div>`;
+        container.innerHTML = `<div style="text-align:center; padding: 20px;"><p>Your cart is empty!</p></div>`;
         if (orderForm) orderForm.style.display = "none";
         if (totalSpan) totalSpan.innerText = "0";
         return; 
@@ -99,39 +98,54 @@ function updateCartUI() {
         const div = document.createElement('div');
         div.className = 'cart-item';
         div.innerHTML = `
-            <div style="flex:1"><b>${item.name}</b><br><span>৳ ${item.price} x ${item.quantity}</span></div>
-            <div style="display:flex; align-items:center; gap:10px;"> 
-                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-                <span>${item.quantity}</span>
-                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            <div style="flex:1; display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee;">
+                <span>${item.name} (x${item.quantity})</span>
+                <span>৳${item.price * item.quantity}</span>
             </div>`;
         container.appendChild(div);
     });
 
-    let finalTotal = total - (total * discountPercent);
+    let discountAmount = total * discountPercent;
+    let finalTotal = total - discountAmount;
+
     if (totalSpan) totalSpan.innerText = Math.round(finalTotal);
 }
 
-// ৪. পরিমাণ পরিবর্তন
-function changeQty(index, delta) {
-    cart[index].quantity += delta;
-    if (cart[index].quantity < 1) cart.splice(index, 1);
+// ৫. কুপন কোড ফাংশন (SAVE10 বাটন সচল করবে)
+function applyCoupon() {
+    const couponInput = document.getElementById('couponInput');
+    const message = document.getElementById('couponMessage');
+    
+    if (couponInput.value.trim() === "SAVE10") {
+        discountPercent = 0.10; // ১০% ছাড়
+        message.innerText = "Success! 10% discount applied.";
+        message.style.color = "green";
+    } else {
+        discountPercent = 0;
+        message.innerText = "Invalid Coupon!";
+        message.style.color = "red";
+    }
+    message.style.display = "block";
     updateCartUI();
 }
 
-// ৫. কার্টে যোগ করা (অ্যানিমেশন সহ)
-function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    if (product) {
-        let existing = cart.find(item => item.id === id);
-        if (existing) { existing.quantity += 1; } 
-        else { product.quantity = 1; cart.push(product); }
-        updateCartUI();
-        showToast(product.name + " added to cart!");
+// ৬. অর্ডার ভ্যালিডেশন (Confirm Order বাটন সচল করবে)
+function validateAndOrder() {
+    const name = document.getElementById('orderName').value;
+    const phone = document.getElementById('orderPhone').value;
+    const address = document.getElementById('orderAddress').value;
+
+    if (!name || !phone || !address) {
+        alert("অনুগ্রহ করে নাম, মোবাইল নম্বর এবং ঠিকানা সঠিকভাবে দিন।");
+        return;
     }
+
+    // ফর্ম লুকিয়ে রিভিউ বক্স দেখানো
+    document.getElementById('order-form-container').style.display = "none";
+    document.getElementById('confirmBox').style.display = "block";
 }
 
-// ৬. ফাইনাল অর্ডার প্রসেস (লিঙ্ক ঠিক করা হয়েছে)
+// ৭. ফাইনাল অর্ডার (গুগল শিটে ডাটা পাঠানো)
 function finalOrderProcess() {
     const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
     const name = document.getElementById('orderName').value;
@@ -141,56 +155,56 @@ function finalOrderProcess() {
     const total = document.getElementById('cart-total').innerText;
     const items = cart.map(i => `${i.name} (${i.quantity})`).join(", ");
 
-    const orderData = { orderID, name, phone, address, note, items, total };
-
-    // লিঙ্কটি এক লাইনে রাখা হয়েছে
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
     fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({ orderID, name, phone, address, note, items, total })
     }).then(() => {
         document.getElementById('confirmBox').style.display = "none";
         const successBox = document.getElementById('successBox');
-        if(successBox) {
-            successBox.innerHTML = `<div style="text-align:center; padding:20px;"><h2 style="color:#28a745;">অর্ডার সফল!</h2><p>আইডি: ${orderID}</p><button onclick="location.reload()">OK</button></div>`;
-            successBox.style.display = "block";
-        }
+        successBox.innerHTML = `<div style="text-align:center; padding:20px;"><h2>ধন্যবাদ!</h2><p>অর্ডার সফল হয়েছে। আইডি: ${orderID}</p><button onclick="location.reload()">ঠিক আছে</button></div>`;
+        successBox.style.display = "block";
         cart = []; updateCartUI();
-    }).catch(error => console.error("Error!", error));
+    }).catch(err => alert("Error: " + err));
 }
 
-// ৭. মডাল, সার্চ ও ফিল্টার
-function openModal(id) {
-    const p = products.find(prod => prod.id === id);
-    document.getElementById('modal-body').innerHTML = `<div style="text-align:center;"><span style="font-size:70px;">${p.img}</span><h2>${p.name}</h2><p>${p.desc}</p><h3>৳ ${p.price}</h3><button class="confirm-btn" onclick="addToCart(${p.id})">ADD TO CART</button></div>`;
-    document.getElementById('productModal').style.display = "block";
-}
-
-function searchProduct() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    const items = document.querySelectorAll('.product-card'); 
-    items.forEach(item => {
-        item.style.display = item.innerText.toLowerCase().includes(term) ? "block" : "none";
-    });
-}
-
-function filterCategory(cat) {
-    const banner = document.querySelector('.coming-soon-banner');
-    if (cat === 'all') { displayProducts(products); if(banner) banner.style.display = 'block'; } 
-    else { displayProducts(products.filter(p => p.category === cat)); if(banner) banner.style.display = 'none'; }
+// ৮. কার্টে যোগ করা এবং অন্যান্য লজিক
+function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    let existing = cart.find(item => item.id === id);
+    if (existing) { existing.quantity++; } else { cart.push({...product, quantity: 1}); }
+    updateCartUI();
+    showToast(product.name + " added to cart!");
 }
 
 function toggleCart() {
-    const m = document.getElementById('cartModal');
-    m.style.display = (m.style.display === "block") ? "none" : "block";
+    const modal = document.getElementById('cartModal');
+    modal.style.display = (modal.style.display === "block") ? "none" : "block";
 }
 
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
 function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; document.getElementById('order-form-container').style.display = "block"; }
 
-// ৮. পেজ লোড হলে ফাংশন কল
+// ৯. সার্চ ফাংশন
+function searchProduct() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const allCards = document.querySelectorAll('.product-card');
+    allCards.forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
+    });
+}
+
+// ১০. ক্যাটেগরি ফিল্টার
+function filterCategory(cat) {
+    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+    displayProducts(filtered);
+    const banner = document.querySelector('.coming-soon-banner');
+    if(banner) banner.style.display = (cat === 'all') ? 'block' : 'none';
+}
+
+// ১১. পেজ লোড হলে রান হবে
 window.onload = () => {
     displayProducts(products);
     updateCartUI();
@@ -198,5 +212,5 @@ window.onload = () => {
 
 function showToast(msg) {
     const t = document.getElementById('toast');
-    if(t) { t.innerText = msg; t.style.display = "block"; setTimeout(() => { t.style.display = "none"; }, 3000); }
+    if(t) { t.innerText = msg; t.style.display = "block"; setTimeout(() => { t.style.display = "none"; }, 2000); }
 }
