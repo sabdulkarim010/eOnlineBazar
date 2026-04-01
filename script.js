@@ -376,53 +376,42 @@ function showPopup(msg) {
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
-    // ফর্ম থেকে ডাটা সংগ্রহ
-    const name = document.getElementById('orderName').value.trim();
-    const phone = document.getElementById('orderPhone').value.trim();
-    const address = document.getElementById('orderAddress').value.trim();
-    const note = document.getElementById('orderNote').value.trim(); 
+    const scriptURL = 'এখানে_আপনার_আসল_গুগল_স্ক্রিপ্ট_লিংক_দিন'; // <--- এটি চেক করুন
 
-    const total = document.getElementById('cart-total').innerText;
-    const payment = document.querySelector('input[name="payment"]:checked').value;
-    const cartData = JSON.stringify(cart); 
-
-    // ডাটা পাঠানোর প্রস্তুতি
-    const formData = new URLSearchParams();
-    formData.append('name', name);
-    formData.append('phone', phone);
-    formData.append('address', address);
-    formData.append('note', note);
-    formData.append('items', cartData);
-    formData.append('total', total);
-    formData.append('payment', payment);
-
-    // বাটনটিকে সাময়িকভাবে ডিজেবল করা যাতে ডাবল ক্লিক না হয়
+    // বাটন লোডিং দেখানো
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
+    const originalText = confirmBtn.innerText;
+    confirmBtn.innerText = "Sending...";
     confirmBtn.disabled = true;
-    confirmBtn.innerText = "Processing...";
 
-    // আপনার গুগল শিট স্ক্রিপ্ট ইউআরএল
-    const scriptURL = 'আপনার_গুগল_স্ক্রিপ্ট_ইউআরএল_এখানে_দিন';
+    const formData = new URLSearchParams();
+    formData.append('name', document.getElementById('orderName').value.trim());
+    formData.append('phone', document.getElementById('orderPhone').value.trim());
+    formData.append('address', document.getElementById('orderAddress').value.trim());
+    formData.append('note', document.getElementById('orderNote').value.trim());
+    formData.append('items', JSON.stringify(cart));
+    formData.append('total', document.getElementById('cart-total').innerText);
+    
+    // পেমেন্ট মেথড চেক
+    const paymentEl = document.querySelector('input[name="payment"]:checked');
+    formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-    })
+    fetch(scriptURL, { method: 'POST', body: formData })
     .then(response => {
-        // সফল হলে মেসেজ দেখানো এবং কার্ট খালি করা
+        // অর্ডার সফল হলে
         document.getElementById('confirmBox').style.display = 'none';
-        showSuccessMessage(); 
-        cart = []; 
+        alert("Order Placed Successfully!");
+        cart = [];
         updateCartUI();
         toggleCart();
     })
     .catch(error => {
-        alert('Error! Please try again.');
+        // এরর হলে
+        alert("Network Error! Please check your Script URL.");
+        confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
-        confirmBtn.innerText = "Confirm Now";
     });
 }
-
 
 
 // কুপন, সার্চ এবং অন্যান্য
