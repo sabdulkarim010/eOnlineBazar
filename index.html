@@ -142,54 +142,53 @@
             <div id="order-form-container" class="order-form">
                 <h3 style="margin: 25px 0 15px; color: #232f3e; font-size: 18px;">Shipping Address</h3>
                 
-                <div class="input-group">
+                                <div class="input-group">
                     <label>Full Name <span class="required" style="color:red;">*</span></label>
-                    <input type="text" id="orderName" placeholder="Enter full name">
+                    <input type="text" id="orderName" placeholder="Enter full name" required>
                     <span id="nameError" class="error-text"></span>
-                </div>
-                
-                <div class="input-group">
-                    <label>Mobile Number <span class="required" style="color:red;">*</span></label>
-                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <span id="phoneError" class="error-text"></span>
-                </div>
-                
-                <div class="input-group">
-                    <label>Full Address <span class="required" style="color:red;">*</span></label>
-                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District" rows="3"></textarea>
-                    <span id="addressError" class="error-text"></span>
-                </div>
-                
-                <div class="input-group">
-                    <label>Note for Courier (Optional)</label>
-                    <textarea id="orderNote" placeholder="Extra instructions for delivery" rows="2"></textarea>
                 </div>
 
                 <div class="input-group">
-                    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 12px;">Payment Method <span style="color:red;">*</span></label>
+                    <label>Mobile Number <span class="required" style="color:red;">*</span></label>
+                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11" required>
+                    <span id="phoneError" class="error-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>Full Address <span class="required" style="color:red;">*</span></label>
+                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District" required></textarea>
+                    <span id="addressError" class="error-text"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>Note for Courier (Optional)</label>
+                    <textarea id="orderNote" placeholder="Extra instructions for delivery..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 8px;">Payment Method:</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                         
-                        <label id="label-bkash" style="border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('bkash')">
-                            <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
+                        <label id="label-bkash" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-bkash" value="bkash">
                             <span style="font-size: 18px;">📱</span><br>
                             <span style="font-weight:bold; font-size:13px;">bKash</span>
                         </label>
 
-                        <label id="label-nagad" style="border: 2px solid #ddd; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('nagad')">
-                            <input type="radio" name="payment" id="pay-nagad" value="nagad" style="display:none;">
+                        <label id="label-nagad" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-nagad" value="nagad">
                             <span style="font-size: 18px;">💸</span><br>
                             <span style="font-weight:bold; font-size:13px;">Nagad</span>
                         </label>
-                        
-                        <label id="label-cod" style="border: 2px solid #f85606; padding: 12px; background: #fffaf7; border-radius: 10px; cursor: pointer; text-align: center; display: block; transition: 0.3s;" onclick="selectPayment('cod')">
-    <input type="radio" name="payment" id="pay-cod" value="cod" checked style="display:none;">
-    <span style="font-size: 18px;">🚚</span><br>
-    
-    <span style="font-weight:bold; font-size: 10px; line-height: 1.2; display: block;">Cash on delivery</span> 
-    </label>
 
+                        <label id="label-cod" style="border: 2px solid #f85606; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; background: #fff5f0;">
+                            <input type="radio" name="payment" id="pay-cod" value="cod" checked>
+                            <span style="font-size: 18px;">🚚</span><br>
+                            <span style="font-weight:bold; font-size:10px; line-height: 1.2; display: block;">Cash on Delivery</span>
+                        </label>
                     </div>
                 </div>
+
 
                 <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
                     <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
