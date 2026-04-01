@@ -54,45 +54,29 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
-let cart = []; 
-let discountPercent = 0; 
 
-// ১. ডিসপ্লে ফাংশন
+
+
+
+
+let cart = [];
+let discountPercent = 0;
+
+// ২. ডিসপ্লে ফাংশন (প্রডাক্ট না আসার সমাধান)
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
     grid.innerHTML = items.map(p => `
         <div class="product-card" onclick="openModal(${p.id})">
             <button class="add-fast-btn" onclick="event.stopPropagation(); addToCart(${p.id}, event)">+</button>
-            <div>
-                <span class="p-img">${p.img}</span>
-                <div class="p-name">${p.name}</div>
-                <div class="p-price">৳ ${p.price}</div>
-            </div>
+            <span class="p-img">${p.img}</span>
+            <div class="p-name">${p.name}</div>
+            <div class="p-price">৳ ${p.price}</div>
         </div>
     `).join('');
 }
 
-// ২. মডাল ফাংশন
-function openModal(id) {
-    const p = products.find(prod => prod.id === id);
-    const modalBody = document.getElementById('modal-body');
-    const modal = document.getElementById('productModal');
-    if (p && modalBody) {
-        modalBody.innerHTML = `
-            <div style="text-align:center; padding: 20px;">
-                <span style="font-size:80px;">${p.img}</span>
-                <h2 style="margin:15px 0;">${p.name}</h2>
-                <p style="color:#555; line-height:1.6; margin-bottom:20px;">${p.desc}</p>
-                <h3 style="color:#f85606; font-size:24px;">৳ ${p.price}</h3>
-                <button class="confirm-btn" style="width:100%; margin-top:20px;" onclick="addToCart(${p.id}, event); closeModal();">ADD TO CART</button>
-            </div>`;
-        modal.style.display = "block";
-    }
-}
-function closeModal() { document.getElementById('productModal').style.display = "none"; }
-
-// ৩. কার্টে যোগ ও অ্যানিমেশন
+// ৩. কার্টে যোগ করা
 function addToCart(id, event) {
     if(event) event.stopPropagation();
     const product = products.find(p => p.id === id);
@@ -107,23 +91,14 @@ function addToCart(id, event) {
 
 // ৪. কার্ট UI আপডেট
 function updateCartUI() {
-    const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
     const totalSpan = document.getElementById('cart-total');
-    const orderForm = document.getElementById('order-form-container');
+    const count = document.getElementById('cart-count');
     
     if (count) count.innerText = cart.length;
     if (container) container.innerHTML = "";
     
     let total = 0;
-    if (cart.length === 0) {
-        if (container) container.innerHTML = `<p style="text-align:center; padding:20px; color:#888;">Your cart is empty!</p>`;
-        if (orderForm) orderForm.style.display = "none";
-        if (totalSpan) totalSpan.innerText = "0";
-        return; 
-    }
-    if (orderForm) orderForm.style.display = "block";
-
     cart.forEach((item, index) => {
         total += (item.price * item.quantity);
         const div = document.createElement('div');
@@ -137,26 +112,10 @@ function updateCartUI() {
             </div>`;
         container.appendChild(div);
     });
-
-    let finalTotal = total - (total * discountPercent);
-    if (totalSpan) totalSpan.innerText = Math.round(finalTotal);
+    if (totalSpan) totalSpan.innerText = Math.round(total - (total * discountPercent));
 }
 
-// ৫. পেমেন্ট সিলেকশন
-function selectPayment(method) {
-    ['bkash', 'nagad', 'cod'].forEach(m => {
-        const el = document.getElementById('label-' + m);
-        if (el) { el.style.border = "2px solid #ddd"; el.style.background = "none"; }
-    });
-    const selectedLabel = document.getElementById('label-' + method);
-    if (selectedLabel) {
-        selectedLabel.style.border = "2px solid #f85606";
-        selectedLabel.style.background = "#fff5f0";
-        document.getElementById('pay-' + method).checked = true;
-    }
-}
-
-// ৬. ভ্যালিডেশন এবং রিভিউ বক্স (Edit Button Fix Included)
+// ৫. ভ্যালিডেশন এবং রিভিউ বক্স (Edit Button কালার ফিক্স)
 function validateAndOrder() {
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
@@ -167,21 +126,20 @@ function validateAndOrder() {
     if (address.length < 5) { showToast("Enter full address!"); return; }
 
     document.getElementById('cartModal').style.display = 'none';
-    
-    // রিভিউ বক্স কন্টেন্ট এবং Edit Button এ কালার সেট
     const confirmBox = document.getElementById('confirmBox');
+    
     confirmBox.innerHTML = `
-        <div class="popup-card" style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 380px; width: 90%;">
-            <h3 style="margin-bottom:10px;">Review Your Order</h3>
-            <p style="font-size:14px; color:#666; margin-bottom:20px;">আপনার নাম, নাম্বার এবং ঠিকানা সঠিক আছে কি না চেক করে নিন।</p>
-            <div style="text-align:left; background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:20px; font-size:14px;">
+        <div class="popup-card" style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 350px; margin: auto;">
+            <h3 style="color:#333;">Review Order</h3>
+            <p style="font-size:13px; color:#666;">সঠিক ডাটা চেক করে কনফার্ম করুন।</p>
+            <div style="text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin:15px 0; font-size:14px;">
                 <b>Name:</b> ${name}<br>
                 <b>Phone:</b> ${phone}<br>
                 <b>Address:</b> ${address}
             </div>
-            <div style="display:flex; gap:10px; justify-content:center;">
-                <button onclick="closeConfirm()" style="background:#e0e0e0; color:#333; border:none; padding:12px 25px; border-radius:10px; font-weight:bold; cursor:pointer; flex:1;">Edit</button>
-                <button onclick="finalOrderProcess()" class="confirm-now-btn" style="background:#2ecc71; color:white; border:none; padding:12px 25px; border-radius:10px; font-weight:bold; cursor:pointer; flex:1;">Confirm Now</button>
+            <div style="display:flex; gap:10px;">
+                <button onclick="closeConfirm()" style="background:#808080; color:white; border:none; padding:12px; border-radius:8px; flex:1; cursor:pointer; font-weight:bold;">Edit</button>
+                <button onclick="finalOrderProcess()" class="confirm-now-btn" style="background:#f85606; color:white; border:none; padding:12px; border-radius:8px; flex:1; cursor:pointer; font-weight:bold;">Confirm Now</button>
             </div>
         </div>
     `;
@@ -193,105 +151,71 @@ function closeConfirm() {
     document.getElementById('cartModal').style.display = "block"; 
 }
 
-// ৭. Google Sheets এ ডাটা পাঠানো (Final Fix)
+// ৬. গুগল শিটে ডাটা পাঠানো (Data Sending Fix)
 async function finalOrderProcess() {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
     const confirmBtn = document.querySelector(".confirm-now-btn");
-    
-    if(confirmBtn) {
-        confirmBtn.innerText = "Processing...";
-        confirmBtn.disabled = true;
-    }
+    confirmBtn.innerText = "Wait...";
+    confirmBtn.disabled = true;
 
     const orderId = "#EB" + Math.floor(1000 + Math.random() * 9000);
-    const itemsList = cart.map(i => `${i.name} (${i.quantity})`).join(", ");
+    const itemsSummary = cart.map(i => `${i.name}(${i.quantity})`).join(", ");
 
-    // ডাটা কন্টেইনার
     const data = {
         'Order_ID': orderId,
         'Name': document.getElementById('orderName').value.trim(),
         'Phone': document.getElementById('orderPhone').value.trim(),
         'Address': document.getElementById('orderAddress').value.trim(),
-        'Note': document.getElementById('orderNote').value.trim(),
-        'Items': itemsList,
+        'Items': itemsSummary,
         'Total': document.getElementById('cart-total').innerText,
         'Payment': document.querySelector('input[name="payment"]:checked').value
     };
 
     try {
-        // Google Script এ ডাটা পাঠানোর আধুনিক নিয়ম
         await fetch(scriptURL, {
             method: 'POST',
-            mode: 'no-cors', // Google Script এর জন্য এটি জরুরি
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors',
             body: new URLSearchParams(data)
         });
 
-        // সফল হলে কাজগুলো
         document.getElementById('confirmBox').style.display = 'none';
         showSuccessPopup(orderId);
-        
-        // কার্ট ক্লিয়ার
         cart = [];
         updateCartUI();
-        document.getElementById('orderName').value = "";
-        document.getElementById('orderPhone').value = "";
-        document.getElementById('orderAddress').value = "";
-    } catch (error) {
-        console.error('Error!', error.message);
-        alert("অর্ডার পাঠাতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।");
+    } catch (e) {
+        alert("Error sending order!");
     } finally {
-        if(confirmBtn) {
-            confirmBtn.innerText = "Confirm Now";
-            confirmBtn.disabled = false;
-        }
+        confirmBtn.disabled = false;
+        confirmBtn.innerText = "Confirm Now";
     }
 }
 
-// ৮. সাকসেস পপ-আপ
+// ৭. সাকসেস পপ-আপ
 function showSuccessPopup(orderId) {
     const popup = document.createElement('div');
-    popup.id = 'success-popup';
+    popup.className = 'modal-overlay';
     popup.innerHTML = `
-        <div style="background:white; padding:40px 20px; border-radius:25px; text-align:center; max-width:380px; width:90%; box-shadow:0 15px 50px rgba(0,0,0,0.5);">
-            <div style="font-size:60px;">✅</div>
-            <h2>অর্ডার সফল হয়েছে!</h2>
-            <p>আপনার অর্ডারটি গ্রহণ করা হয়েছে। <br>অর্ডার আইডি: <b style="color:#f85606;">${orderId}</b></p>
-            <button onclick="this.parentElement.parentElement.remove()" style="margin-top:20px; background:#f85606; color:white; border:none; padding:12px 35px; border-radius:30px; font-weight:bold; cursor:pointer;">বন্ধ করুন</button>
+        <div style="background:white; padding:40px; border-radius:20px; text-align:center;">
+            <h2 style="color:green;">Congratulations!</h2>
+            <p>Order ID: <b>${orderId}</b></p>
+            <button onclick="this.parentElement.parentElement.remove()" style="background:#f85606; color:white; border:none; padding:10px 25px; border-radius:20px; cursor:pointer;">Close</button>
         </div>`;
-    
-    Object.assign(popup.style, {
-        position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-        background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center',
-        justifyContent: 'center', z-index: '999999'
-    });
-    
     document.body.appendChild(popup);
-    setTimeout(() => { if(popup) popup.remove(); }, 15000);
+    setTimeout(() => popup.remove(), 10000);
 }
 
-// ৯. অন্যান্য ইউটিলিটি
-function searchProduct() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
-    });
-}
+// অন্যান্য ফাংশন
 function changeQty(index, delta) {
     cart[index].quantity += delta;
     if (cart[index].quantity < 1) cart.splice(index, 1);
     updateCartUI();
 }
-function toggleCart() {
-    const m = document.getElementById('cartModal');
-    if(m) m.style.display = (m.style.display === "block") ? "none" : "block";
-}
+
 function showToast(msg) {
-    let t = document.getElementById('toast');
-    if(!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
+    let t = document.getElementById('toast') || document.createElement('div');
+    t.id = 'toast'; document.body.appendChild(t);
     t.innerText = msg; t.style.display = "block";
-    setTimeout(() => { t.style.display = "none"; }, 3000);
+    setTimeout(() => t.style.display = "none", 3000);
 }
 
-window.onload = () => { displayProducts(products); updateCartUI(); };
+window.onload = () => { displayProducts(products); };
