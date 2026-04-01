@@ -631,3 +631,48 @@ header {
 @keyframes stroke { to { stroke-dashoffset: 0; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+
+
+
+/* রিভিউ বক্সের কার্ড ডিজাইন */
+#confirmBox .popup-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+/* Edit বাটন - প্রফেশনাল গ্রে কালার */
+.edit-btn {
+    background-color: #f1f2f6;
+    color: #2f3542;
+    border: 1px solid #dfe4ea;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+.edit-btn:hover {
+    background-color: #dfe4ea;
+}
+
+/* Confirm Now বাটন - হালকা সবুজ কালার */
+.confirm-now-btn {
+    background-color: #2ecc71; /* হালকা সবুজ */
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.confirm-now-btn:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
