@@ -340,26 +340,29 @@ function showPopup(msg) {
 
 
 
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (প্রফেশনাল মোড ও নেটওয়ার্ক এরর ফিক্স)
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (আপডেট করা)
-function finalOrderProcess() {
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (সম্পূর্ণ আপডেট ভার্সন)
+function finalOrderProcess() {
+    // আপনার গুগল অ্যাপস স্ক্রিপ্ট ইউআরএল (অবশ্যই চেক করবেন)
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
+
+    // বাটন লোডিং স্টেট দেখানো (প্রফেশনাল মোড)
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
-    confirmBtn.innerText = "Sending...";
+    
+    confirmBtn.innerHTML = '<span class="spinner"></span> Sending...';
     confirmBtn.disabled = true;
+    confirmBtn.style.opacity = "0.7";
 
-    // ডাটা সংগ্রহ - এখানে এক্সেল শিটের কলামের নামের সাথে মিল রাখা হয়েছে
+    // ডাটা সংগ্রহ (এক্সেল শিটের কলামের নামের সাথে মিল রেখে)
     const formData = new URLSearchParams();
     formData.append('name', document.getElementById('orderName').value.trim());
     formData.append('phone', document.getElementById('orderPhone').value.trim());
     formData.append('address', document.getElementById('orderAddress').value.trim());
     
-    // এক্সেলের কলাম যেহেতু 'Note', তাই এখানেও 'Note' ব্যবহার করা ভালো
-    const noteValue = document.getElementById('orderNote') ? document.getElementById('orderNote').value.trim() : "";
-    formData.append('note', noteValue); 
+    // নোট ফিল্ডটি 'Note for Courier' হলেও এক্সেলে 'Note' হিসেবে যাবে
+    const noteEl = document.getElementById('orderNote');
+    formData.append('note', noteEl ? noteEl.value.trim() : "");
     
     formData.append('items', JSON.stringify(cart));
     formData.append('total', document.getElementById('cart-total').innerText);
@@ -367,34 +370,62 @@ function finalOrderProcess() {
     const paymentEl = document.querySelector('input[name="payment"]:checked');
     formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    // Network Error সমাধান করতে mode: 'no-cors' যোগ করা হয়েছে
+    // ডাটা পাঠানো (CORS এরর ফিক্স করতে mode: 'no-cors' ব্যবহার করা হয়েছে)
     fetch(scriptURL, { 
         method: 'POST', 
         body: formData,
         mode: 'no-cors' 
     })
     .then(() => {
-        // অর্ডার সফল হলে
+        // অর্ডার সফল হওয়ার পর কাজগুলো
         document.getElementById('confirmBox').style.display = 'none';
         
-        // আপনার আগের প্রফেশনাল লুক ফিরিয়ে আনতে showPopup ব্যবহার করুন
+        // প্রফেশনাল সাকসেস পপ-আপ (যদি showPopup ফাংশন থাকে)
         if(typeof showPopup === 'function') {
             showPopup("✅ Order Placed Successfully!");
         } else {
             alert("Order Placed Successfully!");
         }
-
+        
+        // কার্ট ক্লিয়ার এবং UI আপডেট
         cart = [];
         updateCartUI();
-        if(typeof toggleCart === 'function') toggleCart();
-    })
-    .catch(error => {
-        console.error('Error!', error);
-        alert("Network Error! Please check your Google Script Deployment.");
+        
+        // কার্ট মডাল খোলা থাকলে বন্ধ করা
+        if(typeof toggleCart === 'function') {
+            const cartModal = document.getElementById('cartModal');
+            if(cartModal && cartModal.style.display === "block") {
+                toggleCart();
+            }
+        }
+
+        // ইনপুট ফিল্ডগুলো খালি করে দেওয়া
+        document.getElementById('orderName').value = "";
+        document.getElementById('orderPhone').value = "";
+        document.getElementById('orderAddress').value = "";
+        if(noteEl) noteEl.value = "";
+
+        // বাটন রিসেট
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
+        confirmBtn.style.opacity = "1";
+    })
+    .catch(error => {
+        console.error('Error!', error.message);
+        
+        if(typeof showPopup === 'function') {
+            showPopup("❌ Network Error! Check Script URL.");
+        } else {
+            alert("Network Error! Please check your Google Script URL.");
+        }
+        
+        // এরর হলে বাটন আগের অবস্থায় ফিরিয়ে আনা
+        confirmBtn.innerText = originalText;
+        confirmBtn.disabled = false;
+        confirmBtn.style.opacity = "1";
     });
 }
+
 
 
 
