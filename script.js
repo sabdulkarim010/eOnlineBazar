@@ -127,56 +127,57 @@ function changeQty(index, delta) {
 
 // ৫. কার্টে যোগ করা
 function addToCart(id) {
-    // ১. ক্লিক করা বাটনটি খুঁজে বের করা
-    const clickedButton = window.event ? window.event.target : null;
+    // ১. ক্লিক করা বাটনের রেফারেন্স নেওয়া
+    const btn = event.target;
     const cartIcon = document.querySelector('.cart-area');
     
-    if (clickedButton && cartIcon) {
-        // প্রোডাক্ট কার্ড অথবা মডাল কন্টেন্ট থেকে ছবি খোঁজা
-        const productCard = clickedButton.closest('.product-card') || clickedButton.closest('.modal-content');
-        const productImg = productCard ? productCard.querySelector('img') : null;
+    // ২. মডাল বা কার্ড থেকে ছবি খুঁজে বের করা
+    let productCard = btn.closest('.product-card') || btn.closest('.modal-content');
+    let productImg = productCard ? productCard.querySelector('img') : null;
 
-        if (productImg) {
-            const flyingImg = document.createElement('img');
-            flyingImg.src = productImg.src;
-            
-            // ছবির বর্তমান অবস্থান ও সাইজ মাপা
-            const imgRect = productImg.getBoundingClientRect();
-            const cartRect = cartIcon.getBoundingClientRect();
+    if (productImg && cartIcon) {
+        // ওড়ার জন্য নকল ইমেজ তৈরি
+        const flyingImg = document.createElement('img');
+        flyingImg.src = productImg.src;
+        
+        const imgRect = productImg.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
 
-            // উড়ার ইমেজের স্টাইল (সরাসরি JS থেকে)
-            flyingImg.style.position = 'fixed';
-            flyingImg.style.zIndex = '9999';
-            flyingImg.style.width = imgRect.width + 'px';
-            flyingImg.style.height = imgRect.height + 'px';
-            flyingImg.style.top = imgRect.top + 'px';
-            flyingImg.style.left = imgRect.left + 'px';
-            flyingImg.style.borderRadius = '50%';
-            flyingImg.style.objectFit = 'cover';
-            flyingImg.style.pointerEvents = 'none';
-            flyingImg.style.transition = 'all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1)';
+        // ইমেজের শুরুর পজিশন ও স্টাইল
+        flyingImg.style.cssText = `
+            position: fixed;
+            z-index: 10000;
+            top: ${imgRect.top}px;
+            left: ${imgRect.left}px;
+            width: ${imgRect.width}px;
+            height: ${imgRect.height}px;
+            border-radius: 50%;
+            object-fit: cover;
+            pointer-events: none;
+            transition: all 0.9s cubic-bezier(0.24, 1.05, 0.72, 1.1);
+        `;
 
-            document.body.appendChild(flyingImg);
+        document.body.appendChild(flyingImg);
 
-            // কার্টের দিকে উড়িয়ে নেওয়া
-            setTimeout(() => {
-                flyingImg.style.top = (cartRect.top + 10) + 'px';
-                flyingImg.style.left = (cartRect.left + 15) + 'px';
-                flyingImg.style.width = '20px';
-                flyingImg.style.height = '20px';
-                flyingImg.style.opacity = '0.3';
-            }, 50);
+        // কার্টের দিকে উড়িয়ে নেওয়া
+        setTimeout(() => {
+            flyingImg.style.top = (cartRect.top + 5) + 'px';
+            flyingImg.style.left = (cartRect.left + 10) + 'px';
+            flyingImg.style.width = '20px';
+            flyingImg.style.height = '20px';
+            flyingImg.style.opacity = '0.3';
+            flyingImg.style.transform = 'rotate(360deg)'; // একটু ঘুরে ঘুরে পড়বে
+        }, 50);
 
-            // এনিমেশন শেষে সরিয়ে ফেলা
-            setTimeout(() => {
-                flyingImg.remove();
-                cartIcon.style.transform = "scale(1.2)";
-                setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
-            }, 800);
-        }
+        // কাজ শেষে রিমুভ করা
+        setTimeout(() => {
+            flyingImg.remove();
+            cartIcon.style.transform = "scale(1.3)";
+            setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
+        }, 900);
     }
 
-    // ২. কার্টে ডেটা যোগ করার মূল লজিক (আপনার আগের কোড)
+    // ৩. আপনার আগের ডাটা সেভ করার লজিক
     const product = products.find(p => p.id === id);
     if (product) {
         cart.push(product);
@@ -184,6 +185,7 @@ function addToCart(id) {
         if (typeof showToast === "function") showToast(product.name + " added to cart!");
     }
 }
+
 
 
 
