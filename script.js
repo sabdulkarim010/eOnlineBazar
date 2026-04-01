@@ -271,10 +271,21 @@ function openModal(id) {
 }
 
 function searchProduct() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query));
-    displayProducts(filtered);
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const products = document.querySelectorAll('.product-card');
+    
+    products.forEach(product => {
+        const title = product.querySelector('h3').innerText.toLowerCase();
+        // টাইপ করার সাথে সাথে স্মুথলি হাইড বা শো হবে
+        if(title.includes(term)) {
+            product.style.display = "block";
+            product.style.animation = "fadeIn 0.5s";
+        } else {
+            product.style.display = "none";
+        }
+    });
 }
+
 
 function filterCategory(cat) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
