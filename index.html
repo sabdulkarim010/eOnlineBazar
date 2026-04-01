@@ -1,3 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eOnlineBazar | Your Trusted Marketplace</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ব্যানার স্টাইল */
+        .coming-soon-banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); 
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 20px;
+        }
+
+        .banner-content h2 {
+            font-size: 28px;
+            color: #fdb913; 
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .banner-content p {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        /* প্রোগ্রেস বার অ্যানিমেশন */
+        .progress-container {
+            width: 150px;
+            height: 4px;
+            background: #444;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 50px;
+            height: 100%;
+            background: #fdb913;
+            border-radius: 10px;
+            position: absolute;
+            animation: moveProgress 2s linear infinite;
+        }
+
+        @keyframes moveProgress {
+            0% { left: -50px; }
+            100% { left: 150px; }
+        }
+
+        /* এরর টেক্সট স্টাইল */
+        .error-text {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
 
     <div id="toast" class="toast-top"></div>
@@ -6,7 +80,7 @@
         <div class="container">
             <div class="top-bar">
                 <div class="logo-area">
-                    <h1 class="main-logo" onclick="location.reload()">eOnlineBazar</h1>
+                    <h1 class="main-logo">eOnlineBazar</h1>
                 </div>
                 <div class="cart-area" onclick="toggleCart()">
                     <div class="cart-wrapper">
@@ -18,7 +92,7 @@
             
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProduct()">
+               <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProduct()">
                     <button class="search-btn">🔍</button>
                 </div>
             </div>
@@ -39,7 +113,7 @@
         <div class="container">
             <div class="banner-content">
                 <h2>Coming Soon: A Revolution in Shopping!</h2>
-                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
+                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
                 <div class="progress-container">
                     <div class="progress-bar"></div>
                 </div>
@@ -48,8 +122,8 @@
     </section>
 
     <main class="container">
-        <div id="product-grid" class="product-grid">
-            </div>
+        <div id="product-grid" class="product-grid"></div>
+
     </main>
 
     <div id="productModal" class="modal">
@@ -62,93 +136,107 @@
     <div id="cartModal" class="modal">
         <div class="modal-content cart-content">
             <span class="close-modal" onclick="toggleCart()">&times;</span>
-            <h2 class="cart-title">Your Shopping Cart</h2>
+            <h2 class="cart-title" style="margin-bottom: 20px; text-align: center; border-bottom: 2px solid #f85606; padding-bottom: 10px;">Your Shopping Cart</h2>
             
-            <div id="cart-items-container">
-                </div>
+            <div id="cart-items-container"></div>
             
-            <div id="order-form-container" class="order-form" style="display: none;">
-                <h3 class="section-title">Shipping Address</h3>
+            <div id="order-form-container" class="order-form">
+                <h3 style="margin: 25px 0 15px; color: #232f3e; font-size: 18px;">Shipping Address</h3>
                 
-                <div class="input-group">
-                    <label>Full Name <span style="color:red;">*</span></label>
-                    <input type="text" id="orderName" placeholder="Enter full name">
+                                <div class="input-group">
+                    <label>Full Name <span class="required" style="color:red;">*</span></label>
+                    <input type="text" id="orderName" placeholder="Enter full name" required>
                     <span id="nameError" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
-                    <label>Mobile Number <span style="color:red;">*</span></label>
-                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11">
+                    <label>Mobile Number <span class="required" style="color:red;">*</span></label>
+                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11" required>
                     <span id="phoneError" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
-                    <label>Full Address <span style="color:red;">*</span></label>
-                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District"></textarea>
+                    <label>Full Address <span class="required" style="color:red;">*</span></label>
+                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District" required></textarea>
                     <span id="addressError" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
-                    <label style="font-weight: bold; display: block; margin-bottom: 10px;">Payment Method:</label>
-                    <div class="payment-grid">
-                        <label id="label-bkash" onclick="selectPayment('bkash')" class="pay-box">
-                            <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
-                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/bkash.png" width="30" alt="bkash"><br>
-                            <span>bKash</span>
+                    <label>Note for Courier (Optional)</label>
+                    <textarea id="orderNote" placeholder="Extra instructions for delivery..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 8px;">Payment Method:</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                        
+                        <label id="label-bkash" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-bkash" value="bkash">
+                            <span style="font-size: 18px;">📱</span><br>
+                            <span style="font-weight:bold; font-size:13px;">bKash</span>
                         </label>
-                        <label id="label-nagad" onclick="selectPayment('nagad')" class="pay-box">
-                            <input type="radio" name="payment" id="pay-nagad" value="nagad" style="display:none;">
-                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/nagad.png" width="30" alt="nagad"><br>
-                            <span>Nagad</span>
+
+                        <label id="label-nagad" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-nagad" value="nagad">
+                            <span style="font-size: 18px;">💸</span><br>
+                            <span style="font-weight:bold; font-size:13px;">Nagad</span>
                         </label>
-                        <label id="label-cod" onclick="selectPayment('cod')" class="pay-box">
-                            <input type="radio" name="payment" id="pay-cod" value="cod" style="display:none;">
-                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/cod.png" width="30" alt="cod"><br>
-                            <span>COD</span>
+
+                        <label id="label-cod" style="border: 2px solid #f85606; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; background: #fff5f0;">
+                            <input type="radio" name="payment" id="pay-cod" value="cod" checked>
+                            <span style="font-size: 18px;">🚚</span><br>
+                            <span style="font-weight:bold; font-size:10px; line-height: 1.2; display: block;">Cash on Delivery</span>
                         </label>
                     </div>
                 </div>
 
-                <div class="coupon-box">
-                    <input type="text" id="couponInput" placeholder="Enter (SAVE10)">
-                    <button onclick="applyCoupon()">Apply</button>
-                    <p id="couponMessage"></p>
+
+                <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
+                    <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="couponInput" placeholder="Enter (SAVE10)" style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
+                        <button onclick="applyCoupon()" style="padding: 10px 15px; background: #232f3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Apply</button>
+                    </div>
+                    <p id="couponMessage" style="font-size: 12px; margin-top: 5px; display: none; font-weight: bold;"></p>
                 </div>
 
-                <div class="cart-summary-box">
-                    <h4>Total Bill: ৳ <span id="cart-total">0</span></h4>
-                    <button class="confirm-btn" onclick="validateAndOrder()">Confirm Order</button>
+                <div class="total-section" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #eee;">
+                    <h4 style="font-size: 20px; margin-bottom: 15px; display: flex; justify-content: space-between;">
+                        <span>Total Bill:</span> <span>৳ <span id="cart-total">0</span></span>
+                    </h4>
+                    <button class="confirm-btn" style="height: 55px; font-size: 18px;" onclick="validateAndOrder()">Confirm Order</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="confirmBox" class="modal-overlay" style="display:none;">
-        <div class="review-card">
-            <h3>Review Your Order</h3>
-            <p>Please check your phone number and address again.</p>
-            <div class="review-btns">
-                <button class="edit-btn" onclick="closeConfirm()">Edit</button>
-                <button class="confirm-now-btn" onclick="finalOrderProcess()">Confirm Now</button>
+    <div id="confirmBox" class="success-box" style="display:none; border-top: 6px solid #f85606;">
+        <div class="success-content">
+            <h3 style="color:#232f3e; margin-bottom:15px;">Review Your Order</h3>
+            <p style="font-size:15px; margin-bottom:25px; color:#555;">Please make sure your phone number and address are correct before proceeding.</p>
+            <div style="display:flex; gap:10px;">
+                <button class="confirm-btn" style="background:#666; margin:0; flex:1;" onclick="closeConfirm()">Edit</button>
+                <button class="confirm-btn" style="margin:0; flex:1.5;" onclick="finalOrderProcess()">Confirm Now</button>
             </div>
         </div>
     </div>
 
-    <div id="successBox" class="modal-overlay" style="display:none;">
-        <div class="success-card" id="successMessage">
-            </div>
+    <div id="successBox" class="success-box" style="display:none;">
+        <div class="success-content" id="successMessage"></div>
     </div>
 
+    <script src="script.js"></script>
+    
     <footer class="site-footer">
-        <div class="container footer-content">
+        <div class="footer-content">
             <h3 class="footer-logo">eOnlineBazar</h3>
             <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
             <div class="footer-links">
-                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a> | 
+                <a href="#">Terms of Service</a>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-
 </body>
+</html>
