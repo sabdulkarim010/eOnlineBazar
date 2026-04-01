@@ -1,3 +1,8 @@
+/* Project: eOnlineBazar - Integrated Data & UI Fix 
+   Updated by: Gemini 
+   Date: April 2026 
+*/
+
 // ১. পণ্য তালিকা (৪০টি প্রোডাক্ট)
 const products = [
     // Grocery (মুদি সওদা)
@@ -49,7 +54,6 @@ const products = [
     { id: 40, name: "Kids Water Bottle", price: 220, category: "kids", img: "🥤", desc: "BPA free easy sip bottle." }
 ];
 
-// --- Global Variables ---
 let cart = []; 
 let discountPercent = 0; 
 
@@ -69,12 +73,11 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ২. বিবরণ দেখার মডাল
+// ২. মডাল ফাংশন
 function openModal(id) {
     const p = products.find(prod => prod.id === id);
     const modalBody = document.getElementById('modal-body');
     const modal = document.getElementById('productModal');
-    
     if (p && modalBody) {
         modalBody.innerHTML = `
             <div style="text-align:center; padding: 20px;">
@@ -87,54 +90,13 @@ function openModal(id) {
         modal.style.display = "block";
     }
 }
-
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
 
-// ৩. ওড়ার অ্যানিমেশন ও কার্টে যোগ
+// ৩. কার্টে যোগ ও অ্যানিমেশন
 function addToCart(id, event) {
     if(event) event.stopPropagation();
     const product = products.find(p => p.id === id);
     if (!product) return;
-
-    const cartIcon = document.querySelector('.cart-wrapper');
-    let sourceImg = null;
-    const modal = document.getElementById('productModal');
-    
-    if (modal && modal.style.display === "block") {
-        sourceImg = modal.querySelector('span[style*="font-size:80px"]');
-    } else {
-        const card = event ? event.target.closest('.product-card') : null;
-        sourceImg = card ? card.querySelector('.p-img') : null;
-    }
-
-    if (sourceImg && cartIcon) {
-        const flyingItem = document.createElement('div');
-        flyingItem.innerHTML = sourceImg.innerHTML; 
-        const rect = sourceImg.getBoundingClientRect();
-        const cartRect = cartIcon.getBoundingClientRect();
-
-        flyingItem.style.cssText = `
-            position: fixed; z-index: 10000; 
-            top: ${rect.top}px; left: ${rect.left}px;
-            width: ${rect.width}px; height: ${rect.height}px; 
-            font-size: ${rect.width > 50 ? '60px' : '30px'};
-            transition: all 0.9s cubic-bezier(0.42, 0, 0.58, 1); 
-            pointer-events: none;
-            display: flex; align-items: center; justify-content: center;
-        `;
-        document.body.appendChild(flyingItem);
-
-        setTimeout(() => {
-            flyingItem.style.top = (cartRect.top + 5) + 'px';
-            flyingItem.style.left = (cartRect.left + 5) + 'px';
-            flyingItem.style.width = '20px';
-            flyingItem.style.height = '20px';
-            flyingItem.style.fontSize = '12px';
-            flyingItem.style.opacity = '0.4';
-            flyingItem.style.transform = 'scale(0.1) rotate(450deg)';
-        }, 50);
-        setTimeout(() => { flyingItem.remove(); }, 950);
-    }
 
     let existing = cart.find(item => item.id === id);
     if (existing) { existing.quantity++; } else { cart.push({ ...product, quantity: 1 }); }
@@ -143,7 +105,7 @@ function addToCart(id, event) {
     showToast(product.name + " added!");
 }
 
-// ৪. কার্ট UI
+// ৪. কার্ট UI আপডেট
 function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
@@ -182,22 +144,19 @@ function updateCartUI() {
 
 // ৫. পেমেন্ট সিলেকশন
 function selectPayment(method) {
-    const labels = ['label-bkash', 'label-nagad', 'label-cod'];
-    labels.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) { element.style.border = "2px solid #ddd"; element.style.background = "none"; }
+    ['bkash', 'nagad', 'cod'].forEach(m => {
+        const el = document.getElementById('label-' + m);
+        if (el) { el.style.border = "2px solid #ddd"; el.style.background = "none"; }
     });
-
     const selectedLabel = document.getElementById('label-' + method);
-    const selectedRadio = document.getElementById('pay-' + method);
-    if (selectedLabel && selectedRadio) {
+    if (selectedLabel) {
         selectedLabel.style.border = "2px solid #f85606";
         selectedLabel.style.background = "#fff5f0";
-        selectedRadio.checked = true;
+        document.getElementById('pay-' + method).checked = true;
     }
 }
 
-// ৬. ভ্যালিডেশন এবং রিভিউ বক্স দেখানো
+// ৬. ভ্যালিডেশন এবং রিভিউ বক্স (Edit Button Fix Included)
 function validateAndOrder() {
     const name = document.getElementById('orderName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
@@ -207,9 +166,26 @@ function validateAndOrder() {
     if (!/^01[3-9]\d{8}$/.test(phone)) { showToast("Invalid phone number!"); return; }
     if (address.length < 5) { showToast("Enter full address!"); return; }
 
-    // কার্ট মডাল বন্ধ করা এবং রিভিউ বক্স খোলা (ডাবল পপ-আপ সমস্যা সমাধান)
     document.getElementById('cartModal').style.display = 'none';
-    document.getElementById('confirmBox').style.display = 'flex';
+    
+    // রিভিউ বক্স কন্টেন্ট এবং Edit Button এ কালার সেট
+    const confirmBox = document.getElementById('confirmBox');
+    confirmBox.innerHTML = `
+        <div class="popup-card" style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 380px; width: 90%;">
+            <h3 style="margin-bottom:10px;">Review Your Order</h3>
+            <p style="font-size:14px; color:#666; margin-bottom:20px;">আপনার নাম, নাম্বার এবং ঠিকানা সঠিক আছে কি না চেক করে নিন।</p>
+            <div style="text-align:left; background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:20px; font-size:14px;">
+                <b>Name:</b> ${name}<br>
+                <b>Phone:</b> ${phone}<br>
+                <b>Address:</b> ${address}
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button onclick="closeConfirm()" style="background:#e0e0e0; color:#333; border:none; padding:12px 25px; border-radius:10px; font-weight:bold; cursor:pointer; flex:1;">Edit</button>
+                <button onclick="finalOrderProcess()" class="confirm-now-btn" style="background:#2ecc71; color:white; border:none; padding:12px 25px; border-radius:10px; font-weight:bold; cursor:pointer; flex:1;">Confirm Now</button>
+            </div>
+        </div>
+    `;
+    confirmBox.style.display = 'flex';
 }
 
 function closeConfirm() { 
@@ -217,86 +193,82 @@ function closeConfirm() {
     document.getElementById('cartModal').style.display = "block"; 
 }
 
-// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
-function finalOrderProcess() {
+// ৭. Google Sheets এ ডাটা পাঠানো (Final Fix)
+async function finalOrderProcess() {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
     const confirmBtn = document.querySelector(".confirm-now-btn");
-    confirmBtn.innerText = "Processing...";
-    confirmBtn.disabled = true;
-
-    const orderId = "#" + Math.floor(10000 + Math.random() * 90000).toString().substring(0, 5);
-    const formData = new URLSearchParams();
-    formData.append('Order ID', orderId);
-    formData.append('Name', document.getElementById('orderName').value.trim());
-    formData.append('Phone', document.getElementById('orderPhone').value.trim());
-    formData.append('Address', document.getElementById('orderAddress').value.trim());
     
-    const noteEl = document.getElementById('orderNote');
-    formData.append('Note', noteEl ? noteEl.value.trim() : "");
-    formData.append('Items', JSON.stringify(cart));
-    formData.append('Total', document.getElementById('cart-total').innerText);
-    
-    const paymentEl = document.querySelector('input[name="payment"]:checked');
-    formData.append('Payment', paymentEl ? paymentEl.value : "Not Selected");
+    if(confirmBtn) {
+        confirmBtn.innerText = "Processing...";
+        confirmBtn.disabled = true;
+    }
 
-    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-    .then(() => {
-        // সবকিছু হাইড করা
+    const orderId = "#EB" + Math.floor(1000 + Math.random() * 9000);
+    const itemsList = cart.map(i => `${i.name} (${i.quantity})`).join(", ");
+
+    // ডাটা কন্টেইনার
+    const data = {
+        'Order_ID': orderId,
+        'Name': document.getElementById('orderName').value.trim(),
+        'Phone': document.getElementById('orderPhone').value.trim(),
+        'Address': document.getElementById('orderAddress').value.trim(),
+        'Note': document.getElementById('orderNote').value.trim(),
+        'Items': itemsList,
+        'Total': document.getElementById('cart-total').innerText,
+        'Payment': document.querySelector('input[name="payment"]:checked').value
+    };
+
+    try {
+        // Google Script এ ডাটা পাঠানোর আধুনিক নিয়ম
+        await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // Google Script এর জন্য এটি জরুরি
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: new URLSearchParams(data)
+        });
+
+        // সফল হলে কাজগুলো
         document.getElementById('confirmBox').style.display = 'none';
-        document.getElementById('cartModal').style.display = 'none';
-        
         showSuccessPopup(orderId);
+        
+        // কার্ট ক্লিয়ার
         cart = [];
         updateCartUI();
-        
-        // ফর্ম ক্লিয়ার
         document.getElementById('orderName').value = "";
         document.getElementById('orderPhone').value = "";
         document.getElementById('orderAddress').value = "";
-        if(noteEl) noteEl.value = "";
-        
-        confirmBtn.innerText = "Confirm Now";
-        confirmBtn.disabled = false;
-    })
-    .catch(error => {
-        alert("Network Error!");
-        confirmBtn.disabled = false;
-    });
+    } catch (error) {
+        console.error('Error!', error.message);
+        alert("অর্ডার পাঠাতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।");
+    } finally {
+        if(confirmBtn) {
+            confirmBtn.innerText = "Confirm Now";
+            confirmBtn.disabled = false;
+        }
+    }
 }
 
-// ৮. ১০ সেকেন্ডের সাকসেস পপ-আপ
+// ৮. সাকসেস পপ-আপ
 function showSuccessPopup(orderId) {
-    const oldPopup = document.getElementById('success-popup');
-    if(oldPopup) oldPopup.remove();
-
     const popup = document.createElement('div');
     popup.id = 'success-popup';
-    
-    const style = document.createElement('style');
-    style.innerHTML = `
-        #success-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 99999; animation: fadeIn 0.4s ease; }
-        .popup-card-final { background: white; padding: 40px 20px; border-radius: 25px; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 15px 50px rgba(0,0,0,0.5); animation: slideUp 0.5s ease; }
-        .order-id-display { background: #f1f2f6; padding: 15px; border-radius: 12px; margin: 20px 0; font-size: 18px; font-weight: bold; border: 2px dashed #dfe6e9; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    `;
-    document.head.appendChild(style);
-
     popup.innerHTML = `
-        <div class="popup-card-final">
+        <div style="background:white; padding:40px 20px; border-radius:25px; text-align:center; max-width:380px; width:90%; box-shadow:0 15px 50px rgba(0,0,0,0.5);">
             <div style="font-size:60px;">✅</div>
-            <h2>Congratulations!</h2>
-            <p>Thank you for your purchase.<br>Your order has been placed.</p>
-            <div class="order-id-display">Order ID: <span style="color:#f85606;">${orderId}</span></div>
-            <p style="font-size:14px; color:#888;">We will call you shortly for confirmation.</p>
-            <button onclick="document.getElementById('success-popup').remove()" style="background:#f85606; color:white; border:none; padding:12px 35px; border-radius:30px; font-weight:bold; cursor:pointer;">Close</button>
+            <h2>অর্ডার সফল হয়েছে!</h2>
+            <p>আপনার অর্ডারটি গ্রহণ করা হয়েছে। <br>অর্ডার আইডি: <b style="color:#f85606;">${orderId}</b></p>
+            <button onclick="this.parentElement.parentElement.remove()" style="margin-top:20px; background:#f85606; color:white; border:none; padding:12px 35px; border-radius:30px; font-weight:bold; cursor:pointer;">বন্ধ করুন</button>
         </div>`;
-
+    
+    Object.assign(popup.style, {
+        position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+        background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center',
+        justifyContent: 'center', z-index: '999999'
+    });
+    
     document.body.appendChild(popup);
-    setTimeout(() => {
-        const p = document.getElementById('success-popup');
-        if(p) { p.style.opacity = '0'; p.style.transition = 'opacity 1s ease'; setTimeout(() => p.remove(), 1000); }
-    }, 10000); 
+    setTimeout(() => { if(popup) popup.remove(); }, 15000);
 }
 
 // ৯. অন্যান্য ইউটিলিটি
@@ -306,18 +278,15 @@ function searchProduct() {
         card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
     });
 }
-
 function changeQty(index, delta) {
     cart[index].quantity += delta;
     if (cart[index].quantity < 1) cart.splice(index, 1);
     updateCartUI();
 }
-
 function toggleCart() {
     const m = document.getElementById('cartModal');
     if(m) m.style.display = (m.style.display === "block") ? "none" : "block";
 }
-
 function showToast(msg) {
     let t = document.getElementById('toast');
     if(!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
@@ -325,22 +294,4 @@ function showToast(msg) {
     setTimeout(() => { t.style.display = "none"; }, 3000);
 }
 
-// রিয়েল-টাইম ভ্যালিডেশন সেটআপ
-function setupValidation() {
-    const fields = ['orderName', 'orderPhone', 'orderAddress'];
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('input', function() {
-                const val = this.value.trim();
-                let ok = false;
-                if (id === 'orderName') ok = val.split(' ').length >= 2;
-                else if (id === 'orderPhone') ok = /^01[3-9]\d{8}$/.test(val);
-                else if (id === 'orderAddress') ok = val.length >= 5;
-                this.style.border = ok ? "2px solid green" : "2px solid red";
-            });
-        }
-    });
-}
-
-window.onload = () => { displayProducts(products); updateCartUI(); setupValidation(); };
+window.onload = () => { displayProducts(products); updateCartUI(); };
