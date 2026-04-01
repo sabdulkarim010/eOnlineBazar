@@ -255,100 +255,123 @@ function setupValidation() {
 }
 
 // কনফার্ম বাটন ফাংশন (সিরিয়াল অনুযায়ী মেসেজ আসবে)
+// ১. মেইন ফাংশন: কনফার্ম অর্ডার বাটনে ক্লিক করলে এটি আগে কাজ করবে
 function validateAndOrder() {
     const name = document.getElementById('orderName');
     const phone = document.getElementById('orderPhone');
     const address = document.getElementById('orderAddress');
     
     let isValid = true;
-    let errorMessage = "";
+    let errorMsg = "";
 
-    // সব এরর রিমুভ করার ফাংশন
-    const resetStyle = (el) => {
-        el.style.border = "1px solid #ddd";
-        el.style.backgroundColor = "#fff";
-    };
+    // জাঙ্ক টেক্সট বা আজেবাজে টাইপিং (যেমন: gggggg বা jjjjj) চেক করার লজিক
+    const isJunk = (str) => /(.)\1{4,}/.test(str);
 
-    const setErrorStyle = (el) => {
-        el.style.border = "2px solid red";
-        el.style.backgroundColor = "#ffe6e6"; // হালকা লাল
+    // নাম চেক (কমপক্ষে ২ শব্দ এবং জাঙ্ক ফিল্টার)
+    if (name.value.trim().split(' ').length < 2 || isJunk(name.value.trim())) {
+        name.style.border = "2px solid red";
+        name.style.backgroundColor = "#ffe6e6";
+        if(!errorMsg) errorMsg = "Please enter your valid full name!";
         isValid = false;
-    };
-
-    const setSuccessStyle = (el) => {
-        el.style.border = "2px solid green";
-        el.style.backgroundColor = "#f0fff0"; // হালকা সবুজ
-    };
-
-    // ১. নাম ভ্যালিডেশন (কমপক্ষে ২ শব্দ এবং জাঙ্ক টেক্সট চেক)
-    const nameValue = name.value.trim();
-    const nameRegex = /^[a-zA-Z\s]{4,}$/; // শুধু অক্ষর এবং কমপক্ষে ৪ ক্যারেক্টার
-    if (nameValue === "" || nameValue.split(' ').length < 2 || !nameRegex.test(nameValue)) {
-        setErrorStyle(name);
-        errorMessage = "Please enter your full name (at least 2 words).";
-    } else {
-        setSuccessStyle(name);
     }
 
-    // ২. ফোন নাম্বার ভ্যালিডেশন (সঠিক ১১ ডিজিট)
-    const phoneValue = phone.value.trim();
-    const phoneRegex = /^01[3-9]\d{8}$/;
-    if (!phoneRegex.test(phoneValue)) {
-        setErrorStyle(phone);
-        if (!errorMessage) errorMessage = "Please enter a valid 11-digit BD mobile number.";
-    } else {
-        setSuccessStyle(phone);
+    // ফোন চেক (সঠিক ১১ ডিজিট বিডি নাম্বার)
+    if (!/^01[3-9]\d{8}$/.test(phone.value.trim())) {
+        phone.style.border = "2px solid red";
+        phone.style.backgroundColor = "#ffe6e6";
+        if(!errorMsg) errorMsg = "Please enter a valid mobile number!";
+        isValid = false;
     }
 
-    // ৩. ঠিকানা ভ্যালিডেশন (কমপক্ষে ৩টি শব্দ থাকতে হবে জাঙ্ক এড়াতে)
-    const addressValue = address.value.trim();
-    if (addressValue === "" || addressValue.split(' ').length < 3) {
-        setErrorStyle(address);
-        if (!errorMessage) errorMessage = "Please provide a complete and valid address.";
-    } else {
-        setSuccessStyle(address);
+    // ঠিকানা চেক (কমপক্ষে ৩টি শব্দ থাকতে হবে)
+    if (address.value.trim().split(' ').length < 3 || isJunk(address.value.trim())) {
+        address.style.border = "2px solid red";
+        address.style.backgroundColor = "#ffe6e6";
+        if(!errorMsg) errorMsg = "Please provide a complete address!";
+        isValid = false;
     }
 
-    // যদি কোনো ভুল থাকে তবে পপ-আপ দেখানো
+    // কোনো একটি ঘর ভুল থাকলে সেন্টারে পপ-আপ মেসেজ আসবে
     if (!isValid) {
-        showPopup(errorMessage);
+        showPopup(errorMsg);
         return;
     }
 
-    // সব ঠিক থাকলে কনফার্ম বক্স দেখানো
+    // সব ঠিক থাকলে রিভিউ বক্স ওপেন হবে
     document.getElementById('confirmBox').style.display = 'flex';
 }
 
-// সুন্দর পপ-আপ মেসেজ ফাংশন (২ সেকেন্ড পর চলে যাবে)
-function showPopup(msg) {
-    const toast = document.getElementById('toast');
-    toast.innerText = msg;
-    toast.style.display = 'block';
-    toast.style.backgroundColor = '#ff4d4d';
-    toast.style.color = 'white';
-    toast.style.padding = '15px';
-    toast.style.position = 'fixed';
-    toast.style.top = '20px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.borderRadius = '8px';
-    toast.style.zIndex = '10000';
-    toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+// ২. টাইপ করার সময় রিয়েল-টাইম কালার চেঞ্জ (সবুজ/লাল) করার লজিক
+const inputs = ['orderName', 'orderPhone', 'orderAddress'];
+inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', function() {
+            const value = this.trim ? this.value.trim() : this.value;
+            
+            // ঘর খালি থাকলে ডিফল্ট স্টাইল
+            if (value === "") {
+                this.style.border = "1px solid #ddd";
+                this.style.backgroundColor = "#fff";
+                return;
+            }
 
+            let isCorrect = false;
+            if (id === 'orderName') {
+                isCorrect = /^[a-zA-Z\s]{4,}$/.test(value) && value.split(' ').length >= 2 && !/(.)\1{4,}/.test(value);
+            } else if (id === 'orderPhone') {
+                isCorrect = /^01[3-9]\d{8}$/.test(value);
+            } else if (id === 'orderAddress') {
+                isCorrect = value.split(' ').length >= 3 && !/(.)\1{4,}/.test(value);
+            }
+
+            // সঠিক হলে সবুজ, ভুল হলে লাল বর্ডার ও হাইলাইট
+            if (isCorrect) {
+                this.style.border = "2px solid #28a745";
+                this.style.backgroundColor = "#f0fff0";
+            } else {
+                this.style.border = "2px solid #dc3545";
+                this.style.backgroundColor = "#fff5f5";
+            }
+        });
+    }
+});
+
+// ৩. সেন্টারে (Center) পপ-আপ মেসেজ দেখানোর ফাংশন
+function showPopup(msg) {
+    let toast = document.getElementById('toast');
+    if(!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        document.body.appendChild(toast);
+    }
+    
+    toast.innerText = msg;
+    // স্টাইল যা মেসেজটিকে স্ক্রিনের একদম মাঝখানে আনবে
+    Object.assign(toast.style, {
+        display: 'block',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: '20px 30px',
+        borderRadius: '10px',
+        zIndex: '10001',
+        textAlign: 'center',
+        boxShadow: '0 5px 20px rgba(0,0,0,0.3)',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        minWidth: '280px'
+    });
+
+    // ২ সেকেন্ড পর অটো হাইড হয়ে যাবে
     setTimeout(() => {
         toast.style.display = 'none';
     }, 2000);
 }
 
-// ইনপুট দেওয়ার সাথে সাথে লাল বর্ডার সরানোর জন্য ইভেন্ট লিসেনার
-['orderName', 'orderPhone', 'orderAddress'].forEach(id => {
-    document.getElementById(id).addEventListener('input', function() {
-        if(this.value.trim() !== "") {
-            this.style.border = "2px solid green";
-            this.style.backgroundColor = "#f0fff0";
-        }
-    });
-});
 
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
