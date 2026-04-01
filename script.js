@@ -342,25 +342,25 @@ function showPopup(msg) {
 
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (সম্পূর্ণ আপডেট ভার্সন)
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (ফাইনাল ফিক্স)
 function finalOrderProcess() {
-    // আপনার গুগল অ্যাপস স্ক্রিপ্ট ইউআরএল (অবশ্যই চেক করবেন)
+    // আপনার স্ক্রিপ্ট URL (এটি পরিবর্তন করার প্রয়োজন নেই যদি না নতুন করে Deploy করেন)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
 
-    // বাটন লোডিং স্টেট দেখানো (প্রফেশনাল মোড)
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
     
-    confirmBtn.innerHTML = '<span class="spinner"></span> Sending...';
+    // প্রফেশনাল লোডিং স্টাইল
+    confirmBtn.innerText = "Sending...";
     confirmBtn.disabled = true;
-    confirmBtn.style.opacity = "0.7";
 
-    // ডাটা সংগ্রহ (এক্সেল শিটের কলামের নামের সাথে মিল রেখে)
+    // ডাটা সংগ্রহ
     const formData = new URLSearchParams();
     formData.append('name', document.getElementById('orderName').value.trim());
     formData.append('phone', document.getElementById('orderPhone').value.trim());
     formData.append('address', document.getElementById('orderAddress').value.trim());
     
-    // নোট ফিল্ডটি 'Note for Courier' হলেও এক্সেলে 'Note' হিসেবে যাবে
+    // আপনার এক্সেলে যেহেতু 'Note' লেখা, তাই এখানে 'note' কি (key) ব্যবহার করা হয়েছে
     const noteEl = document.getElementById('orderNote');
     formData.append('note', noteEl ? noteEl.value.trim() : "");
     
@@ -370,62 +370,48 @@ function finalOrderProcess() {
     const paymentEl = document.querySelector('input[name="payment"]:checked');
     formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    // ডাটা পাঠানো (CORS এরর ফিক্স করতে mode: 'no-cors' ব্যবহার করা হয়েছে)
+    // fetch এর মাধ্যমে ডাটা পাঠানো (Network Error সমাধান করার জন্য mode: 'no-cors' মাস্ট)
     fetch(scriptURL, { 
         method: 'POST', 
         body: formData,
         mode: 'no-cors' 
     })
     .then(() => {
-        // অর্ডার সফল হওয়ার পর কাজগুলো
+        // অর্ডার সফল হওয়ার পর কাজ
         document.getElementById('confirmBox').style.display = 'none';
         
-        // প্রফেশনাল সাকসেস পপ-আপ (যদি showPopup ফাংশন থাকে)
+        // সুন্দর পপ-আপ মেসেজ
         if(typeof showPopup === 'function') {
             showPopup("✅ Order Placed Successfully!");
         } else {
             alert("Order Placed Successfully!");
         }
         
-        // কার্ট ক্লিয়ার এবং UI আপডেট
+        // কার্ট এবং UI রিসেট
         cart = [];
         updateCartUI();
         
-        // কার্ট মডাল খোলা থাকলে বন্ধ করা
-        if(typeof toggleCart === 'function') {
-            const cartModal = document.getElementById('cartModal');
-            if(cartModal && cartModal.style.display === "block") {
-                toggleCart();
-            }
-        }
+        // যদি কার্ট খোলা থাকে তবে তা বন্ধ করা
+        const cartModal = document.getElementById('cartModal');
+        if(cartModal) cartModal.style.display = 'none';
 
-        // ইনপুট ফিল্ডগুলো খালি করে দেওয়া
+        // ফর্ম ক্লিয়ার করা
         document.getElementById('orderName').value = "";
         document.getElementById('orderPhone').value = "";
         document.getElementById('orderAddress').value = "";
         if(noteEl) noteEl.value = "";
-
-        // বাটন রিসেট
+        
+        // বাটন আগের অবস্থায় আনা
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
-        confirmBtn.style.opacity = "1";
     })
     .catch(error => {
         console.error('Error!', error.message);
-        
-        if(typeof showPopup === 'function') {
-            showPopup("❌ Network Error! Check Script URL.");
-        } else {
-            alert("Network Error! Please check your Google Script URL.");
-        }
-        
-        // এরর হলে বাটন আগের অবস্থায় ফিরিয়ে আনা
+        alert("Something went wrong! Please check your internet or try again.");
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
-        confirmBtn.style.opacity = "1";
     });
 }
-
 
 
 
