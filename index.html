@@ -208,17 +208,21 @@
         </div>
     </div>
 
-    <div id="confirmBox" class="success-box" style="display:none; border-top: 6px solid #f85606;">
-        <div class="success-content">
-            <h3 style="color:#232f3e; margin-bottom:15px;">Review Your Order</h3>
-            <p style="font-size:15px; margin-bottom:25px; color:#555;">Please make sure your phone number and address are correct before proceeding.</p>
-            <div style="display:flex; gap:10px;">
-                <button class="confirm-btn" style="background:#666; margin:0; flex:1;" onclick="closeConfirm()">Edit</button>
-                <button class="confirm-btn" style="margin:0; flex:1.5;" onclick="finalOrderProcess()">Confirm Now</button>
-            </div>
+    
+
+    <div id="confirmBox" class="success-box" style="display:none;">
+    <div class="success-content">
+        <h3>Review Your Order</h3>
+        <p>Please make sure your phone number and address are correct before proceeding.</p>
+        <div style="display:flex; gap:10px;">
+            <button onclick="closeConfirm()">Edit</button>
+            <button onclick="finalOrderProcess()">Confirm Now</button> 
         </div>
     </div>
+</div>
 
+
+    
     <div id="successBox" class="success-box" style="display:none;">
         <div class="success-content" id="successMessage"></div>
     </div>
