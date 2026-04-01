@@ -341,15 +341,20 @@ function showPopup(msg) {
 
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (প্রফেশনাল মোড ও নেটওয়ার্ক এরর ফিক্স)
 function finalOrderProcess() {
-    // আপনার Web App URL নিশ্চিত করুন
+    // আপনার Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
 
-    // বাটন লোডিং দেখানো
+    // কনফার্ম বক্সের বাটন লোডিং স্টেট
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
-    confirmBtn.innerText = "Sending...";
+    
+    // লোডিং এনিমেশন ও স্টাইল
+    confirmBtn.innerHTML = '<span class="spinner"></span> Sending...';
     confirmBtn.disabled = true;
+    confirmBtn.style.opacity = "0.7";
+    confirmBtn.style.cursor = "not-allowed";
 
     // ডাটা সংগ্রহ
     const formData = new URLSearchParams();
@@ -357,7 +362,6 @@ function finalOrderProcess() {
     formData.append('phone', document.getElementById('orderPhone').value.trim());
     formData.append('address', document.getElementById('orderAddress').value.trim());
     
-    // নোট ফিল্ড চেক (যদি থাকে তবেই ডাটা নিবে)
     const noteEl = document.getElementById('orderNote');
     formData.append('note', noteEl ? noteEl.value.trim() : "");
     
@@ -367,29 +371,53 @@ function finalOrderProcess() {
     const paymentEl = document.querySelector('input[name="payment"]:checked');
     formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    // ডাটা পাঠানো (CORS সমস্যা সমাধানের জন্য mode: 'no-cors' যুক্ত করা হয়েছে)
+    // ডাটা পাঠানো (mode: 'no-cors' ব্যবহার করে Network Error সমাধান করা হয়েছে)
     fetch(scriptURL, { 
         method: 'POST', 
         body: formData,
         mode: 'no-cors' 
     })
     .then(() => {
-        // no-cors মোডে সাকসেস মেসেজ সরাসরি দেখানো হয়
+        // অর্ডার সফল হওয়ার পর সুন্দর পপ-আপ ও ক্লিনিং
         document.getElementById('confirmBox').style.display = 'none';
-        alert("Order Placed Successfully!");
+        
+        // প্রফেশনাল সাকসেস মেসেজ
+        showPopup("✅ Order Placed Successfully!");
         
         // কার্ট খালি করা এবং UI আপডেট
         cart = [];
         updateCartUI();
-        if(typeof toggleCart === 'function') toggleCart();
+        
+        // যদি কার্ট মডাল ওপেন থাকে তবে তা বন্ধ করা
+        const cartModal = document.getElementById('cartModal');
+        if(cartModal) cartModal.style.display = 'none';
+
+        // ফর্ম ইনপুট ক্লিয়ার
+        document.getElementById('orderName').value = "";
+        document.getElementById('orderPhone').value = "";
+        document.getElementById('orderAddress').value = "";
+        if(noteEl) noteEl.value = "";
     })
     .catch(error => {
         console.error('Error!', error.message);
-        alert("Network Error! Please check your internet or Script URL.");
+        showPopup("❌ Network Error! Please try again.");
+        
+        // বাটন আগের অবস্থায় ফিরিয়ে আনা
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
+        confirmBtn.style.opacity = "1";
+        confirmBtn.style.cursor = "pointer";
     });
 }
+
+// কনফার্ম বক্স বন্ধ করার ফাংশন (যাতে ডিজাইন না ভাঙে)
+function closeConfirm() { 
+    const confirmBox = document.getElementById('confirmBox');
+    if(confirmBox) {
+        confirmBox.style.display = "none"; 
+    }
+}
+
 
 
 // কুপন, সার্চ এবং অন্যান্য
