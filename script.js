@@ -127,55 +127,61 @@ function changeQty(index, delta) {
 
 // ৫. কার্টে যোগ করা
 function addToCart(id) {
-    // ১. অ্যানিমেশনের জন্য ইভেন্ট টার্গেট ধরা
-    const clickedButton = event.target;
-    const productCard = clickedButton.closest('.product-card') || clickedButton.closest('.modal-content');
-    const productImg = productCard ? productCard.querySelector('img') : null;
+    // ১. ক্লিক করা বাটনটি খুঁজে বের করা
+    const clickedButton = window.event ? window.event.target : null;
     const cartIcon = document.querySelector('.cart-area');
+    
+    if (clickedButton && cartIcon) {
+        // প্রোডাক্ট কার্ড অথবা মডাল কন্টেন্ট থেকে ছবি খোঁজা
+        const productCard = clickedButton.closest('.product-card') || clickedButton.closest('.modal-content');
+        const productImg = productCard ? productCard.querySelector('img') : null;
 
-    if (productImg && cartIcon) {
-        const flyingImg = document.createElement('img');
-        flyingImg.src = productImg.src;
-        
-        // CSS এর বদলে সরাসরি স্টাইল দিয়ে দিচ্ছি যাতে ভুল না হয়
-        flyingImg.style.cssText = `
-            position: fixed;
-            z-index: 9999;
-            width: ${productImg.offsetWidth}px;
-            height: ${productImg.offsetHeight}px;
-            top: ${productImg.getBoundingClientRect().top}px;
-            left: ${productImg.getBoundingClientRect().left}px;
-            border-radius: 50%;
-            object-fit: cover;
-            transition: all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1);
-            pointer-events: none;
-        `;
+        if (productImg) {
+            const flyingImg = document.createElement('img');
+            flyingImg.src = productImg.src;
+            
+            // ছবির বর্তমান অবস্থান ও সাইজ মাপা
+            const imgRect = productImg.getBoundingClientRect();
+            const cartRect = cartIcon.getBoundingClientRect();
 
-        document.body.appendChild(flyingImg);
+            // উড়ার ইমেজের স্টাইল (সরাসরি JS থেকে)
+            flyingImg.style.position = 'fixed';
+            flyingImg.style.zIndex = '9999';
+            flyingImg.style.width = imgRect.width + 'px';
+            flyingImg.style.height = imgRect.height + 'px';
+            flyingImg.style.top = imgRect.top + 'px';
+            flyingImg.style.left = imgRect.left + 'px';
+            flyingImg.style.borderRadius = '50%';
+            flyingImg.style.objectFit = 'cover';
+            flyingImg.style.pointerEvents = 'none';
+            flyingImg.style.transition = 'all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1)';
 
-        // গন্তব্য পজিশন
-        const cartRect = cartIcon.getBoundingClientRect();
-        setTimeout(() => {
-            flyingImg.style.top = (cartRect.top + 10) + 'px';
-            flyingImg.style.left = (cartRect.left + 15) + 'px';
-            flyingImg.style.width = '20px';
-            flyingImg.style.height = '20px';
-            flyingImg.style.opacity = '0.2';
-        }, 100);
+            document.body.appendChild(flyingImg);
 
-        setTimeout(() => {
-            flyingImg.remove();
-            cartIcon.style.transform = "scale(1.2)";
-            setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
-        }, 850);
+            // কার্টের দিকে উড়িয়ে নেওয়া
+            setTimeout(() => {
+                flyingImg.style.top = (cartRect.top + 10) + 'px';
+                flyingImg.style.left = (cartRect.left + 15) + 'px';
+                flyingImg.style.width = '20px';
+                flyingImg.style.height = '20px';
+                flyingImg.style.opacity = '0.3';
+            }, 50);
+
+            // এনিমেশন শেষে সরিয়ে ফেলা
+            setTimeout(() => {
+                flyingImg.remove();
+                cartIcon.style.transform = "scale(1.2)";
+                setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
+            }, 800);
+        }
     }
 
-    // ২. কার্টে ডেটা যোগ করার মূল কোড
+    // ২. কার্টে ডেটা যোগ করার মূল লজিক (আপনার আগের কোড)
     const product = products.find(p => p.id === id);
     if (product) {
         cart.push(product);
-        updateCartUI();
-        showToast(product.name + " added to cart!");
+        if (typeof updateCartUI === "function") updateCartUI();
+        if (typeof showToast === "function") showToast(product.name + " added to cart!");
     }
 }
 
