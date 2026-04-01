@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* আপনার ব্যানার স্টাইল */
         .coming-soon-banner {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); 
             background-size: cover;
@@ -37,7 +36,6 @@
             margin: 0 auto 25px;
         }
 
-        /* প্রোগ্রেস বার */
         .progress-container {
             width: 150px;
             height: 4px;
@@ -62,7 +60,6 @@
             100% { left: 150px; }
         }
 
-        /* এরর মেসেজ স্টাইল */
         .error-text {
             color: red;
             font-size: 12px;
@@ -168,7 +165,6 @@
                 <div class="input-group">
                     <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 8px; margin-top: 15px;">Payment Method:</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                        
                         <label id="label-bkash" onclick="selectPayment('bkash')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
                             <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
                             <span style="font-size: 18px;">📱</span><br>
@@ -199,40 +195,32 @@
                 </div>
 
                 <div class="total-section" style="background: #fdfdfd; padding: 15px; border-radius: 10px; margin-top: 10px;">
-    <h4 style="font-size: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-        <span>Total Bill:</span> 
-        <span style="color: #2d3436;">৳ <span id="cart-total">0</span></span>
-    </h4>
-    <button class="confirm-btn" onclick="validateAndOrder()" style="width: 100%; background-color: #f85606; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; display: block;">
-        Confirm Order
-    </button>
-</div>
-
-
-    
-
-    <div id="confirmBox" style="display:none;">
-    <div class="popup-card">
-        <h3>Review Your Order</h3>
-        <p>Please make sure your phone number and address are correct before proceeding.</p>
-        <button class="edit-btn" onclick="closeConfirm()">Edit</button>
-        <button class="confirm-now-btn" onclick="finalOrderProcess()">Confirm Now</button>
-    </div>
-</div>
-
-
-    
-    <div id="successBox" class="success-box" style="display:none;">
-        <div class="success-content" id="successMessage"></div>
+                    <h4 style="font-size: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Total Bill:</span> 
+                        <span style="color: #2d3436;">৳ <span id="cart-total">0</span></span>
+                    </h4>
+                    <button class="confirm-btn" onclick="validateAndOrder()" style="width: 100%; background-color: #f85606; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; display: block;">
+                        Confirm Order
+                    </button>
+                </div>
+            </div> </div> </div> <div id="confirmBox" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999999; align-items: center; justify-content: center;">
+        <div class="popup-card" style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%;">
+            <h3>Review Your Order</h3>
+            <p>Please make sure your phone number and address are correct before proceeding.</p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button class="edit-btn" onclick="closeConfirm()" style="background: #eee; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">Edit</button>
+                <button class="confirm-now-btn" onclick="finalOrderProcess()" style="background: #2ecc71; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">Confirm Now</button>
+            </div>
+        </div>
     </div>
 
-    <footer class="site-footer">
-        <div class="footer-content">
-            <h3 class="footer-logo">eOnlineBazar</h3>
+    <footer class="site-footer" style="margin-top: 50px; background: #232f3e; color: white; padding: 40px 0; text-align: center;">
+        <div class="container">
+            <h3 class="footer-logo" style="color: #f85606; font-size: 24px;">eOnlineBazar</h3>
             <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a> | 
-                <a href="#">Terms of Service</a>
+            <div class="footer-links" style="margin-top: 15px;">
+                <a href="#" style="color: #ccc; text-decoration: none;">Privacy Policy</a> | 
+                <a href="#" style="color: #ccc; text-decoration: none;">Terms of Service</a>
             </div>
         </div>
     </footer>
