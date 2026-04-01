@@ -127,45 +127,42 @@ function changeQty(index, delta) {
 
 // ৫. কার্টে যোগ করা
 function addToCart(id) {
-    // --- ১. উড়ার অ্যানিমেশন (Fly to Cart) লজিক ---
-    // যে বাটনে ক্লিক করা হয়েছে তার কাছাকাছি থাকা প্রোডাক্ট কার্ডটি ধরা হচ্ছে
-    const productCard = event.target.closest('.product-card');
-    const cartIcon = document.querySelector('.cart-area'); // আপনার HTML এ ক্লাস .cart-area
+    // ১. অ্যানিমেশনের জন্য ইভেন্ট টার্গেট ধরা
+    const clickedButton = event.target;
+    const productCard = clickedButton.closest('.product-card') || clickedButton.closest('.modal-content');
     const productImg = productCard ? productCard.querySelector('img') : null;
+    const cartIcon = document.querySelector('.cart-area');
 
     if (productImg && cartIcon) {
-        // উড়ার জন্য একটি নকল ইমেজ তৈরি করা
         const flyingImg = document.createElement('img');
         flyingImg.src = productImg.src;
-        flyingImg.style.position = 'fixed';
-        flyingImg.style.zIndex = '1000';
-        flyingImg.style.borderRadius = '50%';
-        flyingImg.style.objectFit = 'cover';
-        flyingImg.style.pointerEvents = 'none'; // ক্লিক বাধা দেবে না
-        // উড়ার গতি ও স্টাইল
-        flyingImg.style.transition = 'all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1)';
-
-        // শুরুর পজিশন (যেখানে প্রোডাক্টের ছবি আছে)
-        const imgRect = productImg.getBoundingClientRect();
-        const cartRect = cartIcon.getBoundingClientRect();
-
-        flyingImg.style.left = imgRect.left + 'px';
-        flyingImg.style.top = imgRect.top + 'px';
-        flyingImg.style.width = imgRect.width + 'px';
-        flyingImg.style.height = imgRect.height + 'px';
+        
+        // CSS এর বদলে সরাসরি স্টাইল দিয়ে দিচ্ছি যাতে ভুল না হয়
+        flyingImg.style.cssText = `
+            position: fixed;
+            z-index: 9999;
+            width: ${productImg.offsetWidth}px;
+            height: ${productImg.offsetHeight}px;
+            top: ${productImg.getBoundingClientRect().top}px;
+            left: ${productImg.getBoundingClientRect().left}px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.24, 1.05, 0.72, 1.1);
+            pointer-events: none;
+        `;
 
         document.body.appendChild(flyingImg);
 
-        // গন্তব্য পজিশন (ওপরের কার্ট আইকনের দিকে উড়ে যাবে)
+        // গন্তব্য পজিশন
+        const cartRect = cartIcon.getBoundingClientRect();
         setTimeout(() => {
-            flyingImg.style.left = (cartRect.left + 15) + 'px';
             flyingImg.style.top = (cartRect.top + 10) + 'px';
+            flyingImg.style.left = (cartRect.left + 15) + 'px';
             flyingImg.style.width = '20px';
             flyingImg.style.height = '20px';
-            flyingImg.style.opacity = '0.3';
+            flyingImg.style.opacity = '0.2';
         }, 100);
 
-        // অ্যানিমেশন শেষে ইমেজ মুছে ফেলা এবং কার্ট আইকন কাঁপানো (Bounce)
         setTimeout(() => {
             flyingImg.remove();
             cartIcon.style.transform = "scale(1.2)";
@@ -173,22 +170,15 @@ function addToCart(id) {
         }, 850);
     }
 
-    // --- ২. কার্টে ডেটা যোগ করার মূল লজিক (আপনার আগের কোড অনুযায়ী) ---
+    // ২. কার্টে ডেটা যোগ করার মূল কোড
     const product = products.find(p => p.id === id);
     if (product) {
         cart.push(product);
-        
-        // কার্ট ইন্টারফেস আপডেট করা
-        if (typeof updateCartUI === "function") {
-            updateCartUI();
-        }
-
-        // সফলতার মেসেজ (Toast) দেখানো
-        if (typeof showToast === "function") {
-            showToast(product.name + " added to cart!");
-        }
+        updateCartUI();
+        showToast(product.name + " added to cart!");
     }
 }
+
 
 
 // ৬. টোস্ট মেসেজ
