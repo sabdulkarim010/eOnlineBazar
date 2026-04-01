@@ -169,15 +169,13 @@ function updateCartUI() {
     if (totalSpan) totalSpan.innerText = Math.round(finalTotal);
 }
 
-// ৫. পেমেন্ট হাইলাইট সমাধান (পয়েন্ট ২ সমাধান)
+// ৫. পেমেন্ট হাইলাইট (কোনোটিই ডিফল্ট হাইলাইট থাকবে না)
 function selectPayment(method) {
-    // সব লেবেলের হাইলাইট মুছে ফেলা (এখন আর ডিফল্ট হাইলাইট থাকবে না)
     document.querySelectorAll('.payment-label').forEach(label => {
         label.style.borderColor = "#ddd";
         label.style.background = "white";
     });
 
-    // নির্দিষ্ট মেথড হাইলাইট করা
     const activeLabel = document.getElementById('label-' + method);
     if (activeLabel) {
         activeLabel.style.borderColor = "#f85606"; 
@@ -188,7 +186,7 @@ function selectPayment(method) {
     if (radio) radio.checked = true;
 }
 
-// ৬. সিরিয়াল ভ্যালিডেশন এবং রিয়েল-টাইম ক্লিয়ার (পয়েন্ট ১ সমাধান)
+// ৬. সিরিয়াল ভ্যালিডেশন এবং রিয়েল-টাইম ক্লিয়ার
 function setupValidation() {
     const inputs = ['orderName', 'orderPhone', 'orderAddress'];
     inputs.forEach(id => {
@@ -196,9 +194,9 @@ function setupValidation() {
         if (el) {
             el.addEventListener('input', () => {
                 const err = document.getElementById(id + 'Error');
-                // সঠিক ডাটা দিলে রেড সিগনাল চলে যাবে
                 if (id === 'orderName') {
-                    if (el.value.trim().split(/\s+/).length >= 2) {
+                    // নাম ২ শব্দ হলে এরর মুছবে
+                    if (el.value.trim().split(/\s+/).filter(w => w.length > 0).length >= 2) {
                         el.style.borderColor = "#ddd";
                         if (err) err.innerText = "";
                     }
@@ -219,31 +217,24 @@ function setupValidation() {
     });
 }
 
+// কনফার্ম বাটন ফাংশন (সিরিয়াল অনুযায়ী মেসেজ আসবে)
 function validateAndOrder() {
     const name = document.getElementById('orderName');
     const phone = document.getElementById('orderPhone');
     const address = document.getElementById('orderAddress');
     const payment = document.querySelector('input[name="payment"]:checked');
     
-    // সব সিগনাল রিসেট
-    const ids = ['orderName', 'orderPhone', 'orderAddress'];
-    ids.forEach(id => {
-        document.getElementById(id).style.borderColor = "#ddd";
-        document.getElementById(id + 'Error').innerText = "";
-    });
-
     // ১. নাম চেক (মিনিমাম ২ শব্দ)
-    const nameVal = name.value.trim();
-    if (!nameVal || nameVal.split(/\s+/).length < 2) {
+    const nameWords = name.value.trim().split(/\s+/).filter(w => w.length > 0);
+    if (nameWords.length < 2) {
         name.style.borderColor = "red";
-        document.getElementById('nameError').innerText = "Please enter your full name (at least 2 words)";
-        return; // সিরিয়াল অনুযায়ী ১ম এরর দেখালে বাকিগুলো চেক করবে না
+        document.getElementById('nameError').innerText = "Please write your full name (at least 2 words)";
+        return; // এখানেই থেমে যাবে, পরেরটা দেখাবে না
     }
 
     // ২. ফোন চেক
-    const phoneVal = phone.value.trim();
     const phonePattern = /^(013|014|015|016|017|018|019)\d{8}$/;
-    if (!phonePattern.test(phoneVal)) {
+    if (!phonePattern.test(phone.value.trim())) {
         phone.style.borderColor = "red";
         document.getElementById('phoneError').innerText = "Please enter a valid 11-digit BD number";
         return;
@@ -252,31 +243,32 @@ function validateAndOrder() {
     // ৩. এড্রেস চেক
     if (!address.value.trim()) {
         address.style.borderColor = "red";
-        document.getElementById('addressError').innerText = "Please enter your full shipping address";
+        document.getElementById('addressError').innerText = "Please enter your full address";
         return;
     }
 
     // ৪. পেমেন্ট মেথড চেক
     if (!payment) {
-        showToast("Please select a payment method (bKash/Nagad/COD)");
+        showToast("Please select a Payment Method!");
         return;
     }
 
-    // সব ঠিক থাকলে কনফার্ম বক্স ওপেন হবে
-    showToast("Payment Method: " + payment.value.toUpperCase());
+    // সব ঠিক থাকলে পেমেন্ট মেথড নোটিফিকেশন দেখিয়ে পরের ধাপে যাবে
+    showToast("Selected Payment: " + payment.value.toUpperCase());
+    
     setTimeout(() => {
         document.getElementById('order-form-container').style.display = "none";
         document.getElementById('confirmBox').style.display = "block";
-    }, 800);
+    }, 1000);
 }
 
-// ৭. ডেটাবেস কানেকশন এবং সাকসেস মেসেজ
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 function finalOrderProcess() {
     const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
     
     const orderData = {
-        orderID,
+        orderID: orderID,
         name: document.getElementById('orderName').value,
         phone: document.getElementById('orderPhone').value,
         address: document.getElementById('orderAddress').value,
@@ -290,25 +282,24 @@ function finalOrderProcess() {
     document.getElementById('confirmBox').style.display = "none";
     const success = document.getElementById('successBox');
     success.innerHTML = `
-        <div style="text-align:center; padding:30px; font-family:sans-serif;">
+        <div style="text-align:center; padding:30px;">
             <div style="font-size:60px; color:#28a745;">✔</div>
-            <h2 style="margin:15px 0; color:#232f3e;">Thank You!</h2>
-            <p style="color:#555;">Your order was placed successfully.</p>
-            <p style="font-size:18px; margin:10px 0;">Order ID: <b>${orderID}</b></p>
-            <button onclick="location.reload()" style="margin-top:20px; padding:12px 25px; background:#f85606; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Shop More</button>
+            <h2 style="margin:15px 0;">Thank You!</h2>
+            <p>Your order has been placed. Order ID: <b>${orderID}</b></p>
+            <button onclick="location.reload()" style="margin-top:20px; padding:10px 25px; background:#f85606; color:white; border:none; border-radius:5px; cursor:pointer;">Continue Shopping</button>
         </div>`;
     success.style.display = "block";
     cart = []; updateCartUI();
 }
 
-// অন্যান্য প্রয়োজনীয় ফাংশন
+// কুপন, সার্চ এবং অন্যান্য
 function applyCoupon() {
     const input = document.getElementById('couponInput');
     const msg = document.getElementById('couponMessage');
     if (input.value.trim().toUpperCase() === "SAVE10") {
         discountPercent = 0.10; msg.innerText = "10% Discount Applied!"; msg.style.color = "green";
     } else {
-        discountPercent = 0; msg.innerText = "Invalid Coupon Code!"; msg.style.color = "red";
+        discountPercent = 0; msg.innerText = "Invalid Coupon!"; msg.style.color = "red";
     }
     msg.style.display = "block"; updateCartUI();
 }
@@ -345,5 +336,5 @@ function showToast(msg) {
 window.onload = () => { 
     displayProducts(products); 
     updateCartUI(); 
-    setupValidation(); // রিয়েল-টাইম ক্লিয়ার লিসেনার চালু করা
+    setupValidation(); 
 };
