@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ব্যানার স্টাইল */
+        /* আপনার ব্যানার স্টাইল */
         .coming-soon-banner {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('46553.jpg'); 
             background-size: cover;
@@ -37,7 +37,7 @@
             margin: 0 auto 25px;
         }
 
-        /* প্রোগ্রেস বার অ্যানিমেশন */
+        /* প্রোগ্রেস বার */
         .progress-container {
             width: 150px;
             height: 4px;
@@ -62,7 +62,7 @@
             100% { left: 150px; }
         }
 
-        /* এরর টেক্সট স্টাইল */
+        /* এরর মেসেজ স্টাইল */
         .error-text {
             color: red;
             font-size: 12px;
@@ -80,7 +80,7 @@
         <div class="container">
             <div class="top-bar">
                 <div class="logo-area">
-                    <h1 class="main-logo">eOnlineBazar</h1>
+                    <h1 class="main-logo" onclick="location.reload()" style="cursor:pointer;">eOnlineBazar</h1>
                 </div>
                 <div class="cart-area" onclick="toggleCart()">
                     <div class="cart-wrapper">
@@ -92,7 +92,7 @@
             
             <div class="search-container">
                 <div class="search-box">
-               <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProduct()">
+                    <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProduct()">
                     <button class="search-btn">🔍</button>
                 </div>
             </div>
@@ -123,7 +123,6 @@
 
     <main class="container">
         <div id="product-grid" class="product-grid"></div>
-
     </main>
 
     <div id="productModal" class="modal">
@@ -140,56 +139,50 @@
             
             <div id="cart-items-container"></div>
             
-            <div id="order-form-container" class="order-form">
+            <div id="order-form-container" class="order-form" style="display: none;">
                 <h3 style="margin: 25px 0 15px; color: #232f3e; font-size: 18px;">Shipping Address</h3>
                 
-                                <div class="input-group">
-                    <label>Full Name <span class="required" style="color:red;">*</span></label>
-                    <input type="text" id="orderName" placeholder="Enter full name" required>
+                <div class="input-group">
+                    <label>Full Name <span style="color:red;">*</span></label>
+                    <input type="text" id="orderName" placeholder="Enter full name">
                     <span id="nameError" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
-                    <label>Mobile Number <span class="required" style="color:red;">*</span></label>
-                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11" required>
+                    <label>Mobile Number <span style="color:red;">*</span></label>
+                    <input type="tel" id="orderPhone" placeholder="01XXXXXXXXX" maxlength="11">
                     <span id="phoneError" class="error-text"></span>
                 </div>
 
                 <div class="input-group">
-                    <label>Full Address <span class="required" style="color:red;">*</span></label>
-                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District" required></textarea>
+                    <label>Full Address <span style="color:red;">*</span></label>
+                    <textarea id="orderAddress" placeholder="Village/House, Road, Area, District"></textarea>
                     <span id="addressError" class="error-text"></span>
-                </div>
-
-                <div class="input-group">
-                    <label>Note for Courier (Optional)</label>
-                    <textarea id="orderNote" placeholder="Extra instructions for delivery..."></textarea>
                 </div>
 
                 <div class="input-group">
                     <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 8px;">Payment Method:</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                         
-                        <label id="label-bkash" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
-                            <input type="radio" name="payment" id="pay-bkash" value="bkash">
+                        <label id="label-bkash" onclick="selectPayment('bkash')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
                             <span style="font-size: 18px;">📱</span><br>
                             <span style="font-weight:bold; font-size:13px;">bKash</span>
                         </label>
 
-                        <label id="label-nagad" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
-                            <input type="radio" name="payment" id="pay-nagad" value="nagad">
+                        <label id="label-nagad" onclick="selectPayment('nagad')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                            <input type="radio" name="payment" id="pay-nagad" value="nagad" style="display:none;">
                             <span style="font-size: 18px;">💸</span><br>
                             <span style="font-weight:bold; font-size:13px;">Nagad</span>
                         </label>
 
-                        <label id="label-cod" style="border: 2px solid #f85606; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; background: #fff5f0;">
-                            <input type="radio" name="payment" id="pay-cod" value="cod" checked>
+                        <label id="label-cod" onclick="selectPayment('cod')" style="border: 2px solid #f85606; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; background: #fff5f0;">
+                            <input type="radio" name="payment" id="pay-cod" value="cod" checked style="display:none;">
                             <span style="font-size: 18px;">🚚</span><br>
                             <span style="font-weight:bold; font-size:10px; line-height: 1.2; display: block;">Cash on Delivery</span>
                         </label>
                     </div>
                 </div>
-
 
                 <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
                     <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
@@ -204,7 +197,7 @@
                     <h4 style="font-size: 20px; margin-bottom: 15px; display: flex; justify-content: space-between;">
                         <span>Total Bill:</span> <span>৳ <span id="cart-total">0</span></span>
                     </h4>
-                    <button class="confirm-btn" style="height: 55px; font-size: 18px;" onclick="validateAndOrder()">Confirm Order</button>
+                    <button class="confirm-btn" style="height: 55px; font-size: 18px; width: 100%;" onclick="validateAndOrder()">Confirm Order</button>
                 </div>
             </div>
         </div>
@@ -225,8 +218,6 @@
         <div class="success-content" id="successMessage"></div>
     </div>
 
-    <script src="script.js"></script>
-    
     <footer class="site-footer">
         <div class="footer-content">
             <h3 class="footer-logo">eOnlineBazar</h3>
@@ -237,6 +228,8 @@
             </div>
         </div>
     </footer>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
