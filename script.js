@@ -51,12 +51,11 @@ const products = [
 
 
 
-
 // --- গ্লোবাল ভেরিয়েবল ---
 let cart = []; 
 let discountPercent = 0; 
 
-// ১. প্রোডাক্ট ডিসপ্লে ফাংশন
+// ১. পেজ লোড হলে পণ্য দেখানো
 function displayProducts(items) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -72,10 +71,10 @@ function displayProducts(items) {
     `).join('');
 }
 
-// ২. কার্টে পণ্য যোগ করা (Flying Animation সহ)
+// ২. ওড়ার অ্যানিমেশন সহ কার্টে যোগ করা (Flying Animation)
 function addToCart(id) {
     const btn = event.target;
-    const cartIcon = document.querySelector('.cart-wrapper'); // আপনার HTML অনুযায়ী ক্লাস
+    const cartIcon = document.querySelector('.cart-wrapper'); 
     const productCard = btn.closest('.product-card') || btn.closest('.modal-content');
 
     if (productCard && cartIcon) {
@@ -87,9 +86,9 @@ function addToCart(id) {
             const cartRect = cartIcon.getBoundingClientRect();
 
             flyingItem.style.cssText = `
-                position: fixed; z-index: 10000; top: ${rect.top}px; left: ${rect.left}px;
+                position: fixed; z-index: 9999; top: ${rect.top}px; left: ${rect.left}px;
                 width: ${rect.width}px; height: ${rect.height}px; font-size: 40px;
-                transition: all 0.8s ease-in-out; pointer-events: none;
+                transition: all 0.9s cubic-bezier(0.24, 1.05, 0.72, 1.1); pointer-events: none;
             `;
             document.body.appendChild(flyingItem);
 
@@ -98,11 +97,12 @@ function addToCart(id) {
                 flyingItem.style.left = cartRect.left + 'px';
                 flyingItem.style.width = '15px';
                 flyingItem.style.height = '15px';
-                flyingItem.style.fontSize = '10px';
-                flyingItem.style.opacity = '0.5';
+                flyingItem.style.fontSize = '12px';
+                flyingItem.style.opacity = '0.4';
+                flyingItem.style.transform = 'rotate(360deg)';
             }, 50);
 
-            setTimeout(() => { flyingItem.remove(); }, 800);
+            setTimeout(() => { flyingItem.remove(); }, 900);
         }
     }
 
@@ -112,11 +112,11 @@ function addToCart(id) {
         if (existing) { existing.quantity++; } 
         else { cart.push({ ...product, quantity: 1 }); }
         updateCartUI();
-        showToast(product.name + " added to cart!");
+        showToast(product.name + " added!");
     }
 }
 
-// ৩. কার্ট আপডেট এবং পেমেন্ট সেকশন কন্ট্রোল
+// ৩. কার্ট আপডেট এবং ফর্ম কন্ট্রোল
 function updateCartUI() {
     const count = document.getElementById('cart-count');
     const container = document.getElementById('cart-items-container');
@@ -128,7 +128,7 @@ function updateCartUI() {
     
     let total = 0;
     if (cart.length === 0) {
-        if (container) container.innerHTML = "<p style='text-align:center; padding:20px;'>আপনার কার্ট খালি!</p>";
+        if (container) container.innerHTML = "<p style='text-align:center; padding:30px;'>আপনার কার্ট খালি!</p>";
         if (orderForm) orderForm.style.display = "none";
         if (totalSpan) totalSpan.innerText = "0";
         return; 
@@ -140,12 +140,13 @@ function updateCartUI() {
         total += (item.price * item.quantity);
         const div = document.createElement('div');
         div.className = 'cart-item';
+        div.style.display = 'flex'; div.style.justifyContent = 'space-between'; div.style.marginBottom = '10px';
         div.innerHTML = `
-            <div style="flex:1"><b>${item.name}</b><br>৳ ${item.price} x ${item.quantity}</div>
-            <div style="display:flex; align-items:center; gap:10px;"> 
-                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-                <span>${item.quantity}</span>
-                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            <div><b>${item.name}</b><br>৳ ${item.price} x ${item.quantity}</div>
+            <div>
+                <button onclick="changeQty(${index}, -1)">−</button>
+                <span style="margin:0 5px">${item.quantity}</span>
+                <button onclick="changeQty(${index}, 1)">+</button>
             </div>`;
         container.appendChild(div);
     });
@@ -160,43 +161,51 @@ function changeQty(index, delta) {
     updateCartUI();
 }
 
-// ৪. কুপন ও পেমেন্ট মেথড লজিক
+// ৪. কুপন এবং পেমেন্ট সিলেকশন (ছবি অনুযায়ী)
 function applyCoupon() {
-    const couponInput = document.getElementById('couponInput');
-    const message = document.getElementById('couponMessage');
-    if (couponInput.value.trim() === "SAVE10") {
-        discountPercent = 0.10;
-        message.innerText = "Success! 10% discount applied.";
-        message.style.color = "green";
+    const val = document.getElementById('couponInput').value.trim();
+    const msg = document.getElementById('couponMessage');
+    if (val === "SAVE10") {
+        discountPercent = 0.10; msg.innerText = "Success! 10% applied."; msg.style.color = "green";
     } else {
-        discountPercent = 0;
-        message.innerText = "Invalid Coupon!";
-        message.style.color = "red";
+        discountPercent = 0; msg.innerText = "Invalid Coupon!"; msg.style.color = "red";
     }
-    message.style.display = "block";
-    updateCartUI();
+    msg.style.display = "block"; updateCartUI();
 }
 
 function selectPayment(method) {
     ['bkash', 'nagad', 'cod'].forEach(m => {
-        const el = document.getElementById('label-' + m);
-        if (el) { el.style.borderColor = "#ddd"; el.style.background = "white"; }
+        const label = document.getElementById('label-' + m);
+        if (label) { label.style.borderColor = "#ddd"; label.style.background = "white"; }
     });
-    const selected = document.getElementById('label-' + method);
-    if (selected) { selected.style.borderColor = "#f85606"; selected.style.background = "#fffaf7"; }
+    const active = document.getElementById('label-' + method);
+    if (active) { active.style.borderColor = "#f85606"; active.style.background = "#fffaf7"; }
     const radio = document.getElementById('pay-' + method);
     if (radio) radio.checked = true;
 }
 
-// ৫. অর্ডার ভ্যালিডেশন এবং প্রসেস
-function validateAndOrder() {
-    const name = document.getElementById('orderName').value.trim();
-    const phone = document.getElementById('orderPhone').value.trim();
-    const address = document.getElementById('orderAddress').value.trim();
-    const payment = document.querySelector('input[name="payment"]:checked');
+// ৫. সার্চ এবং ফিল্টার
+function searchProduct() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
+    });
+}
 
-    if (!name || !phone || !address || !payment) {
-        alert("অনুগ্রহ করে নাম, মোবাইল নম্বর, ঠিকানা এবং পেমেন্ট মেথড সঠিকভাবে দিন।");
+function filterCategory(cat) {
+    const items = cat === 'all' ? products : products.filter(p => p.category === cat);
+    displayProducts(items);
+    const banner = document.querySelector('.coming-soon-banner');
+    if (banner) banner.style.display = (cat === 'all') ? 'block' : 'none';
+}
+
+// ৬. অর্ডার কনফার্মেশন (গুগল শিট লিঙ্ক ঠিক করা হয়েছে)
+function validateAndOrder() {
+    const name = document.getElementById('orderName').value;
+    const phone = document.getElementById('orderPhone').value;
+    const address = document.getElementById('orderAddress').value;
+    if (!name || !phone || !address) {
+        alert("অনুগ্রহ করে নাম, মোবাইল নম্বর এবং ঠিকানা সঠিকভাবে দিন।");
         return;
     }
     document.getElementById('order-form-container').style.display = "none";
@@ -206,7 +215,7 @@ function validateAndOrder() {
 function finalOrderProcess() {
     const orderID = "#EB" + Math.floor(1000 + Math.random() * 9000);
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
-    
+
     const orderData = {
         orderID,
         name: document.getElementById('orderName').value,
@@ -219,20 +228,13 @@ function finalOrderProcess() {
     fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(orderData) });
 
     document.getElementById('confirmBox').style.display = "none";
-    const successBox = document.getElementById('successBox');
-    successBox.innerHTML = `<div style="text-align:center; padding:20px;"><h2>ধন্যবাদ!</h2><p>অর্ডার সফল। আইডি: ${orderID}</p><button onclick="location.reload()">ঠিক আছে</button></div>`;
-    successBox.style.display = "block";
+    const success = document.getElementById('successBox');
+    success.innerHTML = `<div style="text-align:center; padding:20px;"><h2>ধন্যবাদ!</h2><p>অর্ডার সফল। আইডি: ${orderID}</p><button onclick="location.reload()">ঠিক আছে</button></div>`;
+    success.style.display = "block";
     cart = []; updateCartUI();
 }
 
-// ৬. সার্চ ও মডাল
-function searchProduct() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(term) ? "block" : "none";
-    });
-}
-
+// ৭. অন্যান্য লজিক
 function openModal(id) {
     const p = products.find(prod => prod.id === id);
     document.getElementById('modal-body').innerHTML = `
@@ -248,17 +250,12 @@ function toggleCart() {
     const m = document.getElementById('cartModal');
     m.style.display = (m.style.display === "block") ? "none" : "block";
 }
-
 function closeModal() { document.getElementById('productModal').style.display = "none"; }
 function closeConfirm() { document.getElementById('confirmBox').style.display = "none"; document.getElementById('order-form-container').style.display = "block"; }
 
-// ৭. পেজ লোড হলে রান হবে
-window.onload = () => {
-    displayProducts(products);
-    updateCartUI();
-};
+window.onload = () => { displayProducts(products); updateCartUI(); };
 
 function showToast(msg) {
     let t = document.getElementById('toast');
-    if(t) { t.innerText = msg; t.style.display = "block"; setTimeout(() => { t.style.display = "none"; }, 3000); }
+    if(t) { t.innerText = msg; t.style.display = "block"; setTimeout(() => { t.style.display = "none"; }, 2500); }
 }
