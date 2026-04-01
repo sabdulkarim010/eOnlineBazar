@@ -342,28 +342,24 @@ function showPopup(msg) {
 
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস
 // ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (প্রফেশনাল মোড ও নেটওয়ার্ক এরর ফিক্স)
+// ৭. ডেটাবেস ও ফাইনাল অর্ডার প্রসেস (আপডেট করা)
 function finalOrderProcess() {
-    // আপনার Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
-    // কনফার্ম বক্সের বাটন লোডিং স্টেট
     const confirmBtn = document.querySelector("#confirmBox button:last-child");
     const originalText = confirmBtn.innerText;
-    
-    // লোডিং এনিমেশন ও স্টাইল
-    confirmBtn.innerHTML = '<span class="spinner"></span> Sending...';
+    confirmBtn.innerText = "Sending...";
     confirmBtn.disabled = true;
-    confirmBtn.style.opacity = "0.7";
-    confirmBtn.style.cursor = "not-allowed";
 
-    // ডাটা সংগ্রহ
+    // ডাটা সংগ্রহ - এখানে এক্সেল শিটের কলামের নামের সাথে মিল রাখা হয়েছে
     const formData = new URLSearchParams();
     formData.append('name', document.getElementById('orderName').value.trim());
     formData.append('phone', document.getElementById('orderPhone').value.trim());
     formData.append('address', document.getElementById('orderAddress').value.trim());
     
-    const noteEl = document.getElementById('orderNote');
-    formData.append('note', noteEl ? noteEl.value.trim() : "");
+    // এক্সেলের কলাম যেহেতু 'Note', তাই এখানেও 'Note' ব্যবহার করা ভালো
+    const noteValue = document.getElementById('orderNote') ? document.getElementById('orderNote').value.trim() : "";
+    formData.append('note', noteValue); 
     
     formData.append('items', JSON.stringify(cart));
     formData.append('total', document.getElementById('cart-total').innerText);
@@ -371,51 +367,33 @@ function finalOrderProcess() {
     const paymentEl = document.querySelector('input[name="payment"]:checked');
     formData.append('payment', paymentEl ? paymentEl.value : "Not Selected");
 
-    // ডাটা পাঠানো (mode: 'no-cors' ব্যবহার করে Network Error সমাধান করা হয়েছে)
+    // Network Error সমাধান করতে mode: 'no-cors' যোগ করা হয়েছে
     fetch(scriptURL, { 
         method: 'POST', 
         body: formData,
         mode: 'no-cors' 
     })
     .then(() => {
-        // অর্ডার সফল হওয়ার পর সুন্দর পপ-আপ ও ক্লিনিং
+        // অর্ডার সফল হলে
         document.getElementById('confirmBox').style.display = 'none';
         
-        // প্রফেশনাল সাকসেস মেসেজ
-        showPopup("✅ Order Placed Successfully!");
-        
-        // কার্ট খালি করা এবং UI আপডেট
+        // আপনার আগের প্রফেশনাল লুক ফিরিয়ে আনতে showPopup ব্যবহার করুন
+        if(typeof showPopup === 'function') {
+            showPopup("✅ Order Placed Successfully!");
+        } else {
+            alert("Order Placed Successfully!");
+        }
+
         cart = [];
         updateCartUI();
-        
-        // যদি কার্ট মডাল ওপেন থাকে তবে তা বন্ধ করা
-        const cartModal = document.getElementById('cartModal');
-        if(cartModal) cartModal.style.display = 'none';
-
-        // ফর্ম ইনপুট ক্লিয়ার
-        document.getElementById('orderName').value = "";
-        document.getElementById('orderPhone').value = "";
-        document.getElementById('orderAddress').value = "";
-        if(noteEl) noteEl.value = "";
+        if(typeof toggleCart === 'function') toggleCart();
     })
     .catch(error => {
-        console.error('Error!', error.message);
-        showPopup("❌ Network Error! Please try again.");
-        
-        // বাটন আগের অবস্থায় ফিরিয়ে আনা
+        console.error('Error!', error);
+        alert("Network Error! Please check your Google Script Deployment.");
         confirmBtn.innerText = originalText;
         confirmBtn.disabled = false;
-        confirmBtn.style.opacity = "1";
-        confirmBtn.style.cursor = "pointer";
     });
-}
-
-// কনফার্ম বক্স বন্ধ করার ফাংশন (যাতে ডিজাইন না ভাঙে)
-function closeConfirm() { 
-    const confirmBox = document.getElementById('confirmBox');
-    if(confirmBox) {
-        confirmBox.style.display = "none"; 
-    }
 }
 
 
