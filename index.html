@@ -6,10 +6,10 @@
         <div class="container">
             <div class="top-bar">
                 <div class="logo-area">
-                    <h1 class="main-logo" onclick="location.reload()" style="cursor:pointer;">eOnlineBazar</h1>
+                    <h1 class="main-logo" onclick="location.reload()">eOnlineBazar</h1>
                 </div>
                 <div class="cart-area" onclick="toggleCart()">
-                    <div class="cart-wrapper" style="position: relative; cursor: pointer;">
+                    <div class="cart-wrapper">
                         <span class="cart-icon">🛒</span>
                         <span id="cart-count">0</span>
                     </div>
@@ -39,7 +39,7 @@
         <div class="container">
             <div class="banner-content">
                 <h2>Coming Soon: A Revolution in Shopping!</h2>
-                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
                 <div class="progress-container">
                     <div class="progress-bar"></div>
                 </div>
@@ -55,24 +55,24 @@
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div id="modal-body">
-                </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 
     <div id="cartModal" class="modal">
         <div class="modal-content cart-content">
             <span class="close-modal" onclick="toggleCart()">&times;</span>
-            <h2 class="cart-title" style="margin-bottom: 20px; text-align: center; border-bottom: 2px solid #f85606; padding-bottom: 10px;">Your Shopping Cart</h2>
+            <h2 class="cart-title">Your Shopping Cart</h2>
             
-            <div id="cart-items-container"></div>
+            <div id="cart-items-container">
+                </div>
             
             <div id="order-form-container" class="order-form" style="display: none;">
-                <h3 style="margin: 25px 0 15px; color: #232f3e; font-size: 18px;">Shipping Address</h3>
+                <h3 class="section-title">Shipping Address</h3>
                 
                 <div class="input-group">
                     <label>Full Name <span style="color:red;">*</span></label>
-                    <input type="text" id="orderName" placeholder="Enter full name (At least 2 words)">
+                    <input type="text" id="orderName" placeholder="Enter full name">
                     <span id="nameError" class="error-text"></span>
                 </div>
 
@@ -89,70 +89,62 @@
                 </div>
 
                 <div class="input-group">
-                    <label style="font-weight: bold; color: #232f3e; display: block; margin-bottom: 8px;">Payment Method <span style="color:red;">*</span></label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                        
-                        <label id="label-bkash" onclick="selectPayment('bkash')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 10px;">Payment Method:</label>
+                    <div class="payment-grid">
+                        <label id="label-bkash" onclick="selectPayment('bkash')" class="pay-box">
                             <input type="radio" name="payment" id="pay-bkash" value="bkash" style="display:none;">
-                            <span style="font-size: 18px;">📱</span><br>
-                            <span style="font-weight:bold; font-size:13px;">bKash</span>
+                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/bkash.png" width="30" alt="bkash"><br>
+                            <span>bKash</span>
                         </label>
-
-                        <label id="label-nagad" onclick="selectPayment('nagad')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                        <label id="label-nagad" onclick="selectPayment('nagad')" class="pay-box">
                             <input type="radio" name="payment" id="pay-nagad" value="nagad" style="display:none;">
-                            <span style="font-size: 18px;">💸</span><br>
-                            <span style="font-weight:bold; font-size:13px;">Nagad</span>
+                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/nagad.png" width="30" alt="nagad"><br>
+                            <span>Nagad</span>
                         </label>
-
-                        <label id="label-cod" onclick="selectPayment('cod')" style="border: 2px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+                        <label id="label-cod" onclick="selectPayment('cod')" class="pay-box">
                             <input type="radio" name="payment" id="pay-cod" value="cod" style="display:none;">
-                            <span style="font-size: 18px;">🚚</span><br>
-                            <span style="font-weight:bold; font-size:10px; line-height: 1.2; display: block;">Cash on Delivery</span>
+                            <img src="https://eonlinebazar.com/wp-content/uploads/2024/cod.png" width="30" alt="cod"><br>
+                            <span>COD</span>
                         </label>
                     </div>
                 </div>
 
-                <div style="margin: 15px 0; padding: 15px; background: #fff5f0; border: 1px dashed #f85606; border-radius: 8px;">
-                    <label style="font-weight: bold; color: #232f3e; font-size: 14px; display: block; margin-bottom: 8px;">Apply Coupon Code</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="couponInput" placeholder="Enter (SAVE10)" style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
-                        <button onclick="applyCoupon()" style="padding: 10px 15px; background: #232f3e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Apply</button>
-                    </div>
-                    <p id="couponMessage" style="font-size: 12px; margin-top: 5px; display: none; font-weight: bold;"></p>
+                <div class="coupon-box">
+                    <input type="text" id="couponInput" placeholder="Enter (SAVE10)">
+                    <button onclick="applyCoupon()">Apply</button>
+                    <p id="couponMessage"></p>
                 </div>
 
-                <div class="total-section" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #eee;">
-                    <h4 style="font-size: 20px; margin-bottom: 15px; display: flex; justify-content: space-between;">
-                        <span>Total Bill:</span> <span>৳ <span id="cart-total">0</span></span>
-                    </h4>
-                    <button class="confirm-btn" style="height: 55px; font-size: 18px;" onclick="validateAndOrder()">Confirm Order</button>
+                <div class="cart-summary-box">
+                    <h4>Total Bill: ৳ <span id="cart-total">0</span></h4>
+                    <button class="confirm-btn" onclick="validateAndOrder()">Confirm Order</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="confirmBox" class="success-box" style="display:none; border-top: 6px solid #f85606; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000; background: white; padding: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.2); border-radius: 10px; width: 90%; max-width: 400px;">
-        <div class="success-content" style="text-align: center;">
-            <h3 style="color:#232f3e; margin-bottom:15px;">Review Your Order</h3>
-            <p style="font-size:15px; margin-bottom:25px; color:#555;">Please make sure your phone number and address are correct before proceeding.</p>
-            <div style="display:flex; gap:10px;">
-                <button class="confirm-btn" style="background:#666; margin:0; flex:1;" onclick="closeConfirm()">Edit</button>
-                <button class="confirm-btn" style="margin:0; flex:1.5;" onclick="finalOrderProcess()">Confirm Now</button>
+    <div id="confirmBox" class="modal-overlay" style="display:none;">
+        <div class="review-card">
+            <h3>Review Your Order</h3>
+            <p>Please check your phone number and address again.</p>
+            <div class="review-btns">
+                <button class="edit-btn" onclick="closeConfirm()">Edit</button>
+                <button class="confirm-now-btn" onclick="finalOrderProcess()">Confirm Now</button>
             </div>
         </div>
     </div>
 
-    <div id="successBox" class="success-box" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 4000; background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center;">
-        <div class="success-content" id="successMessage"></div>
+    <div id="successBox" class="modal-overlay" style="display:none;">
+        <div class="success-card" id="successMessage">
+            </div>
     </div>
 
-    <footer class="site-footer" style="margin-top: 50px; padding: 40px 0; background: #232f3e; color: white; text-align: center;">
-        <div class="footer-content container">
-            <h3 class="footer-logo" style="color: #f85606; font-size: 24px; margin-bottom: 10px;">eOnlineBazar</h3>
-            <p style="font-size: 14px; color: #ccc;">&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
-            <div class="footer-links" style="margin-top: 15px;">
-                <a href="#" style="color: white; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
-                <a href="#" style="color: white; text-decoration: none; margin: 0 10px;">Terms of Service</a>
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <h3 class="footer-logo">eOnlineBazar</h3>
+            <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
             </div>
         </div>
     </footer>
