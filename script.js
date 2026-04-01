@@ -431,8 +431,6 @@ window.onload = () => {
     updateCartUI();
 };
 
-
-
 // প্রফেশনাল পপ-আপ (Toast) ফাংশন
 function showToast(message) {
     let toast = document.getElementById('custom-toast');
@@ -454,7 +452,3 @@ function showToast(message) {
         setTimeout(() => { toast.style.display = 'none'; }, 500);
     }, 3000);
 }
-
-    
-    updateCartUI();
-};
