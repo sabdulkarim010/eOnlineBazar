@@ -529,3 +529,31 @@ header {
 .add-fast-btn:active {
     transform: scale(0.9);
 }
+
+
+
+/* ১. প্রোডাক্ট কার্ডের ছবি বা ইমোজির কন্টেইনার */
+.p-img {
+    display: inline-block;
+    transition: transform 0.4s ease; /* জুম হওয়ার গতি নিয়ন্ত্রণ করবে */
+    cursor: zoom-in;
+}
+
+/* ২. মাউস নিলে (Hover) জুম ইফেক্ট */
+.product-card:hover .p-img {
+    transform: scale(1.2); /* ১.২ গুণ বড় হবে, আপনি চাইলে ১.৫ দিতে পারেন */
+}
+
+/* ৩. যদি আপনি ভবিষ্যতে আসল ছবি (img tag) ব্যবহার করেন */
+.product-card img {
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.15); /* ছবির জন্য হালকা জুম প্রফেশনাল দেখায় */
+}
+
+/* ৪. জুম হওয়ার সময় যাতে কার্ডের বাইরে বের হয়ে না যায় */
+.product-card {
+    overflow: hidden; /* বাড়তি অংশ কেটে যাবে, ফলে জুমটা কার্ডের ভেতরেই মনে হবে */
+}
