@@ -1,359 +1,297 @@
-/* Project: eOnlineBazar 
-   Author: Abdul Karim Sheikh 
-   Section: External CSS for 28 Points Requirement
+/* Project: eOnlineBazar Professional CSS
+   Author: Abdul Karim Sheikh
+   Points: Mobile 3-column, Progress Animation, Fixed Shipping Header, Validation Colors
 */
 
-/* 1. Basic Reset & Variables */
 :root {
-    --primary-color: #f85606;    /* দারাজ স্টাইল অরেঞ্জ */
-    --secondary-color: #1a237e;  /* নেভি ব্লু */
+    --primary: #f85606;
+    --secondary: #1a237e;
     --bg-light: #f4f4f4;
     --white: #ffffff;
-    --error-bg: #ffe6e6;         /* হালকা লাল ব্যাকগ্রাউন্ড */
-    --success-bg: #e6ffed;       /* হালকা সবুজ ব্যাকগ্রাউন্ড */
-    --border-color: #ddd;
-    --grey-btn: #6c757d;
+    --success: #e6ffed;
+    --error: #ffe6e6;
+    --text: #333;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 body {
     background-color: var(--bg-light);
-    color: #333;
-    line-height: 1.6;
+    color: var(--text);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 10px;
 }
 
-/* 2. Header & Search Bar [Point 28] */
+/* 1. Header & Search Bar [Point 3] */
 .main-header {
-    background: var(--secondary-color);
+    background: var(--secondary);
     padding: 15px 0;
+    color: white;
     position: sticky;
     top: 0;
     z-index: 1000;
-    color: var(--white);
 }
 
-.header-flex {
+.header-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
-.search-container {
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-bar {
     flex: 1;
     display: flex;
-    background: var(--white);
+    background: white;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.search-container input {
+.search-bar input {
     flex: 1;
+    padding: 10px;
     border: none;
-    padding: 10px 15px;
     outline: none;
 }
 
 .search-btn {
     background: #ff9800;
     border: none;
-    padding: 0 20px;
-    color: var(--white);
+    padding: 0 15px;
     cursor: pointer;
 }
 
 .cart-wrapper {
     position: relative;
     cursor: pointer;
-    font-size: 24px;
 }
 
+.cart-icon { font-size: 24px; }
 #cart-count {
     position: absolute;
     top: -8px;
     right: -10px;
-    background: var(--primary-color);
-    color: white;
+    background: var(--primary);
     font-size: 12px;
     padding: 2px 6px;
     border-radius: 50%;
 }
 
-/* 3. Hero Banner [Point 1] */
-.hero-banner {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400');
-    background-size: cover;
+/* 2. Category Nav [Point 2] */
+.category-nav {
+    background: white;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cat-flex {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.cat-flex a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+}
+
+.cat-flex a.active {
+    background: var(--secondary);
     color: white;
+    border-color: var(--secondary);
+}
+
+/* 3. Coming Soon Banner with Animation [Point 4] */
+.coming-soon-banner {
+    background: #333;
+    color: white;
+    padding: 40px 20px;
     text-align: center;
-    padding: 60px 20px;
     margin-bottom: 20px;
 }
 
-.progress-bar {
+.coming-soon-banner h2 { color: #ff9800; margin-bottom: 10px; }
+
+.progress-container {
     width: 200px;
-    height: 4px;
+    height: 6px;
     background: #555;
     margin: 20px auto;
-    border-radius: 2px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.progress-bar .fill {
-    width: 40%;
+.progress-bar {
+    width: 0;
     height: 100%;
     background: #ffeb3b;
+    animation: progressMove 3s infinite;
 }
 
-/* 4. Product Grid (Mobile: 3 Columns, PC: Responsive) [Point 1] */
-.products-grid {
+@keyframes progressMove {
+    0% { width: 0; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* 4. Product Grid (Mobile 3 Columns) [Point 1] */
+.product-grid {
     display: grid;
-    gap: 10px;
+    gap: 8px;
     padding: 10px 0;
 }
 
-/* Desktop View */
-@media (min-width: 992px) {
-    .products-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
+@media (max-width: 600px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Tablet View */
-@media (min-width: 600px) and (max-width: 991px) {
-    .products-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
+@media (min-width: 601px) {
+    .product-grid { grid-template-columns: repeat(5, 1fr); }
 }
 
-/* Mobile View (Strictly 3 Columns as per Point 1) */
-@media (max-width: 599px) {
-    .products-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* 5. Product Card & (+) Icon [Point 4] */
 .product-card {
-    background: var(--white);
-    border-radius: 8px;
-    padding: 10px;
-    position: relative;
+    background: white;
+    padding: 8px;
+    border-radius: 5px;
     text-align: center;
+    position: relative;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-    cursor: pointer;
 }
 
-.product-card:hover { transform: translateY(-3px); }
-
-.add-fast-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.p-img { font-size: 40px; margin-bottom: 10px; display: block; }
-.p-name { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; }
-.p-price { color: var(--primary-color); font-weight: bold; margin-top: 5px; }
-
-/* 6. Modal / Pop-up Logic [Point 19] */
-.modal-overlay {
+/* 5. Modals & Popups [Point 7, 8, 9] */
+.modal {
+    display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0,0,0,0.7);
-    display: none; /* JS will toggle this */
+    z-index: 2000;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
 }
 
-.cart-modal, .address-card, .review-card, .details-card, .success-card {
-    background: var(--white);
-    width: 90%;
+.modal-content {
+    background: white;
+    width: 95%;
     max-width: 450px;
-    max-height: 90vh;
-    border-radius: 15px;
-    overflow-y: auto;
+    border-radius: 10px;
     position: relative;
-    padding: 20px;
-    animation: slideUp 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* 7. Input Validation Styling [Point 13, 14, 15] */
-.form-group { margin-bottom: 15px; position: relative; }
-
-.form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-
-.form-group input, .form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    outline: none;
-    transition: 0.3s;
-}
-
-/* Validation States [Point 13] */
-.valid-input {
-    background-color: var(--success-bg) !important;
-    border-color: #28a745 !important;
-}
-
-.invalid-input {
-    background-color: var(--error-bg) !important;
-    border-color: #dc3545 !important;
-}
-
-.error-text {
-    color: #dc3545;
-    font-size: 11px;
-    display: none; /* JS will show this if skipped */
-    margin-top: 3px;
+/* Professional Cross Button [Point 7] */
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
     font-weight: bold;
+    color: #333;
 }
 
-/* 8. Buttons Styling [Point 6, 18, 23] */
-.proceed-btn, .confirm-order-btn, .final-confirm-btn {
-    width: 100%;
-    background: var(--primary-color);
-    color: white;
-    border: none;
+/* Shipping Header Fixed [Point 8] */
+.shipping-header {
+    background: white;
+    position: sticky;
+    top: 0;
     padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.back-btn, .edit-btn {
-    background: var(--grey-btn);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    flex: 1;
-    cursor: pointer;
-}
-
-/* 9. Payment Methods Radio [Point 16] */
-.radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.radio-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.radio-item input[type="radio"] { width: auto; }
-
-/* 10. Policy Box [Point 26] */
-.policy-box {
-    background: #fff8e1;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border-left: 5px solid #ffc107;
-}
-
-.policy-box h4 { font-size: 14px; margin-bottom: 8px; color: #856404; }
-
-.policy-box ul { padding-left: 20px; font-size: 12px; color: #856404; }
-
-/* 11. Shopping Cart Items [Point 23, 24] */
-.cart-item {
+    border-bottom: 2px solid var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    z-index: 10;
 }
 
-.qty-controls { display: flex; align-items: center; gap: 8px; }
+.back-icon { color: var(--secondary); cursor: pointer; font-weight: bold; }
 
-.qty-btn {
-    width: 25px; height: 25px;
-    border: 1px solid var(--border-color);
-    background: white;
-    border-radius: 4px;
-    cursor: pointer;
+.shipping-form { padding: 20px; }
+
+.shipping-form input, .shipping-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
 }
 
-.delete-btn { color: #dc3545; border: none; background: none; cursor: pointer; margin-left: 10px; }
+/* Validation Colors [Point 13] */
+.valid-field { background-color: var(--success) !important; border-color: green !important; }
+.invalid-field { background-color: var(--error) !important; border-color: red !important; }
 
-/* 12. Success Card [Point 20] */
-.success-card { text-align: center; padding: 40px 20px; }
+/* 6. Review Popup & Top Edit Button [Point 9] */
+.review-card { padding: 20px; position: relative; }
 
-.success-icon {
-    font-size: 50px;
-    color: #28a745;
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
-/* 13. Toast Notification [Point 22] */
-#toast-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-}
-
-.toast-msg {
-    background: rgba(0,0,0,0.8);
+.edit-btn-top {
+    background: #6c757d;
     color: white;
-    padding: 12px 25px;
-    border-radius: 30px;
-    font-size: 14px;
-    text-align: center;
-    animation: fadeInOut 3s forwards;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
 }
 
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: scale(0.8); }
-    10% { opacity: 1; transform: scale(1); }
-    90% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0.8); }
+.confirm-now-btn {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
 }
 
-/* 14. Flying Animation [Point 3] */
-.flying-item {
+/* 7. Success & Toast Animations */
+.success-box {
     position: fixed;
-    z-index: 5000;
-    pointer-events: none;
-    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 3000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
+
+.footer-logo { color: var(--primary); }
+.site-footer { background: #1a237e; color: white; padding: 30px 0; text-align: center; margin-top: 40px; }
