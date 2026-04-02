@@ -59,242 +59,207 @@ const products = [
 
 
 let cart = [];
-let discount = 0;
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
+let discountAmount = 0;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
-// ২. প্রডাক্ট লোড করা [Point 1, 4]
-function displayProducts(data) {
+// ২. প্রডাক্ট ডিসপ্লে (অ্যালাইন করা বড় প্লাস বাটনসহ) [Point 1 - New]
+function loadProducts(items) {
     const grid = document.getElementById('product-grid');
-    grid.innerHTML = data.map(p => `
-        <div class="product-card" onclick="openProductDetails(${p.id})">
-            <span style="font-size:40px;">${p.img}</span>
-            <h4 style="font-size:13px; margin:5px 0;">${p.name}</h4>
-            <p style="color:#f85606; font-weight:bold;">৳ ${p.price}</p>
-            <button class="add-btn" onclick="event.stopPropagation(); addToCart(${p.id}, event)">+</button>
+    grid.innerHTML = items.map(p => `
+        <div class="product-card">
+            <span style="font-size:50px;">${p.img}</span>
+            <h4>${p.name}</h4>
+            <p style="color:#f85606; font-weight:700;">৳ ${p.price}</p>
+            <button class="add-btn" onclick="addToCart(${p.id}, event)">+</button>
         </div>
     `).join('');
 }
 
-// ৩. প্রডাক্ট বিস্তারিত দেখা [Point 1 - New Fix]
-function openProductDetails(id) {
-    const p = products.find(i => i.id === id);
-    const modal = document.getElementById('productModal');
-    const body = document.getElementById('modal-body');
-    
-    body.innerHTML = `
-        <span class="close-modal" onclick="closeModal('productModal')">&times;</span>
-        <div style="padding:20px; text-align:center;">
-            <span style="font-size:80px;">${p.img}</span>
-            <h2>${p.name}</h2>
-            <p style="color:#f85606; font-size:20px; font-weight:bold;">Price: ৳ ${p.price}</p>
-            <hr style="margin:15px 0;">
-            <p><b>Description:</b> ${p.desc}</p>
-            <p><b>Special Offer:</b> <span style="color:green;">${p.offer}</span></p>
-            <p><b>Reviews:</b> ⭐⭐⭐⭐⭐ ${p.reviews}</p>
-            <div style="margin-top:20px; display:flex; gap:10px;">
-                <button class="confirm-btn" style="background:#6c757d;" onclick="addToCart(${p.id}); closeModal('productModal')">Add to Cart</button>
-                <button class="confirm-btn" onclick="buyNow(${p.id})">Buy Now</button>
-            </div>
-            <div style="margin-top:15px;">
-                <a href="https://wa.me/8801XXXXXXXXX" target="_blank" style="color:#25D366; text-decoration:none; font-weight:bold;">💬 Chat with Support</a>
-            </div>
-        </div>
-    `;
-    modal.style.display = 'flex';
-}
-
-// ৪. কার্ট লজিক ও অ্যানিমেশন [Point 3, 23, 24]
+// ৩. ফ্লাই অ্যানিমেশন [Point 2 - New]
 function addToCart(id, event) {
     const p = products.find(i => i.id === id);
-    let item = cart.find(i => i.id === id);
-    if (item) { item.qty++; } else { cart.push({ ...p, qty: 1, selected: true }); }
+    cart.push({ ...p, qty: 1 });
     
-    if (event) playFlyAnimation(event);
+    // অ্যানিমেশন লজিক
+    const flyer = document.createElement('div');
+    flyer.className = 'flyer-emoji';
+    flyer.innerHTML = p.img;
+    flyer.style.left = event.clientX + 'px';
+    flyer.style.top = event.clientY + 'px';
+    document.body.appendChild(flyer);
+
+    const cartIcon = document.querySelector('.cart-wrapper').getBoundingClientRect();
+    
+    setTimeout(() => {
+        flyer.style.left = cartIcon.left + 'px';
+        flyer.style.top = cartIcon.top + 'px';
+        flyer.style.transform = 'scale(0.1)';
+        flyer.style.opacity = '0';
+    }, 50);
+
+    setTimeout(() => flyer.remove(), 800);
     updateCartUI();
-    showToast("Added to cart!");
 }
 
+// ৪. কার্ট আপডেট ও খালি কার্ট মেসেজ [Point 3, 6 - New]
 function updateCartUI() {
-    const container = document.getElementById('cart-items-container');
-    const totalCount = document.getElementById('cart-count');
-    const billTotal = document.getElementById('cart-total');
-    
-    totalCount.innerText = cart.length;
-    let total = 0;
-    
-    container.innerHTML = cart.map((item, index) => {
-        if (item.selected) total += (item.price * item.qty);
+    document.getElementById('cart-count').innerText = cart.length;
+    const list = document.getElementById('cart-items-list');
+    const footer = document.getElementById('cart-footer-logic');
+
+    if (cart.length === 0) {
+        list.innerHTML = `<div class="empty-msg">Your cart is empty!<br>Please add some products to the cart.</div>`;
+        footer.style.display = 'none';
+        return;
+    }
+
+    footer.style.display = 'block';
+    let subtotal = 0;
+    list.innerHTML = cart.map((item, index) => {
+        subtotal += (item.price * item.qty);
         return `
-            <div style="display:flex; align-items:center; border-bottom:1px solid #eee; padding:10px 0;">
-                <input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleSelect(${index})">
-                <div style="flex:1; margin-left:10px;">
-                    <p style="font-size:14px; font-weight:bold;">${item.name}</p>
-                    <small>${item.qty} x ${item.price} = ৳ ${item.qty * item.price}</small>
+            <div style="display:flex; align-items:center; background:white; margin-bottom:10px; padding:15px; border-radius:10px;">
+                <span style="font-size:30px;">${item.img}</span>
+                <div style="flex:1; margin-left:15px;">
+                    <p style="font-weight:600; font-size:14px;">${item.name}</p>
+                    <p>৳ ${item.price}</p>
                 </div>
-                <div style="display:flex; align-items:center; gap:5px;">
-                    <button onclick="changeQty(${index}, -1)">-</button>
-                    <span>${item.qty}</span>
-                    <button onclick="changeQty(${index}, 1)">+</button>
-                    <button onclick="removeItem(${index})" style="color:red; border:none; background:none; margin-left:5px;">🗑️</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                    <span style="font-weight:700;">${item.qty}</span>
+                    <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                    <button onclick="removeItem(${index})" style="background:none; border:none; color:red; margin-left:10px;">🗑️</button>
                 </div>
             </div>
         `;
     }).join('');
-    
-    billTotal.innerText = total - discount;
+
+    document.getElementById('sub-val').innerText = subtotal;
+    document.getElementById('dis-val').innerText = discountAmount;
+    document.getElementById('final-val').innerText = subtotal - discountAmount;
 }
 
-// ৫. ভ্যালিডেশন লজিক [Point 5, 6, 9, 10, 11, 13]
-function validateAndOrder() {
-    const name = document.getElementById('orderName');
-    const phone = document.getElementById('orderPhone');
-    const addr = document.getElementById('orderAddress');
-    
-    // Anti-Junk Logic: কমপক্ষে ২ শব্দ এবং একই অক্ষর ৩ বারের বেশি লুপ হবে না
-    const nameValid = name.value.trim().split(' ').length >= 2 && !/(.)\1{2,}/.test(name.value);
-    const phoneValid = /^01[3-9]\d{8}$/.test(phone.value); // ১১ ডিজিট বিডি ফরম্যাট
-    const addrValid = addr.value.trim().split(' ').length >= 3; // কমপক্ষে ৩ শব্দ
+// ৫. কুপন সিস্টেম ফিক্স [Point 5 - New]
+function applyDiscount() {
+    const code = document.getElementById('couponCode').value.toUpperCase();
+    if (code === "SAVE10") {
+        discountAmount = 50; // ধরুন ৫০ টাকা ফিক্সড ডিসকাউন্ট
+        showToast("Coupon Applied! ৳50 Discounted.");
+    } else {
+        discountAmount = 0;
+        showToast("Invalid Coupon!");
+    }
+    updateCartUI();
+}
 
-    // ইনপুট কালার চেঞ্জ
-    name.className = nameValid ? 'valid-field' : 'invalid-field';
-    phone.className = phoneValid ? 'valid-field' : 'invalid-field';
-    addr.className = addrValid ? 'valid-field' : 'invalid-field';
+// ৬. লাইভ ভ্যালিডেশন (গ্রিন/রেড কালার) [Point 8, 9, 10, 11 - New]
+function validateLive(id, type) {
+    const input = document.getElementById(id);
+    const val = input.value.trim();
+    let isValid = false;
 
-    if (!nameValid || !phoneValid || !addrValid) {
-        showToast("Please provide valid information!");
+    if (type === 'name') {
+        isValid = val.split(' ').length >= 2 && !/(.)\1{2,}/.test(val);
+    } else if (type === 'phone') {
+        isValid = /^01[3-9]\d{8}$/.test(val); // ১১ ডিজিট লক
+    } else if (type === 'address') {
+        isValid = val.split(' ').length >= 3;
+    }
+
+    if (isValid) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+    } else {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+    }
+}
+
+// ৭. রিভিউ এবং ফাইনাল অর্ডার [Point 13, 14, 15 - New]
+function showReview() {
+    const name = document.getElementById('uName');
+    const phone = document.getElementById('uPhone');
+    const addr = document.getElementById('uAddress');
+
+    if (!name.classList.contains('is-valid') || !phone.classList.contains('is-valid') || !addr.classList.contains('is-valid')) {
+        showToast("Please fill the form correctly!");
         return;
     }
 
-    // রিভিউ পপআপ দেখানো [Point 18, 9-New]
-    document.getElementById('shippingModal').style.display = 'none';
-    const reviewData = document.getElementById('review-data');
-    reviewData.innerHTML = `
-        <p><b>Name:</b> ${name.value}</p>
-        <p><b>Phone:</b> ${phone.value}</p>
-        <p><b>Address:</b> ${addr.value}</p>
-        <p><b>Total Bill:</b> ৳ ${document.getElementById('cart-total').innerText}</p>
+    const content = document.getElementById('reviewContent');
+    content.innerHTML = `
+        <div style="text-align:left; line-height:1.8;">
+            <p><strong>Name:</strong> ${name.value}</p>
+            <p><strong>Phone:</strong> ${phone.value}</p>
+            <p><strong>Address:</strong> ${addr.value}</p>
+            <p><strong>Total Bill:</strong> ৳ ${document.getElementById('final-val').innerText}</p>
+            <p style="color:green;"><strong>Discount:</strong> ৳ ${discountAmount}</p>
+        </div>
     `;
-    document.getElementById('confirmBox').style.display = 'flex';
+    document.getElementById('reviewPopup').style.display = 'flex';
 }
 
-// ৬. ফাইনাল অর্ডার প্রসেসিং (Excel Integration) [Point 27, 29, 10-New]
-async function finalOrderProcess() {
-    const btn = document.getElementById('confirmFinalBtn');
-    btn.innerText = "Processing..."; // [Point 27, 341]
+async function processFinalOrder() {
+    const btn = document.querySelector('.final-btn');
+    btn.innerText = "Processing..."; //
     btn.disabled = true;
 
-    const orderData = {
-        Order_ID: "EB" + Math.floor(Math.random() * 100000),
-        Name: document.getElementById('orderName').value,
-        Phone: document.getElementById('orderPhone').value,
-        Address: document.getElementById('orderAddress').value,
-        Items: cart.filter(i => i.selected).map(i => `${i.name}(${i.qty})`).join(", "),
-        Total: document.getElementById('cart-total').innerText
-    };
+    const orderID = "#EB" + Math.floor(100000 + Math.random() * 900000); // ইউনিক আইডি
+    
+    const formData = new URLSearchParams({
+        "Order_ID": orderID,
+        "Name": document.getElementById('uName').value,
+        "Phone": document.getElementById('uPhone').value,
+        "Address": document.getElementById('uAddress').value,
+        "Total": document.getElementById('final-val').innerText,
+        "Status": "Pending"
+    });
 
     try {
-        // গুগল শিটে ডাটা পাঠানো
-        await fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: new URLSearchParams(orderData)
-        });
-
-        // সফল হলে মেসেজ [Point 20]
-        document.getElementById('confirmBox').style.display = 'none';
-        const success = document.getElementById('successBox');
-        document.getElementById('successMessage').innerHTML = `
-            <h2 style="color:green;">✔️ Order Confirmed!</h2>
-            <p>Order ID: ${orderData.Order_ID}</p>
-            <p>Thanks for purchase. We will call you soon.</p>
-        `;
-        success.style.display = 'block';
-        cart = cart.filter(i => !i.selected);
-        updateCartUI();
+        await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
         
-        setTimeout(() => { success.style.display = 'none'; }, 10000); // ১০ সেকেন্ড পর ভ্যানিশ
+        document.getElementById('reviewPopup').style.display = 'none';
+        document.getElementById('displayOrderID').innerText = orderID;
+        const success = document.getElementById('successPopup');
+        success.style.display = 'flex';
+
+        cart = [];
+        updateCartUI();
+        closeShippingView();
+        
+        setTimeout(() => { success.style.display = 'none'; }, 10000); // ১০ সেকেন্ড পর ভ্যানিশ [Point 15]
     } catch (e) {
-        alert("Something went wrong. Try again!");
+        showToast("Error! Try again.");
         btn.innerText = "Confirm Now";
         btn.disabled = false;
     }
 }
 
-// ৭. ইউটিলিটি ফাংশনস
-function playFlyAnimation(e) {
-    const cartIcon = document.querySelector('.cart-wrapper');
-    const flyer = document.createElement('div');
-    flyer.innerHTML = "🛒";
-    flyer.style.position = 'fixed';
-    flyer.style.left = e.clientX + 'px';
-    flyer.style.top = e.clientY + 'px';
-    flyer.style.zIndex = '5000';
-    flyer.style.transition = 'all 0.8s ease-in-out';
-    document.body.appendChild(flyer);
-    
-    setTimeout(() => {
-        flyer.style.left = cartIcon.getBoundingClientRect().left + 'px';
-        flyer.style.top = cartIcon.getBoundingClientRect().top + 'px';
-        flyer.style.opacity = '0';
-    }, 10);
-    setTimeout(() => flyer.remove(), 800);
+// ইউটিলিটি নেভিগেশন
+function openCartView() { document.getElementById('cartView').style.display = 'flex'; updateCartUI(); }
+function closeCartView() { document.getElementById('cartView').style.display = 'none'; }
+function openShippingView() { document.getElementById('shippingView').style.display = 'flex'; }
+function closeShippingView() { document.getElementById('shippingView').style.display = 'none'; }
+function closeReview() { document.getElementById('reviewPopup').style.display = 'none'; }
+
+function changeQty(i, delta) {
+    cart[i].qty += delta;
+    if (cart[i].qty < 1) cart[i].qty = 1;
+    updateCartUI();
 }
 
-function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.innerText = msg;
-    t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
-}
-
-function toggleCart() {
-    const modal = document.getElementById('cartModal');
-    if (cart.length === 0 && modal.style.display !== 'flex') {
-        showToast("Your cart is empty!");
-        return;
-    }
-    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-}
-
-function buyNow(id) {
-    cart = []; // আগের সব বাদ
-    addToCart(id);
-    closeModal('productModal');
-    openShipping();
-}
-
-function openShipping() {
-    document.getElementById('cartModal').style.display = 'none';
-    document.getElementById('shippingModal').style.display = 'flex';
-}
-
-function backToCart() {
-    document.getElementById('shippingModal').style.display = 'none';
-    document.getElementById('cartModal').style.display = 'flex';
-}
-
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function closeConfirm() { document.getElementById('confirmBox').style.display = 'none'; document.getElementById('shippingModal').style.display = 'flex'; }
-function changeQty(i, d) { cart[i].qty += d; if(cart[i].qty < 1) cart[i].qty = 1; updateCartUI(); }
 function removeItem(i) { cart.splice(i, 1); updateCartUI(); }
-function toggleSelect(i) { cart[i].selected = !cart[i].selected; updateCartUI(); }
 
-// ক্যাটাগরি ফিল্টার [Point 2]
-function filterCategory(cat) {
-    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
-    displayProducts(filtered);
-    // Active class update
-    document.querySelectorAll('.cat-flex a').forEach(a => {
-        a.classList.remove('active');
-        if(a.innerText.toLowerCase() === cat) a.classList.add('active');
-    });
+function showToast(m) {
+    const t = document.getElementById('toast-msg');
+    t.innerText = m; t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
 }
 
-// সার্চ ফাংশন [Point 3, 28]
-function searchProduct() {
-    const val = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(val));
-    displayProducts(filtered);
+// সার্চ এবং ফিল্টার
+function filterCat(c) {
+    const filtered = c === 'all' ? products : products.filter(p => p.category === c);
+    loadProducts(filtered);
 }
 
-window.onload = () => { displayProducts(products); };
+window.onload = () => loadProducts(products);
