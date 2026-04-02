@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eOnlineBazar | Professional Online Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,38 +13,46 @@
         <div class="container header-content">
             <h1 class="logo" onclick="location.reload()">eOnlineBazar</h1>
             <div class="cart-wrapper" onclick="openCartView()">
-                <span class="cart-icon">🛒</span>
-                <span id="cart-count">0</span>
+                <div class="cart-icon-container">
+                    <span class="cart-icon">🛒</span>
+                    <span id="cart-count">0</span>
+                </div>
             </div>
         </div>
         <div class="container search-container">
             <div class="search-box">
-                <input type="text" id="productSearch" placeholder="Search for products..." onkeyup="liveSearch()">
+                <input type="text" id="productSearch" placeholder="পণ্য খুঁজুন..." onkeyup="liveSearch()">
                 <button class="search-btn">🔍</button>
             </div>
         </div>
     </header>
 
-    <nav class="category-section">
-        <div class="container cat-flex">
-            <button class="cat-btn active" onclick="filterCat('all')">All</button>
-            <button class="cat-btn" onclick="filterCat('grocery')">Grocery</button>
-            <button class="cat-btn" onclick="filterCat('electronics')">Electronics</button>
-            <button class="cat-btn" onclick="filterCat('cosmetics')">Cosmetics</button>
+    <nav class="category-nav">
+        <div class="container cat-scroll-wrapper">
+            <button class="cat-item active" onclick="filterCat('all')">All</button>
+            <button class="cat-item" onclick="filterCat('grocery')">Grocery</button>
+            <button class="cat-item" onclick="filterCat('electronics')">Electronics</button>
+            <button class="cat-item" onclick="filterCat('cosmetics')">Cosmetics</button>
         </div>
     </nav>
 
     <section class="banner-area">
-        <div class="container banner-card">
-            <h2>COMING SOON: A REVOLUTION IN SHOPPING!</h2>
-            <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
-            <div class="loader-container">
-                <div class="loader-bar"></div>
+        <div class="container">
+            <div class="banner-card">
+                <div class="badge">Coming Soon</div>
+                <h2>A REVOLUTION IN SHOPPING!</h2>
+                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
+                <div class="loader-wrapper">
+                    <div class="loader-track">
+                        <div class="loader-fill"></div>
+                    </div>
+                    <span class="loading-text">Launching Soon...</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <main class="container">
+    <main class="container main-content">
         <div id="product-grid" class="product-grid">
             </div>
     </main>
@@ -55,18 +63,31 @@
             <h2>Your Shopping Cart</h2>
         </div>
         <div class="container view-body">
-            <div id="cart-items-list">
+            <div id="cart-items-list" class="cart-items-container">
                 </div>
             
-            <div id="cart-footer-logic" style="display:none;">
-                <div class="coupon-box">
-                    <input type="text" id="couponCode" placeholder="Enter Coupon (e.g. SAVE10)">
-                    <button onclick="applyDiscount()">Apply</button> </div>
-                <div class="bill-summary">
-                    <p>Subtotal: ৳ <span id="sub-val">0</span></p>
-                    <p>Discount: <span style="color:green;">- ৳ <span id="dis-val">0</span></span></p>
-                    <hr>
-                    <h3>Total: ৳ <span id="final-val">0</span></h3>
+            <div id="cart-footer-logic" class="cart-summary-card" style="display:none;">
+                <div class="coupon-section">
+                    <div class="coupon-input-group">
+                        <input type="text" id="couponCode" placeholder="Enter Coupon (e.g. SAVE10)">
+                        <button class="apply-btn" onclick="applyDiscount()">Apply</button>
+                    </div>
+                    <div id="coupon-message" class="coupon-msg"></div>
+                </div>
+
+                <div class="bill-details">
+                    <div class="bill-row">
+                        <span>Subtotal:</span>
+                        <span>৳ <span id="sub-val">0</span></span>
+                    </div>
+                    <div class="bill-row discount-row">
+                        <span>Discount:</span>
+                        <span>- ৳ <span id="dis-val">0</span></span>
+                    </div>
+                    <div class="bill-row total-row">
+                        <strong>Total:</strong>
+                        <strong>৳ <span id="final-val">0</span></strong>
+                    </div>
                 </div>
                 <button class="checkout-btn" onclick="openShippingView()">Proceed to Checkout</button>
             </div>
@@ -81,51 +102,57 @@
         <div class="container view-body shipping-form">
             <div class="input-group">
                 <label>Full Name *</label>
-                <input type="text" id="uName" placeholder="Enter at least 2 words" oninput="validateLive('uName', 'name')">
+                <input type="text" id="uName" placeholder="আপনার নাম লিখুন" oninput="validateLive('uName', 'name')">
                 <small class="error-text">Please enter at least 2 words.</small>
             </div>
 
             <div class="input-group">
-                <label>Mobile Number * [Point 10 - New]</label>
+                <label>Mobile Number *</label>
                 <input type="tel" id="uPhone" maxlength="11" placeholder="01XXXXXXXXX" oninput="validateLive('uPhone', 'phone')">
                 <small class="error-text">Enter a valid 11-digit BD number.</small>
             </div>
 
             <div class="input-group">
-                <label>Full Address * [Point 11 - New]</label>
-                <textarea id="uAddress" placeholder="Village, Area, District (Min 3 words)" oninput="validateLive('uAddress', 'address')"></textarea>
+                <label>Full Address *</label>
+                <textarea id="uAddress" placeholder="গ্রাম, ইউনিয়ন, জেলা..." oninput="validateLive('uAddress', 'address')"></textarea>
                 <small class="error-text">Address must contain at least 3 words.</small>
             </div>
 
             <div class="payment-section">
                 <label>Select Payment Method:</label>
-                <div class="radio-group">
-                    <label class="radio-card">
+                <div class="payment-grid">
+                    <label class="pay-card">
                         <input type="radio" name="pay" value="COD" checked>
-                        <div class="radio-content">
-                            <span>🚚 Cash on Delivery</span>
+                        <div class="pay-info">
+                            <span class="icon">🚚</span>
+                            <span>Cash on Delivery</span>
                         </div>
                     </label>
-                    <label class="radio-card">
+                    <label class="pay-card">
                         <input type="radio" name="pay" value="bKash">
-                        <div class="radio-content">
-                            <span>📱 bKash</span>
+                        <div class="pay-info">
+                            <span class="icon">📱</span>
+                            <span>bKash</span>
+                        </div>
+                    </label>
+                    <label class="pay-card">
+                        <input type="radio" name="pay" value="Nagad">
+                        <div class="pay-info">
+                            <span class="icon">💸</span>
+                            <span>Nagad</span>
                         </div>
                     </label>
                 </div>
             </div>
 
-            <button class="confirm-order-btn" onclick="showReview()">Confirm Order</button>
+            <button id="confirmOrderBtn" class="confirm-order-btn" onclick="showReview()">Confirm Order</button>
         </div>
     </div>
 
     <div id="reviewPopup" class="modal-overlay">
         <div class="modal-card">
-            <div class="modal-header">
-                <h3>Review Your Order</h3>
-            </div>
-            <div class="modal-body" id="reviewContent">
-                </div>
+            <div class="modal-header"><h3>Review Your Order</h3></div>
+            <div id="reviewContent" class="modal-body"></div>
             <div class="modal-footer">
                 <button class="edit-btn" onclick="closeReview()">Edit Info</button>
                 <button class="final-btn" onclick="processFinalOrder()">Confirm Now</button>
@@ -137,11 +164,9 @@
         <div class="success-card">
             <div class="check-icon">✔️</div>
             <h2>Congratulations!</h2>
-            <p>Thank you for your purchase. Your order has been placed.</p>
-            <div class="order-id-box">
-                Order ID: <span id="displayOrderID">#000000</span>
-            </div>
-            <p><small>We will call you shortly for confirmation.</small></p>
+            <p>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</p>
+            <div class="order-id-box">Order ID: <span id="displayOrderID">#000000</span></div>
+            <button class="close-success" onclick="location.reload()">Back to Home</button>
         </div>
     </div>
 
