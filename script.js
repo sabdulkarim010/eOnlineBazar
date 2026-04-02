@@ -52,7 +52,25 @@ const products = [
 
 // --- Global Variables ---
 let cart = []; 
-let discountPercent = 0; 
+let discountPercent = 0; // এটি একদম ফাইলের উপরে ডিক্লেয়ার করবেন
+
+function applyCoupon() {
+    const input = document.getElementById('couponInput').value.trim();
+    const msg = document.getElementById('couponMessage');
+    
+    if (input === "SAVE10") {
+        discountPercent = 0.10; // ১০% ডিসকাউন্ট
+        msg.innerText = "10% Discount Applied! ✔️";
+        msg.style.color = "green";
+        showToast("Coupon Applied!");
+    } else {
+        discountPercent = 0;
+        msg.innerText = "Invalid Coupon! ❌";
+        msg.style.color = "red";
+    }
+    updateCartUI(); // টোটাল আপডেট করার জন্য
+}
+
 
 // ১. ডিসপ্লে ফাংশন
 function displayProducts(items) {
@@ -299,6 +317,7 @@ function showSuccessPopup(orderId) {
         if(p) { p.style.opacity = '0'; p.style.transition = 'opacity 1s ease'; setTimeout(() => p.remove(), 1000); }
     }, 10000); 
 }
+
 
 // ৯. অন্যান্য ইউটিলিটি
 function searchProduct() {
