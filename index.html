@@ -199,6 +199,28 @@
                         <span>Total Bill:</span> 
                         <span style="color: #2d3436;">৳ <span id="cart-total">0</span></span>
                     </h4>
+
+
+                    <div style="margin: 15px 0; padding: 15px; border: 1px dashed #f85606; border-radius: 10px; background: #fffaf0;">
+    <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px;">Apply Coupon Code</label>
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="text" id="couponInput" placeholder="Enter (SAVE10)" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none;">
+        <button onclick="applyCoupon()" style="background: #1a237e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Apply</button>
+    </div>
+    <p id="couponMessage" style="font-size: 12px; margin-top: 5px; font-weight: 500;"></p>
+    </div>
+
+                    
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+    <h4 style="font-size: 20px; margin: 0;">Total Bill:</h4>
+    <h4 style="font-size: 22px; margin: 0; color: #f85606;">৳ <span id="cart-total">0</span></h4>
+</div>
+
+
+
+
+
+                    
                     <button class="confirm-btn" onclick="validateAndOrder()" style="width: 100%; background-color: #f85606; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; display: block;">
                         Confirm Order
                     </button>
