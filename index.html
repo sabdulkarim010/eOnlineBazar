@@ -3,108 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eOnlineBazar | Abdul Karim</title>
+    <title>eOnlineBazar | Premium Shopping Experience</title>
+    
     <link rel="stylesheet" href="style.css">
-    </head>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 <body>
 
-    <header class="site-header">
-        <div class="header-container">
-            <h1 class="logo">eOnlineBazar</h1>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProduct()">
-                <button class="search-btn">🔍</button>
+    <header class="main-header">
+        <div class="container header-flex">
+            <div class="logo">
+                <h1>eOnlineBazar</h1>
             </div>
-            <div class="cart-wrapper" onclick="toggleCart()">
-                <div class="cart-icon">🛒</div>
+            
+            <div class="search-container">
+                <input type="text" id="productSearch" placeholder="Search for products (e.g. Rice, Watch...)" onkeyup="searchProducts()">
+                <button type="button" class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="cart-wrapper" onclick="openCart()">
+                <i class="fas fa-shopping-cart"></i>
                 <span id="cart-count">0</span>
             </div>
         </div>
     </header>
 
-    <nav class="category-nav">
-        <button onclick="filterCategory('all')" class="active">All</button>
-        <button onclick="filterCategory('grocery')">Grocery</button>
-        <button onclick="filterCategory('electronics')">Electronics</button>
-        <button onclick="filterCategory('cosmetics')">Cosmetic</button>
-    </nav>
-
-    <section class="coming-soon-banner">
-        <div class="banner-content">
+    <section class="hero-banner">
+        <div class="banner-overlay">
             <h2>COMING SOON: A REVOLUTION IN SHOPPING!</h2>
-            <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
-            <div class="progress-line"><span></span></div>
+            <p>Experience the premium quality and handpicked products. Customer satisfaction is our goal.</p>
+            <div class="progress-bar"><div class="fill"></div></div>
         </div>
     </section>
 
-    <main id="product-grid" class="product-container">
-        </main>
+    <nav class="category-filter">
+        <button class="filter-btn active" onclick="filterData('all')">All Products</button>
+        <button class="filter-btn" onclick="filterData('grocery')">Grocery</button>
+        <button class="filter-btn" onclick="filterData('electronics')">Electronics</button>
+        <button class="filter-btn" onclick="filterData('cosmetics')">Cosmetics</button>
+    </nav>
 
-    <div id="cartModal" class="modal">
-        <div class="modal-content">
+    <main class="container">
+        <div id="product-grid" class="products-grid">
+            </div>
+    </main>
+
+    <div id="cartModal" class="modal-overlay">
+        <div class="cart-modal">
             <div class="modal-header">
-                <h2>Your Shopping Cart</h2>
-                <span class="close" onclick="toggleCart()">&times;</span>
-            </div>
-            
-            <div id="cart-items-container">
-                </div>
-
-            <div class="coupon-section">
-                <label>Apply Coupon Code</label>
-                <div class="coupon-input-group">
-                    <input type="text" id="couponInput" placeholder="Enter (SAVE10)">
-                    <button onclick="applyCoupon()">Apply</button>
-                </div>
-                <p id="couponMessage"></p>
+                <h3><i class="fas fa-shopping-basket"></i> Your Shopping Cart</h3>
+                <span class="close-modal" onclick="closeCart()">&times;</span>
             </div>
 
-            <div id="order-form-container" class="order-section">
-                <div class="total-bill-row">
-                    <span>Total Bill:</span>
-                    <span>৳ <span id="cart-total">0</span></span>
+            <div id="cart-content" class="cart-body">
                 </div>
 
-                <div class="input-fields">
-                    <input type="text" id="orderName" placeholder="Full Name *" required>
-                    <input type="text" id="orderPhone" placeholder="Mobile Number (01XXXXXXXXX) *" required>
-                    <textarea id="orderAddress" placeholder="Full Address (Village/House, Road, Area, District) *" required></textarea>
-                    <textarea id="orderNote" placeholder="Note for Courier (Optional)"></textarea>
+            <div id="checkout-section" class="checkout-footer" style="display: none;">
+                <div class="coupon-box">
+                    <input type="text" id="couponInput" placeholder="Enter Coupon (e.g. SAVE10)">
+                    <button onclick="applyCouponCode()">Apply</button>
+                </div>
+                <p id="coupon-status-msg"></p>
+                
+                <div class="summary-table">
+                    <div class="sum-row"><span>Subtotal:</span> <span id="subtotal-val">0</span></div>
+                    <div class="sum-row"><span>Discount:</span> <span id="discount-val">0</span></div>
+                    <div class="sum-row total"><span>Total:</span> <span id="final-total">0</span></div>
                 </div>
 
-                <div class="payment-methods">
-                    <p>Payment Method:</p>
-                    <div class="method-options">
-                        <label><input type="radio" name="payment" value="bkash"> bKash</label>
-                        <label><input type="radio" name="payment" value="nagad"> Nagad</label>
-                        <label><input type="radio" name="payment" value="cod" checked> Cash on Delivery</label>
-                    </div>
-                </div>
-
-                <button class="confirm-btn" onclick="validateAndOrder()">Confirm Order</button>
+                <button class="proceed-btn" onclick="openAddressPopup()">Proceed to Checkout</button>
             </div>
         </div>
     </div>
 
-    <div id="confirmBox" class="confirm-overlay" style="display:none;">
-        </div>
-
-    <div id="productModal" class="modal">
-        <div class="modal-content" id="modal-body">
+    <div id="addressModal" class="modal-overlay">
+        <div class="address-card">
+            <h3>Shipping Details</h3>
+            <div class="form-group">
+                <label>Full Name <span class="required">*</span></label>
+                <input type="text" id="uName" placeholder="Enter at least 2 words" oninput="validateField(this, 'name')">
+                <small class="error-text" id="name-err">Full Name Required</small>
             </div>
+
+            <div class="form-group">
+                <label>Mobile Number <span class="required">*</span></label>
+                <input type="number" id="uPhone" placeholder="01XXXXXXXXX" oninput="validateField(this, 'phone')">
+                <small class="error-text" id="phone-err">Valid BD Mobile Number Required</small>
+            </div>
+
+            <div class="form-group">
+                <label>Full Address <span class="required">*</span></label>
+                <textarea id="uAddress" placeholder="Village/House, Area, District" oninput="validateField(this, 'address')"></textarea>
+                <small class="error-text" id="addr-err">Full Address Required (Min 3 words)</small>
+            </div>
+
+            <div class="form-group">
+                <label>Note for Courier (Optional)</label>
+                <textarea id="uNote" placeholder="Extra instructions for delivery..."></textarea>
+            </div>
+
+            <div class="payment-section">
+                <label>Select Payment Method:</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="payMethod" value="COD" checked> 
+                        <span>Cash on Delivery</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="payMethod" value="bKash"> 
+                        <span>bKash</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="payMethod" value="Nagad"> 
+                        <span>Nagad</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="policy-box">
+                <h4><i class="fas fa-info-circle"></i> Return & Warranty Policy</h4>
+                <ul>
+                    <li>7 Days easy return if product is damaged.</li>
+                    <li>Keep the original packaging for warranty claims.</li>
+                    <li>Refund will be processed within 72 hours.</li>
+                    <li>Delivery charges are non-refundable.</li>
+                    <li>Check the product in front of the delivery man.</li>
+                </ul>
+            </div>
+
+            <div class="modal-actions">
+                <button class="back-btn" onclick="closeAddressPopup()">Back to Cart</button>
+                <button id="mainConfirmBtn" class="confirm-order-btn" onclick="showReviewPopup()">Order Now</button>
+            </div>
+        </div>
     </div>
 
-    <footer class="site-footer">
-        <div class="footer-content">
+    <div id="reviewModal" class="modal-overlay">
+        <div class="review-card">
+            <h3>Review Your Information</h3>
+            <div id="review-data-display" class="review-content">
+                </div>
+            <div class="modal-actions">
+                <button class="edit-btn" onclick="closeReview()">Edit Info</button>
+                <button id="finalSubmitBtn" class="final-confirm-btn" onclick="submitToGoogleSheet()">Confirm Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="modal-overlay">
+        <div class="details-card">
+            <span class="close-details" onclick="closeDetails()">&times;</span>
+            <div id="details-content">
+                </div>
+            <div class="details-footer-btns">
+                <button class="detail-cart-btn" onclick="addToCartFromDetail()">Add to Cart</button>
+                <button class="detail-buy-btn" onclick="buyNowFromDetail()">Buy Now</button>
+            </div>
+            <div class="chat-shortcut">
+                <a href="https://wa.me/YOURNUMBER" target="_blank"><i class="fab fa-whatsapp"></i> Chat with Us</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal-overlay">
+        <div class="success-card">
+            <div class="success-icon">✔️</div>
+            <h3>Thanks for your purchase!</h3>
+            <p>Your order has been placed successfully.</p>
+            <p>Order ID: <span id="disp-order-id"></span></p>
+            <p>Our team will call you shortly for confirmation.</p>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container text-center">
             <h3>eOnlineBazar</h3>
-            <p>© 2026 <b>Abdul Karim Sheikh</b>. All Rights Reserved.</p>
+            <p>&copy; 2026 <b>Abdul Karim Sheikh</b>. All Rights Reserved.</p>
             <div class="footer-links">
                 <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
             </div>
         </div>
     </footer>
 
-    <div id="toast"></div>
+    <div id="toast-container"></div>
 
     <script src="script.js"></script>
 </body>
