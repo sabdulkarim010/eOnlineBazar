@@ -218,18 +218,24 @@ function selectPayment(method) {
 
 // ৬. ভ্যালিডেশন এবং রিভিউ বক্স দেখানো
 function validateAndOrder() {
-    const name = document.getElementById('orderName').value.trim();
-    const phone = document.getElementById('orderPhone').value.trim();
-    const address = document.getElementById('orderAddress').value.trim();
+    // ... আপনার আগের ভ্যালিডেশন কোড ...
     
-    if (name.split(' ').length < 2) { showToast("Enter full name!"); return; }
-    if (!/^01[3-9]\d{8}$/.test(phone)) { showToast("Invalid phone number!"); return; }
-    if (address.length < 5) { showToast("Enter full address!"); return; }
-
-    // কার্ট মডাল বন্ধ করা এবং রিভিউ বক্স খোলা (ডাবল পপ-আপ সমস্যা সমাধান)
-    document.getElementById('cartModal').style.display = 'none';
-    document.getElementById('confirmBox').style.display = 'flex';
+    const confirmBox = document.getElementById('confirmBox');
+    confirmBox.innerHTML = `
+        <div class="popup-card">
+            <h3>Review Your Order</h3>
+            <p>ঠিকানা এবং ফোন নম্বর চেক করে নিন</p>
+            <div class="review-details">
+                </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="closeConfirm()" style="background: #6c757d; color: white; border: none; padding: 12px; border-radius: 10px; flex: 1; cursor: pointer;">Edit</button>
+                <button onclick="finalOrderProcess()" style="background: #f85606; color: white; border: none; padding: 12px; border-radius: 10px; flex: 1; cursor: pointer;">Confirm Now</button>
+            </div>
+        </div>
+    `;
+    confirmBox.style.display = 'flex';
 }
+
 
 function closeConfirm() { 
     document.getElementById('confirmBox').style.display = "none"; 
