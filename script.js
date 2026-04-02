@@ -1,7 +1,7 @@
-/* Project: eOnlineBazar Professional JS 
-   Author: Abdul Karim Sheikh
-   Features: 11-digit Phone, Anti-Junk Validation, Smooth Animations, Excel Integration
+/* Author: Abdul Karim Sheikh
+   Project: eOnlineBazar Professional JS Logic
 */
+
 // ১. পণ্য তালিকা (৪০টি প্রোডাক্ট)
 const products = [
     // Grocery (মুদি সওদা)
@@ -53,213 +53,211 @@ const products = [
 
 ];
 
-
-
-
-
-
 let cart = [];
 let discountAmount = 0;
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjIkqb_QYzGrxSe2DE4X6HihT-Z5mur2PMDhTNKQs0NBIbKl6KsbuUM_1bqY-CVvIchg/exec';
 
-// ২. প্রডাক্ট ডিসপ্লে (অ্যালাইন করা বড় প্লাস বাটনসহ) [Point 1 - New]
-function loadProducts(items) {
+// ২. পেজ লোড হলে প্রোডাক্ট দেখানো
+window.onload = () => {
+    displayProducts(products);
+};
+
+function displayProducts(items) {
     const grid = document.getElementById('product-grid');
-    grid.innerHTML = items.map(p => `
+    grid.innerHTML = items.map(pd => `
         <div class="product-card">
-            <span style="font-size:50px;">${p.img}</span>
-            <h4>${p.name}</h4>
-            <p style="color:#f85606; font-weight:700;">৳ ${p.price}</p>
-            <button class="add-btn" onclick="addToCart(${p.id}, event)">+</button>
+            <img src="${pd.img}" alt="${pd.name}" id="img-${pd.id}">
+            <h3>${pd.name}</h3>
+            <p class="price">৳ ${pd.price}</p>
+            <button class="add-btn" onclick="addToCart(${pd.id}, this)">+</button>
         </div>
     `).join('');
 }
 
-// ৩. ফ্লাই অ্যানিমেশন [Point 2 - New]
-function addToCart(id, event) {
-    const p = products.find(i => i.id === id);
-    cart.push({ ...p, qty: 1 });
-    
-    // অ্যানিমেশন লজিক
-    const flyer = document.createElement('div');
-    flyer.className = 'flyer-emoji';
-    flyer.innerHTML = p.img;
-    flyer.style.left = event.clientX + 'px';
-    flyer.style.top = event.clientY + 'px';
-    document.body.appendChild(flyer);
+// ৩. ক্যাটাগরি ফিল্টার
+function filterCat(category) {
+    // বাটন একটিভ স্টেট পরিবর্তন
+    document.querySelectorAll('.cat-item').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
 
-    const cartIcon = document.querySelector('.cart-wrapper').getBoundingClientRect();
-    
-    setTimeout(() => {
-        flyer.style.left = cartIcon.left + 'px';
-        flyer.style.top = cartIcon.top + 'px';
-        flyer.style.transform = 'scale(0.1)';
-        flyer.style.opacity = '0';
-    }, 50);
-
-    setTimeout(() => flyer.remove(), 800);
-    updateCartUI();
+    if (category === 'all') {
+        displayProducts(products);
+    } else {
+        const filtered = products.filter(p => p.cat === category);
+        displayProducts(filtered);
+    }
 }
 
-// ৪. কার্ট আপডেট ও খালি কার্ট মেসেজ [Point 3, 6 - New]
+// ৪. Add to Cart ও Fly Animation
+function addToCart(id, btnElement) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(item => item.id === id);
+
+    if (existing) {
+        existing.qty++;
+    } else {
+        cart.push({ ...product, qty: 1 });
+    }
+
+    // Fly Animation লজিক
+    const img = document.getElementById(`img-${id}`);
+    const clone = img.cloneNode();
+    clone.style.position = "fixed";
+    clone.style.width = "50px";
+    clone.style.zIndex = "3000";
+    clone.style.left = img.getBoundingClientRect().left + "px";
+    clone.style.top = img.getBoundingClientRect().top + "px";
+    clone.style.transition = "all 0.8s ease-in-out";
+    document.body.appendChild(clone);
+
+    setTimeout(() => {
+        clone.style.left = "90%";
+        clone.style.top = "20px";
+        clone.style.transform = "scale(0.1)";
+        clone.style.opacity = "0";
+    }, 50);
+
+    setTimeout(() => { clone.remove(); }, 800);
+
+    updateCartUI();
+    showToast(`${product.name} যুক্ত হয়েছে!`);
+}
+
+// ৫. কার্ট আপডেট এবং হিসাব (পিস ও টাকা সহ)
 function updateCartUI() {
-    document.getElementById('cart-count').innerText = cart.length;
-    const list = document.getElementById('cart-items-list');
+    const cartCount = document.getElementById('cart-count');
+    const cartList = document.getElementById('cart-items-list');
     const footer = document.getElementById('cart-footer-logic');
 
+    cartCount.innerText = cart.reduce((total, item) => total + item.qty, 0);
+
     if (cart.length === 0) {
-        list.innerHTML = `<div class="empty-msg">Your cart is empty!<br>Please add some products to the cart.</div>`;
-        footer.style.display = 'none';
+        cartList.innerHTML = "<p style='text-align:center; padding:20px;'>আপনার কার্ট খালি!</p>";
+        footer.style.display = "none";
         return;
     }
 
-    footer.style.display = 'block';
+    footer.style.display = "block";
     let subtotal = 0;
-    list.innerHTML = cart.map((item, index) => {
-        subtotal += (item.price * item.qty);
+
+    cartList.innerHTML = cart.map((item, index) => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
         return `
-            <div style="display:flex; align-items:center; background:white; margin-bottom:10px; padding:15px; border-radius:10px;">
-                <span style="font-size:30px;">${item.img}</span>
-                <div style="flex:1; margin-left:15px;">
-                    <p style="font-weight:600; font-size:14px;">${item.name}</p>
-                    <p>৳ ${item.price}</p>
+            <div class="cart-item-row" style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${item.img}" width="40">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>৳ ${item.price} x ${item.qty} = ৳ ${itemTotal}</small>
+                    </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-                    <span style="font-weight:700;">${item.qty}</span>
-                    <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-                    <button onclick="removeItem(${index})" style="background:none; border:none; color:red; margin-left:10px;">🗑️</button>
+                <div class="qty-controls">
+                    <button onclick="changeQty(${index}, -1)">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="changeQty(${index}, 1)">+</button>
+                    <span onclick="removeItem(${index})" style="cursor:pointer; margin-left:10px;">🗑️</span>
                 </div>
             </div>
         `;
     }).join('');
 
     document.getElementById('sub-val').innerText = subtotal;
-    document.getElementById('dis-val').innerText = discountAmount;
-    document.getElementById('final-val').innerText = subtotal - discountAmount;
+    calculateFinal(subtotal);
 }
 
-// ৫. কুপন সিস্টেম ফিক্স [Point 5 - New]
-function applyDiscount() {
-    const code = document.getElementById('couponCode').value.toUpperCase();
-    if (code === "SAVE10") {
-        discountAmount = 50; // ধরুন ৫০ টাকা ফিক্সড ডিসকাউন্ট
-        showToast("Coupon Applied! ৳50 Discounted.");
-    } else {
-        discountAmount = 0;
-        showToast("Invalid Coupon!");
-    }
+function changeQty(index, delta) {
+    cart[index].qty += delta;
+    if (cart[index].qty < 1) cart[index].qty = 1;
     updateCartUI();
 }
 
-// ৬. লাইভ ভ্যালিডেশন (গ্রিন/রেড কালার) [Point 8, 9, 10, 11 - New]
-function validateLive(id, type) {
-    const input = document.getElementById(id);
-    const val = input.value.trim();
-    let isValid = false;
-
-    if (type === 'name') {
-        isValid = val.split(' ').length >= 2 && !/(.)\1{2,}/.test(val);
-    } else if (type === 'phone') {
-        isValid = /^01[3-9]\d{8}$/.test(val); // ১১ ডিজিট লক
-    } else if (type === 'address') {
-        isValid = val.split(' ').length >= 3;
-    }
-
-    if (isValid) {
-        input.classList.remove('is-invalid');
-        input.classList.add('is-valid');
-    } else {
-        input.classList.remove('is-valid');
-        input.classList.add('is-invalid');
-    }
+function removeItem(index) {
+    cart.splice(index, 1);
+    updateCartUI();
 }
 
-// ৭. রিভিউ এবং ফাইনাল অর্ডার [Point 13, 14, 15 - New]
-function showReview() {
-    const name = document.getElementById('uName');
-    const phone = document.getElementById('uPhone');
-    const addr = document.getElementById('uAddress');
+// ৬. কুপন কোড লজিক
+function applyDiscount() {
+    const code = document.getElementById('couponCode').value.trim();
+    const msg = document.getElementById('coupon-message');
+    const subtotal = parseInt(document.getElementById('sub-val').innerText);
 
-    if (!name.classList.contains('is-valid') || !phone.classList.contains('is-valid') || !addr.classList.contains('is-valid')) {
-        showToast("Please fill the form correctly!");
+    if (code === "SAVE10") {
+        discountAmount = subtotal * 0.1; // ১০% ছাড়
+        msg.innerText = "কুপন সফলভাবে প্রয়োগ করা হয়েছে (১০% ছাড়)!";
+        msg.className = "coupon-msg msg-success";
+    } else {
+        discountAmount = 0;
+        msg.innerText = "ভুল কুপন কোড! আবার চেষ্টা করুন।";
+        msg.className = "coupon-msg msg-error";
+    }
+    calculateFinal(subtotal);
+}
+
+function calculateFinal(subtotal) {
+    document.getElementById('dis-val').innerText = Math.round(discountAmount);
+    document.getElementById('final-val').innerText = Math.round(subtotal - discountAmount);
+}
+
+// ৭. নেভিগেশন কন্ট্রোল
+function openCartView() { document.getElementById('cartView').classList.add('active'); }
+function closeCartView() { document.getElementById('cartView').classList.remove('active'); }
+function openShippingView() { document.getElementById('shippingView').classList.add('active'); }
+function closeShippingView() { document.getElementById('shippingView').classList.remove('active'); }
+
+// ৮. অর্ডার কনফার্মেশন লজিক
+function showReview() {
+    const name = document.getElementById('uName').value;
+    const phone = document.getElementById('uPhone').value;
+    const address = document.getElementById('uAddress').value;
+    const payment = document.querySelector('input[name="pay"]:checked').value;
+
+    if (name.split(' ').length < 2 || phone.length < 11 || address.split(' ').length < 3) {
+        showToast("দয়া করে সঠিক তথ্য দিন!");
         return;
     }
 
-    const content = document.getElementById('reviewContent');
-    content.innerHTML = `
-        <div style="text-align:left; line-height:1.8;">
-            <p><strong>Name:</strong> ${name.value}</p>
-            <p><strong>Phone:</strong> ${phone.value}</p>
-            <p><strong>Address:</strong> ${addr.value}</p>
-            <p><strong>Total Bill:</strong> ৳ ${document.getElementById('final-val').innerText}</p>
-            <p style="color:green;"><strong>Discount:</strong> ৳ ${discountAmount}</p>
-        </div>
+    const total = document.getElementById('final-val').innerText;
+    document.getElementById('reviewContent').innerHTML = `
+        <p><strong>নাম:</strong> ${name}</p>
+        <p><strong>মোবাইল:</strong> ${phone}</p>
+        <p><strong>ঠিকানা:</strong> ${address}</p>
+        <p><strong>পেমেন্ট:</strong> ${payment}</p>
+        <hr>
+        <h4>মোট পরিশোধযোগ্য: ৳ ${total}</h4>
     `;
     document.getElementById('reviewPopup').style.display = 'flex';
 }
 
-async function processFinalOrder() {
-    const btn = document.querySelector('.final-btn');
-    btn.innerText = "Processing..."; //
-    btn.disabled = true;
-
-    const orderID = "#EB" + Math.floor(100000 + Math.random() * 900000); // ইউনিক আইডি
-    
-    const formData = new URLSearchParams({
-        "Order_ID": orderID,
-        "Name": document.getElementById('uName').value,
-        "Phone": document.getElementById('uPhone').value,
-        "Address": document.getElementById('uAddress').value,
-        "Total": document.getElementById('final-val').innerText,
-        "Status": "Pending"
-    });
-
-    try {
-        await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
-        
-        document.getElementById('reviewPopup').style.display = 'none';
-        document.getElementById('displayOrderID').innerText = orderID;
-        const success = document.getElementById('successPopup');
-        success.style.display = 'flex';
-
-        cart = [];
-        updateCartUI();
-        closeShippingView();
-        
-        setTimeout(() => { success.style.display = 'none'; }, 10000); // ১০ সেকেন্ড পর ভ্যানিশ [Point 15]
-    } catch (e) {
-        showToast("Error! Try again.");
-        btn.innerText = "Confirm Now";
-        btn.disabled = false;
-    }
-}
-
-// ইউটিলিটি নেভিগেশন
-function openCartView() { document.getElementById('cartView').style.display = 'flex'; updateCartUI(); }
-function closeCartView() { document.getElementById('cartView').style.display = 'none'; }
-function openShippingView() { document.getElementById('shippingView').style.display = 'flex'; }
-function closeShippingView() { document.getElementById('shippingView').style.display = 'none'; }
 function closeReview() { document.getElementById('reviewPopup').style.display = 'none'; }
 
-function changeQty(i, delta) {
-    cart[i].qty += delta;
-    if (cart[i].qty < 1) cart[i].qty = 1;
+function processFinalOrder() {
+    const orderID = "EOB" + Math.floor(Math.random() * 900000 + 100000);
+    document.getElementById('displayOrderID').innerText = "#" + orderID;
+    document.getElementById('reviewPopup').style.display = 'none';
+    document.getElementById('successPopup').style.display = 'flex';
+    
+    // কার্ট ক্লিয়ার করা
+    cart = [];
     updateCartUI();
 }
 
-function removeItem(i) { cart.splice(i, 1); updateCartUI(); }
-
-function showToast(m) {
-    const t = document.getElementById('toast-msg');
-    t.innerText = m; t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 3000);
+// ৯. ইউটিলিটি ফাংশন
+function showToast(text) {
+    const toast = document.getElementById('toast-msg');
+    toast.innerText = text;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 2000);
 }
 
-// সার্চ এবং ফিল্টার
-function filterCat(c) {
-    const filtered = c === 'all' ? products : products.filter(p => p.category === c);
-    loadProducts(filtered);
-}
+function validateLive(id, type) {
+    const val = document.getElementById(id).value;
+    const error = document.querySelector(`#${id} ~ .error-text`);
+    let isValid = false;
 
-window.onload = () => loadProducts(products);
+    if (type === 'phone') isValid = /^[0-9]{11}$/.test(val);
+    if (type === 'name') isValid = val.trim().split(' ').length >= 2;
+    if (type === 'address') isValid = val.trim().split(' ').length >= 3;
+
+    error.style.display = isValid ? "none" : "block";
+}
