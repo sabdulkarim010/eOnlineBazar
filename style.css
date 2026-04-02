@@ -1,418 +1,359 @@
 /* Project: eOnlineBazar 
    Author: Abdul Karim Sheikh 
-   Update: April 2026 
+   Section: External CSS for 28 Points Requirement
 */
 
-/* --- ১. গ্লোবাল স্টাইল --- */
+/* 1. Basic Reset & Variables */
+:root {
+    --primary-color: #f85606;    /* দারাজ স্টাইল অরেঞ্জ */
+    --secondary-color: #1a237e;  /* নেভি ব্লু */
+    --bg-light: #f4f4f4;
+    --white: #ffffff;
+    --error-bg: #ffe6e6;         /* হালকা লাল ব্যাকগ্রাউন্ড */
+    --success-bg: #e6ffed;       /* হালকা সবুজ ব্যাকগ্রাউন্ড */
+    --border-color: #ddd;
+    --grey-btn: #6c757d;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', 'Roboto', 'Hind Siliguri', sans-serif;
-    -webkit-tap-highlight-color: transparent;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: #f7f8fa;
+    background-color: var(--bg-light);
     color: #333;
-    overflow-x: hidden;
+    line-height: 1.6;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 12px;
+    padding: 0 15px;
 }
 
-/* --- ২. হেডার এবং লোগো স্টাইল --- */
-header {
-    background-color: #232f3e;
-    padding: 12px 0;
+/* 2. Header & Search Bar [Point 28] */
+.main-header {
+    background: var(--secondary-color);
+    padding: 15px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
+    color: var(--white);
 }
 
-.top-bar {
+.header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 15px;
 }
 
-.main-logo {
-    color: #fff;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* --- ৩. শপিং কার্ট আইকন --- */
-.cart-wrapper {
-    position: relative;
-    cursor: pointer;
-    background: rgba(255,255,255,0.1);
-    padding: 8px;
-    border-radius: 50%;
-    transition: 0.3s;
-}
-
-.cart-wrapper:hover { background: rgba(255,255,255,0.2); }
-
-#cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #f85606;
-    color: white;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-/* --- ৪. সার্চ বার স্টাইল --- */
-.search-box {
+.search-container {
+    flex: 1;
     display: flex;
-    background: white;
-    border-radius: 8px;
+    background: var(--white);
+    border-radius: 5px;
     overflow: hidden;
 }
 
-.search-box input {
+.search-container input {
     flex: 1;
-    padding: 12px;
     border: none;
+    padding: 10px 15px;
     outline: none;
 }
 
 .search-btn {
-    background: #febd69;
+    background: #ff9800;
     border: none;
-    padding: 0 18px;
+    padding: 0 20px;
+    color: var(--white);
     cursor: pointer;
-    font-size: 18px;
 }
 
-/* --- ৫. ক্যাটাগরি মেনু --- */
-.category-nav {
-    background: white;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.cat-flex {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-}
-
-.cat-flex::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
-.cat-btn {
-    padding: 8px 20px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    border-radius: 20px;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.cat-btn.active {
-    background: #232f3e;
-    color: white;
-    border-color: #232f3e;
-}
-
-/* --- ৬. Modern Coming Soon Banner --- */
-.coming-soon-banner {
-    background: #1a1a1a;
-    padding: 60px 20px;
-    text-align: center;
-    border-bottom: 3px solid #f85606;
-}
-
-.banner-content h2 {
-    font-size: 32px;
-    font-weight: 700;
-    text-transform: uppercase;
-    background: linear-gradient(to right, #f85606, #febd69);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 15px;
-    animation: fadeInDown 1s ease-out;
-}
-
-.banner-content p {
-    font-family: 'Hind Siliguri', sans-serif;
-    font-size: 18px;
-    color: #cccccc;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto 25px;
-}
-
-/* Progress Bar */
-.progress-container {
-    width: 200px;
-    height: 6px;
-    background: #333;
-    margin: 0 auto;
-    border-radius: 10px;
-    overflow: hidden;
+.cart-wrapper {
     position: relative;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+#cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* 3. Hero Banner [Point 1] */
+.hero-banner {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400');
+    background-size: cover;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+    margin-bottom: 20px;
 }
 
 .progress-bar {
-    width: 60px;
+    width: 200px;
+    height: 4px;
+    background: #555;
+    margin: 20px auto;
+    border-radius: 2px;
+}
+
+.progress-bar .fill {
+    width: 40%;
     height: 100%;
-    background: #f85606;
-    border-radius: 10px;
-    position: absolute;
-    animation: slideProgress 2s infinite ease-in-out;
+    background: #ffeb3b;
 }
 
-@keyframes slideProgress {
-    0% { left: -60px; }
-    100% { left: 200px; }
-}
-
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- ৭. প্রোডাক্ট কার্ড গ্রিড --- */
-.product-grid {
+/* 4. Product Grid (Mobile: 3 Columns, PC: Responsive) [Point 1] */
+.products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 15px;
-    margin: 30px 0;
+    gap: 10px;
+    padding: 10px 0;
 }
 
+/* Desktop View */
+@media (min-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Tablet View */
+@media (min-width: 600px) and (max-width: 991px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Mobile View (Strictly 3 Columns as per Point 1) */
+@media (max-width: 599px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 5. Product Card & (+) Icon [Point 4] */
 .product-card {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: var(--white);
+    border-radius: 8px;
+    padding: 10px;
     position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: fadeInUp 0.6s ease forwards;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
+.product-card:hover { transform: translateY(-3px); }
 
-.p-img { 
-    font-size: 55px; 
-    display: block; 
-    margin-bottom: 10px; 
-    transition: transform 0.4s ease;
-}
-
-.product-card:hover .p-img { transform: scale(1.15); }
-
-.p-name { font-size: 14px; font-weight: 600; height: 40px; overflow: hidden; margin-bottom: 5px; }
-.p-price { color: #f85606; font-weight: bold; font-size: 20px; }
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Quick Add Button */
 .add-fast-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #f85606;
+    top: 5px;
+    right: 5px;
+    background: var(--primary-color);
     color: white;
     border: none;
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
-    font-size: 24px;
+    font-weight: bold;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-    z-index: 5;
+    z-index: 10;
 }
 
-.add-fast-btn:hover { background: #232f3e; transform: scale(1.1); }
+.p-img { font-size: 40px; margin-bottom: 10px; display: block; }
+.p-name { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; }
+.p-price { color: var(--primary-color); font-weight: bold; margin-top: 5px; }
 
-/* --- ৮. মডাল এবং কার্ট স্টাইল --- */
-.modal {
-    display: none;
+/* 6. Modal / Pop-up Logic [Point 19] */
+.modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.7);
-    z-index: 2000;
-    backdrop-filter: blur(3px);
-}
-
-.modal-content {
-    background: white;
-    width: 95%;
-    max-width: 450px;
-    padding: 25px;
-    border-radius: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.close-modal {
-    float: right;
-    font-size: 30px;
-    cursor: pointer;
-    color: #333;
-    line-height: 1;
-}
-
-/* কার্ট আইটেম */
-.cart-item {
-    display: flex;
-    justify-content: space-between;
+    display: none; /* JS will toggle this */
+    justify-content: center;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    z-index: 2000;
 }
 
-.qty-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #ddd;
-    background: #f8f9fa;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
+.cart-modal, .address-card, .review-card, .details-card, .success-card {
+    background: var(--white);
+    width: 90%;
+    max-width: 450px;
+    max-height: 90vh;
+    border-radius: 15px;
+    overflow-y: auto;
+    position: relative;
+    padding: 20px;
+    animation: slideUp 0.3s ease-out;
 }
 
-/* ফর্ম ইনপুট */
-.input-group { margin-bottom: 15px; text-align: left; }
-.input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-.input-group input, .input-group textarea {
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 7. Input Validation Styling [Point 13, 14, 15] */
+.form-group { margin-bottom: 15px; position: relative; }
+
+.form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+
+.form-group input, .form-group textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     outline: none;
     transition: 0.3s;
 }
-.input-group input:focus { border-color: #f85606; }
 
-/* রিভিউ বক্স (Confirm Box) */
-#confirmBox {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
+/* Validation States [Point 13] */
+.valid-input {
+    background-color: var(--success-bg) !important;
+    border-color: #28a745 !important;
 }
 
-#confirmBox .popup-card {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    max-width: 350px;
-    width: 90%;
-    animation: zoomIn 0.3s ease;
+.invalid-input {
+    background-color: var(--error-bg) !important;
+    border-color: #dc3545 !important;
 }
 
-@keyframes zoomIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.edit-btn { background: #f1f2f6; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-right: 10px; font-weight: 600; }
-.confirm-now-btn { background: #2ecc71; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-/* --- ৯. সাকসেস পপ-আপ --- */
-#success-popup {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-    display: none; align-items: center; justify-content: center;
-    z-index: 99999;
-}
-
-.order-id-display {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 20px 0;
+.error-text {
+    color: #dc3545;
+    font-size: 11px;
+    display: none; /* JS will show this if skipped */
+    margin-top: 3px;
     font-weight: bold;
-    border: 2px dashed #ddd;
 }
 
-/* --- ১০. ফুটার --- */
-.site-footer {
-    background: #232f3e;
+/* 8. Buttons Styling [Point 6, 18, 23] */
+.proceed-btn, .confirm-order-btn, .final-confirm-btn {
+    width: 100%;
+    background: var(--primary-color);
     color: white;
-    padding: 30px 0;
-    text-align: center;
-    margin-top: 50px;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-.footer-logo { color: #f85606; font-size: 22px; margin-bottom: 10px; }
-.footer-links a { color: #aaa; text-decoration: none; margin: 0 10px; font-size: 13px; }
-.footer-links a:hover { color: white; }
+.back-btn, .edit-btn {
+    background: var(--grey-btn);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    flex: 1;
+    cursor: pointer;
+}
 
-/* --- ১১. টোস্ট মেসেজ --- */
-#toast {
+/* 9. Payment Methods Radio [Point 16] */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.radio-item input[type="radio"] { width: auto; }
+
+/* 10. Policy Box [Point 26] */
+.policy-box {
+    background: #fff8e1;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 5px solid #ffc107;
+}
+
+.policy-box h4 { font-size: 14px; margin-bottom: 8px; color: #856404; }
+
+.policy-box ul { padding-left: 20px; font-size: 12px; color: #856404; }
+
+/* 11. Shopping Cart Items [Point 23, 24] */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.qty-controls { display: flex; align-items: center; gap: 8px; }
+
+.qty-btn {
+    width: 25px; height: 25px;
+    border: 1px solid var(--border-color);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn { color: #dc3545; border: none; background: none; cursor: pointer; margin-left: 10px; }
+
+/* 12. Success Card [Point 20] */
+.success-card { text-align: center; padding: 40px 20px; }
+
+.success-icon {
+    font-size: 50px;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+/* 13. Toast Notification [Point 22] */
+#toast-container {
     position: fixed;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+}
+
+.toast-msg {
+    background: rgba(0,0,0,0.8);
     color: white;
     padding: 12px 25px;
     border-radius: 30px;
-    display: none;
-    z-index: 10001;
-    font-weight: 500;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+    text-align: center;
+    animation: fadeInOut 3s forwards;
 }
 
-/* --- ১২. মোবাইল রেসপন্সিভনেস --- */
-@media (max-width: 600px) {
-    .banner-content h2 { font-size: 24px; }
-    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .p-img { font-size: 45px; }
-    .modal-content { padding: 20px; width: 92%; }
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.8); }
+    10% { opacity: 1; transform: scale(1); }
+    90% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); }
 }
 
-
-
-/* ডাবল বাটন ওভারল্যাপ ফিক্স */
-.total-section {
-    position: relative;
-    padding-bottom: 20px;
-}
-
-.confirm-btn {
-    width: 100%;
-    height: 50px;
-    background-color: #f85606;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
-    display: block; /* যাতে বাটনটি আলাদা লাইনে থাকে */
+/* 14. Flying Animation [Point 3] */
+.flying-item {
+    position: fixed;
+    z-index: 5000;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
