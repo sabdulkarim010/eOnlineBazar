@@ -3,181 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eOnlineBazar | Professional Online Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>eOnlineBazar | Professional Online Shopping</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
+<div id="toastBox" class="toast-container"></div>
+
+
 <body>
+    
+    
+
 
     <header class="main-header">
-        <div class="container header-content">
-            <h1 class="logo" onclick="location.reload()">eOnlineBazar</h1>
-            <div class="cart-wrapper" onclick="openCartView()">
-                <div class="cart-icon-container">
-                    <span class="cart-icon">🛒</span>
-                    <span id="cart-count">0</span>
+        <div class="container header-flex">
+            <div class="nav-toggle" id="navMenu"><i class="fas fa-bars"></i></div>
+            <div class="logo-area"><h1 onclick="location.reload()">eOnlineBazar</h1></div>
+            <div class="header-icons">
+                <div class="cart-trigger" id="cartTrigger">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="uniqueCartCount" class="count-badge">0</span>
                 </div>
             </div>
         </div>
-        <div class="container search-container">
-            <div class="search-box">
-                <input type="text" id="productSearch" placeholder="পণ্য খুঁজুন..." onkeyup="liveSearch()">
-                <button class="search-btn">🔍</button>
+        <div class="search-container container">
+            <div class="search-wrapper">
+                <input type="text" id="mainSearch" placeholder="Search for products (e.g. Rice, Oil)...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </header>
 
-    <nav class="category-nav">
-        <div class="container cat-scroll-wrapper">
-            <button class="cat-item active" onclick="filterCat('all')">All</button>
-            <button class="cat-item" onclick="filterCat('grocery')">Grocery</button>
-            <button class="cat-item" onclick="filterCat('electronics')">Electronics</button>
-            <button class="cat-item" onclick="filterCat('cosmetics')">Cosmetics</button>
-        </div>
-    </nav>
-
-    <section class="banner-area">
-        <div class="container">
-            <div class="banner-card">
-                <div class="badge">Coming Soon</div>
-                <h2>A REVOLUTION IN SHOPPING!</h2>
-                <p>আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির।</p>
-                <div class="loader-wrapper">
-                    <div class="loader-track">
-                        <div class="loader-fill"></div>
-                    </div>
-                    <span class="loading-text">Launching Soon...</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <main class="container main-content">
-        <div id="product-grid" class="product-grid">
-            </div>
+    
+    <div class="coming-soon-container">
+    <div class="coming-soon-content">
+        <h1 class="main-title">Coming Soon: A Revolution in Shopping!</h1>
+        <p class="sub-text">
+            আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।
+        </p>
+        <div class="badge">Stay Tuned</div>
+    </div>
+</div>
+    
+    
+    
+    <main class="container content-area">
+        <div id="productGrid" class="product-grid"></div>
     </main>
 
-    <div id="cartView" class="full-page-view">
-        <div class="view-header">
-            <span class="back-arrow" onclick="closeCartView()">&#10094; Back to Shop</span>
-            <h2>Your Shopping Cart</h2>
+    <div id="cartPanel" class="side-panel">
+        <div class="panel-header">
+            <span class="panel-back" id="backFromCart" onclick="closeCartView()"><i class="fas fa-chevron-left"></i></span>
+            <h3>Shopping Cart</h3>
         </div>
-        <div class="container view-body">
-            <div id="cart-items-list" class="cart-items-container">
+        <div class="panel-body">
+            <div id="cartItemsContainer"></div>
+            <div id="cartFooter" class="cart-footer">
+                <div class="payable-row">
+                    <span>Selected Items Total:</span>
+                    <span class="total-amount">৳ <span id="cartSubTotal">0</span></span>
                 </div>
-            
-            <div id="cart-footer-logic" class="cart-summary-card" style="display:none;">
-                <div class="coupon-section">
-                    <div class="coupon-input-group">
-                        <input type="text" id="couponCode" placeholder="Enter Coupon (e.g. SAVE10)">
-                        <button class="apply-btn" onclick="applyDiscount()">Apply</button>
-                    </div>
-                    <div id="coupon-message" class="coupon-msg"></div>
-                </div>
-
-                <div class="bill-details">
-                    <div class="bill-row">
-                        <span>Subtotal:</span>
-                        <span>৳ <span id="sub-val">0</span></span>
-                    </div>
-                    <div class="bill-row discount-row">
-                        <span>Discount:</span>
-                        <span>- ৳ <span id="dis-val">0</span></span>
-                    </div>
-                    <div class="bill-row total-row">
-                        <strong>Total:</strong>
-                        <strong>৳ <span id="final-val">0</span></strong>
-                    </div>
-                </div>
-                <button class="checkout-btn" onclick="openShippingView()">Proceed to Checkout</button>
+                <button id="prepareOrderBtn" class="btn-primary-large" onclick="openCheckout()">Prepare for Order</button>
             </div>
         </div>
     </div>
 
-    <div id="shippingView" class="full-page-view">
-        <div class="view-header">
-            <span class="back-arrow" onclick="closeShippingView()">&#10094; Back to Cart</span>
-            <h2>Shipping Details</h2>
+    <div id="productDetailPanel" class="side-panel" style="display: none;">
+        <div class="panel-header">
+            <i class="fas fa-arrow-left" onclick="closeProductDetail()" style="cursor:pointer; font-size: 20px;"></i>
+            <h2 style="margin-left: 15px;">Product Details</h2>
         </div>
-        <div class="container view-body shipping-form">
-            <div class="input-group">
-                <label>Full Name *</label>
-                <input type="text" id="uName" placeholder="আপনার নাম লিখুন" oninput="validateLive('uName', 'name')">
-                <small class="error-text">Please enter at least 2 words.</small>
-            </div>
+        <div id="productDetailContent" class="panel-body"></div>
+    </div>
 
-            <div class="input-group">
-                <label>Mobile Number *</label>
-                <input type="tel" id="uPhone" maxlength="11" placeholder="01XXXXXXXXX" oninput="validateLive('uPhone', 'phone')">
-                <small class="error-text">Enter a valid 11-digit BD number.</small>
-            </div>
-
-            <div class="input-group">
-                <label>Full Address *</label>
-                <textarea id="uAddress" placeholder="গ্রাম, ইউনিয়ন, জেলা..." oninput="validateLive('uAddress', 'address')"></textarea>
-                <small class="error-text">Address must contain at least 3 words.</small>
-            </div>
-
-            <div class="payment-section">
-                <label>Select Payment Method:</label>
-                <div class="payment-grid">
-                    <label class="pay-card">
-                        <input type="radio" name="pay" value="COD" checked>
-                        <div class="pay-info">
-                            <span class="icon">🚚</span>
-                            <span>Cash on Delivery</span>
-                        </div>
-                    </label>
-                    <label class="pay-card">
-                        <input type="radio" name="pay" value="bKash">
-                        <div class="pay-info">
-                            <span class="icon">📱</span>
-                            <span>bKash</span>
-                        </div>
-                    </label>
-                    <label class="pay-card">
-                        <input type="radio" name="pay" value="Nagad">
-                        <div class="pay-info">
-                            <span class="icon">💸</span>
-                            <span>Nagad</span>
-                        </div>
-                    </label>
+    <div id="shippingPanel" class="side-panel">
+        <div class="panel-header">
+            <i class="fas fa-arrow-left" onclick="closeShippingPanel()" style="cursor:pointer; font-size: 20px;"></i>
+            <h2 style="margin-left: 15px;">Shipping Information</h2>
+        </div>
+        <div class="panel-body">
+            <form id="orderForm">
+                <div class="input-group">
+                    <label>Full Name <span class="red-star">*</span></label>
+                    <input type="text" id="userName" class="form-input" placeholder="Enter at least 2 words" required>
                 </div>
-            </div>
+                <div class="input-group">
+                    <label>Mobile Number <span class="red-star">*</span></label>
+                    <input type="tel" id="userPhone" class="form-input" placeholder="01XXXXXXXXX" required>
+                </div>
+                <div class="input-group">
+                    <label>Full Address <span class="red-star">*</span></label>
+                    <textarea id="userAddress" class="form-input" placeholder="Village, Post, Thana, District" rows="3" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Note for courier (Optional)</label>
+                    <input type="text" id="orderNote" class="form-input" placeholder="Extra instruction for delivery">
+                </div>
+                
+                
+                <div class="checkout-section">
+    <h3 class="section-title">Payment Method:</h3>
+    <div class="payment-grid">
+        <div class="payment-card active" onclick="selectPayment('cod')">
+            <i class="fas fa-truck" style="font-size: 24px; color: #4CAF50; margin-bottom: 5px;"></i>
+            <span>Cash on Delivery</span>
+        </div>
+        <div class="payment-card" onclick="selectPayment('bkash')">
+            <i class="fas fa-mobile-alt" style="font-size: 24px; color: #E91E63; margin-bottom: 5px;"></i>
+            <span>bKash</span>
+        </div>
+        <div class="payment-card" onclick="selectPayment('nagad')">
+            <i class="fas fa-wallet" style="font-size: 24px; color: #FF5722; margin-bottom: 5px;"></i>
+            <span>Nagad</span>
+        </div>
+    </div>
+</div>
 
-            <button id="confirmOrderBtn" class="confirm-order-btn" onclick="showReview()">Confirm Order</button>
+<div class="coupon-section">
+    <h3 class="section-title">Apply Coupon Code</h3>
+    <div class="coupon-wrapper">
+        <input type="text" id="couponInput" placeholder="SAVE10">
+        <button class="apply-btn" onclick="applyCoupon()">Apply</button>
+    </div>
+    <p id="couponMessage" class="error-text" style="display: none;">Invalid Coupon!</p>
+</div>
+
+
+
+                
+                <div id="checkoutSummary" class="policy-container"></div>
+                <button type="button" class="btn-confirm-order" onclick="submitOrder()">Confirm Order</button>
+            </form>
         </div>
     </div>
 
-    <div id="reviewPopup" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header"><h3>Review Your Order</h3></div>
-            <div id="reviewContent" class="modal-body"></div>
-            <div class="modal-footer">
-                <button class="edit-btn" onclick="closeReview()">Edit Info</button>
-                <button class="final-btn" onclick="processFinalOrder()">Confirm Now</button>
-            </div>
+    <div id="notificationCenter" class="notification-overlay">
+        <div id="statusBox" class="status-box">
+            <div id="loader" class="loader hidden"></div>
+            <p id="notificationMsg"></p>
         </div>
     </div>
 
-    <div id="successPopup" class="modal-overlay">
-        <div class="success-card">
-            <div class="check-icon">✔️</div>
-            <h2>Congratulations!</h2>
-            <p>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</p>
-            <div class="order-id-box">Order ID: <span id="displayOrderID">#000000</span></div>
-            <button class="close-success" onclick="location.reload()">Back to Home</button>
+    <div id="orderSuccessModal" class="modal-overlay" style="display: none;">
+    <div class="success-modal-content">
+        <div class="success-icon">
+            <i class="fas fa-check-square"></i>
         </div>
+        
+        <h2 class="congrats-text">Congratulations!</h2>
+        
+        <p class="order-placed-text">Your order has been placed.</p>
+        
+        <div class="order-id-box">
+            <span>Order ID:</span>
+            <span id="displayOrderId" class="id-number">#12345</span>
+        </div>
+        
+        <p class="call-text">We will call you shortly for confirmation.</p>
+        
+        
+        
+        <div class="success-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+    <button class="btn-continue" onclick="continueShopping()" style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        Continue Shopping
+    </button>
+</div>
+
     </div>
+</div>
 
-    <div id="toast-msg"></div>
-
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2026 <strong>Abdul Karim Sheikh</strong>. All Rights Reserved.</p>
+    
+    
+    <div class="bottom-nav">
+    <a href="#" class="nav-item active">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a href="#" class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>You</span>
+    </a>
+    <a href="#" class="nav-item">
+        <div class="cart-icon-wrapper">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
         </div>
-    </footer>
+        <span>Cart</span>
+    </a>
+    <a href="#" class="nav-item" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+        <span>Menu</span>
+    </a>
+</div>
 
+    
+    
+    
     <script src="script.js"></script>
 </body>
 </html>
