@@ -279,3 +279,43 @@ function applyCoupon() {
         msg.style.display = "block";
     }
 }
+
+
+
+// সার্চ ফাংশন: যা ইনপুট বক্স থেকে লেখা নিয়ে প্রোডাক্ট ফিল্টার করবে
+function performSearch() {
+    const query = document.getElementById('mainSearch').value.toLowerCase().trim();
+    
+    // যদি সার্চ বক্স খালি থাকে তবে সব প্রোডাক্ট দেখাবে
+    if (query === "") {
+        renderProducts(products);
+        return;
+    }
+
+    // নাম অনুযায়ী প্রোডাক্ট ফিল্টার করা
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(query)
+    );
+
+    renderProducts(filteredProducts);
+
+    // যদি কোনো প্রোডাক্ট না পাওয়া যায়
+    const grid = document.getElementById('productGrid');
+    if (filteredProducts.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                <i class="fas fa-search" style="font-size: 40px; color: #ccc;"></i>
+                <p style="margin-top: 10px; color: #666;">দুঃখিত, এই নামে কোনো পণ্য পাওয়া যায়নি!</p>
+            </div>`;
+    }
+}
+
+// বাটন ক্লিকে সার্চ হবে
+document.getElementById('searchBtn').addEventListener('click', performSearch);
+
+// কীবোর্ডের Enter বাটনে চাপ দিলেও সার্চ হবে
+document.getElementById('mainSearch').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
