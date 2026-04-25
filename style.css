@@ -240,7 +240,7 @@ body {
     align-items: center;     /* ছবি বা আইকন মাঝখানে আনবে */
     overflow: hidden;        /* বক্সের বাইরে ছবি যেন বেরিয়ে না আসে */
     margin-bottom: 10px;
-    font-size: 100px;
+    font-size: 50px;
 }
 
 /* ছবির সাইজ ঠিক করা */
