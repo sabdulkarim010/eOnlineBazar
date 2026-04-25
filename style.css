@@ -291,6 +291,10 @@ body {
     }
     
     .main-title { font-size: 28px; }
-    .hero-section { height: 250px; }
+    .hero-section { 
+        height: auto; 
+        padding: 20px 10px;
+        text-align: center;
+    }
 }
 
