@@ -14,6 +14,15 @@ const products = [
     { id: 7, name: "Fresh Green Tea", price: 220, icon: "🍵" },
     { id: 8, name: "Organic Ghee (500g)", price: 850, icon: "🧈" },
     { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-1.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-2.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-3.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-4.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-5.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-6.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-7.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-8.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-9.jpg"},
+    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-10.jpg"}, 
 ];
 
 // পেজ লোড হওয়ার সাথে সাথে পণ্যগুলো গ্রিড আকারে দেখাবে
