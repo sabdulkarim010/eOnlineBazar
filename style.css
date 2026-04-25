@@ -217,7 +217,7 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
     gap: 15px;
 }
 
@@ -276,29 +276,21 @@ body {
 }
 
 /* --- ৬. রেসপনসিভনেস (Mobile Fix) --- */
+/*.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 15px;
+} show up*/
 
-/* ১. মোবাইল ভিউয়ের জন্য (ছোট স্ক্রিন) */
-@media (max-width: 600px) {
-    .product-grid {
-        grid-template-columns: 1fr; /* মোবাইলে ১টি কলাম দেখাবে */
+@media (max-width: 768px) {
+    .hide-mobile { display: none; }
+    
+    .grid-container{
+        grid-template-columns: repeat(2, 1fr); /* মোবাইলে 2 কলাম */
         gap: 10px;
     }
-    .p-card {
-        padding: 10px; /* প্যাডিং কমিয়ে দিলে মোবাইলে বেশি জায়গা পাওয়া যায় */
-    }
-}
-
-/* ২. ট্যাবলেট ভিউয়ের জন্য (মাঝারি স্ক্রিন) */
-@media (min-width: 601px) and (max-width: 900px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr); /* ট্যাবলেটে ২টি কলাম দেখাবে */
-    }
-}
-
-/* ৩. ল্যাপটপ বা ডেস্কটপের জন্য */
-@media (min-width: 901px) {
-    .product-grid {
-        grid-template-columns: repeat(4, 1fr); /* বড় স্ক্রিনে ৪টি কলাম দেখাবে */
-    }
+    
+    .main-title { font-size: 28px; }
+    .hero-section { height: 250px; }
 }
 
