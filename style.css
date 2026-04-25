@@ -276,67 +276,76 @@ body {
 }
 
 /* --- ৬. রেসপনসিভনেস (Mobile Fix) --- */
-/*.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
-    gap: 15px;
-} show up*/
 
 /* মোবাইল রেসপন্সিভ ব্লকের জন্য এটিই চূড়ান্ত কোড */
+
 @media (max-width: 768px) {
-    /* ১. গ্রিড লেআউট */
+    /* ১. গ্রিড লেআউট (২ কলামে ঠিক থাকবে) */
     .grid-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
-    /* ২. হিরো সেকশন */
+    /* ২. হিরো সেকশন (একবারই লেখা হয়েছে যাতে কোনো কনফ্লিক্ট না হয়) */
     .hero-section {
         height: auto; 
-        padding: 20px 10px;
+        padding: 15px;
         text-align: center;
     }
-
+    
     .hero-section h1 {
-        font-size: 20px;
-        margin-bottom: 10px;
+        font-size: 18px;
     }
 
-    .hero-section p {
-        font-size: 12px;
-        margin-bottom: 10px;
-    }
-
-    /* ৩. মেইন টাইটেল (যা আপনি মিস করেছিলেন) */
     .main-title {
-        font-size: 22px; /* মোবাইলের জন্য সাইজ কমিয়ে দিলাম */
-        margin: 15px 0;
-        text-align: center;
+        font-size: 22px; 
+        margin: 10px 0;
     }
 
-    /* ৪. নেভিগেশন ও হেডার */
+    /* ৩. হেডার ও ন্যাভিগেশন ফিক্স (এগুলোই আপনার মোবাইলে ভেঙে যাচ্ছে) */
+      /* হেডারের মেইন কন্টেইনার */
     .main-nav {
-        flex-direction: column;
-        padding: 10px;
-        text-align: center;
+        display: flex;
+        flex-direction: row;      /* এটিই এলিমেন্টগুলোকে পাশাপাশি রাখবে */
+        flex-wrap: nowrap;        /* এটি নিচে নামতে বাধা দিবে */
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 5px;
     }
 
-    .nav-links {
-        font-size: 12px;
-        gap: 8px;
-        margin-top: 10px;
+    /* সার্চ বক্স মাঝের জায়গাটি নিবে */
+    .nav-fill {
+        flex-grow: 1;             /* সার্চ বার বাকি খালি জায়গা দখল করবে */
+        margin: 0 5px;
+        min-width: 50px;          /* একদম ছোট হয়ে যাওয়া রোধ করবে */
     }
 
-    /* ৫. সার্চ বক্স */
-    .search-box {
-        width: 95%;
-        margin: 5px auto;
+    /* ডানদিকের Login এবং Cart সেকশন */
+    .nav-right {
+        display: flex;            /* পাশাপাশি সাজানোর জন্য */
+        flex-shrink: 0;           /* এটি ছোট হবে না, এক লাইনেই থাকবে */
+        gap: 5px;                 /* মাঝখানে অল্প গ্যাপ */
+        font-size: 10px;          /* মোবাইলে ফন্ট সাইজ কমিয়ে দিলাম যাতে ধরে যায় */
     }
 
-    /* ৬. যদি অন্য কোনো এলিমেন্ট বেশি বড় দেখায়, তবে তাদের ছোট করা */
-    body {
-        padding: 0 5px; /* মোবাইলে সাইড থেকে একটু জায়গা রাখা */
+    /* লোগো এবং টেক্সট ছোট করা */
+    .nav-item {
+        font-size: 10px;
     }
 }
+
+
+    /* লোগো এবং সার্চ বক্সের সাইজ ছোট করা */
+    .logo-box { font-size: 16px; }
+    .search-box { width: 100%; order: 3; margin: 5px 0; }
+    
+    /* ন্যাভিগেশন লিংকগুলো ছোট করা */
+    .nav-links {
+        font-size: 11px;
+        gap: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
 
