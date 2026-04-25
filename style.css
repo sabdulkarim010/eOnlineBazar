@@ -282,19 +282,61 @@ body {
     gap: 15px;
 } show up*/
 
+/* মোবাইল রেসপন্সিভ ব্লকের জন্য এটিই চূড়ান্ত কোড */
 @media (max-width: 768px) {
-    .hide-mobile { display: none; }
-    
-    .grid-container{
-        grid-template-columns: repeat(2, 1fr); /* মোবাইলে 2 কলাম */
+    /* ১. গ্রিড লেআউট */
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-    
-    .main-title { font-size: 28px; }
-    .hero-section { 
+
+    /* ২. হিরো সেকশন */
+    .hero-section {
         height: auto; 
         padding: 20px 10px;
         text-align: center;
     }
+
+    .hero-section h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .hero-section p {
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    /* ৩. মেইন টাইটেল (যা আপনি মিস করেছিলেন) */
+    .main-title {
+        font-size: 22px; /* মোবাইলের জন্য সাইজ কমিয়ে দিলাম */
+        margin: 15px 0;
+        text-align: center;
+    }
+
+    /* ৪. নেভিগেশন ও হেডার */
+    .main-nav {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .nav-links {
+        font-size: 12px;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    /* ৫. সার্চ বক্স */
+    .search-box {
+        width: 95%;
+        margin: 5px auto;
+    }
+
+    /* ৬. যদি অন্য কোনো এলিমেন্ট বেশি বড় দেখায়, তবে তাদের ছোট করা */
+    body {
+        padding: 0 5px; /* মোবাইলে সাইড থেকে একটু জায়গা রাখা */
+    }
 }
+
 
