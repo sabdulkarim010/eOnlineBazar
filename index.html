@@ -16,6 +16,7 @@
 
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- icon -->
 </head>
 <body>
 
@@ -23,8 +24,8 @@
         <div class="container main-nav">
             <div class="nav-left">
                 <div class="logo-box" onclick="location.reload()">EonlineBazar</div>
-                <div class="location-box hide-mobile">
-                    <span>Deliver to</span>
+                    <div class="location-box hide-mobile">
+                        <span>Deliver to</span>
                     <strong>Bangladesh</strong>
                 </div>
             </div>
@@ -43,8 +44,9 @@
 
             <div class="nav-right">
                 <div class="nav-item">
-                    <span class="hide-mobile">Hello, Sign in</span>
-                    <strong>Account</strong>
+                    <i class="fa-solid fa-user"></i>
+                    <strong class="hide-mobile">You</strong>
+
                 </div>
                 <div class="nav-cart" id="cartTrigger">
                     <div class="cart-icon-box">
@@ -74,8 +76,8 @@
         <div class="hero-overlay">
             <div class="container">
                 <div class="hero-content">
-                    <h1 class="main-title">A New Era of Shopping</h1>
-                    <p class="sub-text">সেরা মানের পণ্য, দ্রুত ডেলিভারি।</p>
+                    <h1 class="main-title">Coming Soon: A Revolation in Shopping!</h1>
+                    <p class="sub-text">আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য</p>
                     <button class="btn-shop-now">Shop Now</button>
                 </div>
             </div>
@@ -120,8 +122,20 @@
 
         <div class="footer-bottom">
             <div class="footer-logo">EonlineBazar</div>
-            <p>&copy; 2026 eOnlineBazar. Designed by <strong>Abdul Karim</strong></p> </div>
+            <p>&copy; 2026 eOnlineBazar. Designed by <strong>Your Name</strong></p> </div>
     </footer>
+
+<div id="regModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" style="float:right; cursor:pointer;">&times;</span>
+        <h3>Create Account</h3>
+        <input type="text" placeholder="Full Name">
+        <input type="email" placeholder="Gmail Address">
+        <input type="tel" placeholder="Mobile Number">
+        <input type="password" placeholder="Password">
+        <button class="btn-submit">Register</button>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
