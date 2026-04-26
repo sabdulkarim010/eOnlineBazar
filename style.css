@@ -13,7 +13,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* সিস্টেমের ডিফল্ট ফন্ট ব্যবহার করা হয়েছে */
     font-family: Arial, sans-serif; 
 }
 
@@ -29,7 +28,7 @@ body {
     padding: 0 15px;
 }
 
-/* --- ২. আমাজন স্টাইল হেডার ডিজাইন (ডেস্কটপ ফিক্স) --- */
+/* --- ২. প্রফেশনাল হেডার (ডেস্কটপ মোড - ১ লাইনে) --- */
 .amazon-header {
     background-color: var(--amazon-dark);
     color: var(--white);
@@ -40,15 +39,15 @@ body {
     display: flex;
     align-items: center;
     padding: 10px;
-
-    flex-wrap: nowrap; /* এটি নিশ্চিত করবে যে উপাদানগুলো এক লাইনে থাকবে */
+    flex-wrap: nowrap; /* ডেস্কটপে ভাঙবে না */
     gap: 15px;
 }
 
-/* ১. বাম পাশের লোগো সেকশন */
 .nav-left {
-    flex: 0 0 auto; /* লোগো যতটুকু দরকার ততটুকু জায়গা নিবে */
-
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .logo-box {
@@ -56,7 +55,7 @@ body {
     font-weight: bold;
     color: var(--amazon-gold);
     cursor: pointer;
-    white-space: nowrap; /* লেখা ভেঙে নিচে যাবে না */
+    white-space: nowrap;
 }
 
 .location-box {
@@ -67,13 +66,10 @@ body {
 
 .location-box span { color: #ccc; }
 
-/* সার্চ বার ডিজাইন */
-/* ২. মাঝখানের সার্চ বার (এটিই সবচেয়ে বেশি জায়গা নিবে) */
+/* সার্চ বার (মাঝখানের অংশ) */
 .nav-fill { 
-    flex: 1; /* খালি সব জায়গা দখল করবে */
-    max-width: 600px; /* অতিরিক্ত বড় হওয়া রোধ করবে */
-    min-width:50px;
-    /* margin: 0 15px; */
+    flex: 1;
+    max-width: 800px; 
 }
 
 .search-wrapper {
@@ -107,21 +103,15 @@ body {
     padding: 0 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.search-wrapper button:hover { background: #f3a847; }
-
-/* ডান দিকের আইটেম ও কার্ট */
-/* ৩. ডান দিকের আইটেম ও কার্ট */
+/* ডান পাশের আইটেম */
 .nav-right {
-    flex: 0 0 auto; /* কার্ট যতটুকু দরকার ততটুকু জায়গা নিবে */
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     gap: 15px;
-    white-space: nowrap;
 }
-
 
 .nav-item { font-size: 12px; cursor: pointer; }
 .nav-item strong { display: block; font-size: 14px; }
@@ -148,7 +138,7 @@ body {
     font-weight: bold;
 }
 
-/* --- ৩. সাব-নেভিগেশন (কালো ক্যাটাগরি বার) --- */
+/* --- ৩. সাব ন্যাভিগেশন --- */
 .sub-nav {
     background-color: var(--amazon-light);
     padding: 8px 0;
@@ -159,9 +149,8 @@ body {
     align-items: center;
     gap: 15px;
     font-size: 14px;
+    color: white;
 }
-
-.all-menu { font-weight: bold; cursor: pointer; }
 
 .nav-links {
     list-style: none;
@@ -169,72 +158,42 @@ body {
     gap: 15px;
 }
 
-.nav-links li { cursor: pointer; }
-.nav-links li:hover { text-decoration: underline; }
+.nav-links li:hover { text-decoration: underline; cursor: pointer; }
 
-/* --- ৪. হিরো ব্যানার ডিজাইন (Hero Section) --- */
+/* --- ৪. হিরো সেকশন (সেন্টার এলাইনড) --- */
 .hero-section {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
     background-size: cover;
     background-position: center;
-    height: 250px;
-    display: flex;
-    align-items: center; /* লম্বালম্বিভাবে মাঝখানে আনবে */
-    justify-content: center; /* আড়াআড়িভাবে মাঝখানে আনবে */
-    color: white;
-    margin-bottom: 50px;
-}
-
-
-.hero-overlay {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* ইমেজ ঝাপসা করার জন্য */
+    height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    text-align: center;
 }
 
-.hero-content {
-    /* স্ক্রিনশট অনুযায়ী কন্টেন্ট এরিয়া */
-    text-align: center; /* ভেতরের সব লেখা এবং বাটন মাঝখানে আনবে */
-    max-width: 800px;
-    padding: 20px;
-}
-
-.main-title {
-    font-size: 48px; /* আপনার প্রয়োজন মতো সাইজ দিন */
-    margin-bottom: 15px;
-    display: block;
-}
-
-.sub-text {
-    font-size: 20px;
-    margin-bottom: 25px;
-    display: block;
-}
-
+.main-title { font-size: 32px; margin-bottom: 10px; }
+.sub-text { font-size: 16px; margin-bottom: 20px; max-width: 600px; }
 .btn-shop-now {
-    background-color: #febd69; /* আমাজন গোল্ড কালার */
+    background: var(--amazon-gold);
     border: none;
-    padding: 12px 30px;
-    border-radius: 5px;
+    padding: 10px 30px;
+    border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-    display: inline-block; /* সেন্টার হওয়ার জন্য এটি জরুরি */
 }
 
-/* --- ৫. ক্যাটাগরি গ্রিড (Product Grid) --- */
+/* --- ৫. প্রোডাক্ট গ্রিড (ফটো ও আইকন সেম ফ্রেম) --- */
 .content-area {
-    margin-top: -40px; /* ব্যানার এর ওপর একটু তুলে দেওয়া হয়েছে */
+    margin-top: -30px;
     padding-bottom: 50px;
 }
 
-.section-header { margin-bottom: 30px; }
-
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    /* ডেস্কটপে স্ক্রিন অনুযায়ী অটো কলাম */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
 }
 
@@ -244,42 +203,45 @@ body {
     border-radius: 4px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* .p-img-box { font-size: 50px; margin-bottom: 10px; } */
-
-/* ছবির বক্সটি নির্দিষ্ট সাইজের করে দিন  from by js */
 .p-img-box {
     width: 100%;
-    height: 120px; /* বক্সের একটি নির্দিষ্ট উচ্চতা দিন */
+    height: 150px; /* নির্দিষ্ট ফ্রেম সাইজ */
+    background: #f9f9f9;
     display: flex;
-    justify-content: center; /* ছবি বা আইকন মাঝখানে আনবে */
-    align-items: center;     /* ছবি বা আইকন মাঝখানে আনবে */
-    overflow: hidden;        /* বক্সের বাইরে ছবি যেন বেরিয়ে না আসে */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
     margin-bottom: 10px;
-    font-size: 50px;
+    border-radius: 4px;
 }
 
-/* ছবির সাইজ ঠিক করা */
 .p-img-box img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;     /* এটি ছবিকে ভেঙে যেতে দেবে না, পুরো ছবিটিকে সুন্দরভাবে বক্সের ভেতর ফিট করবে */
+    object-fit: contain; /* ছবি ফ্রেমের ভেতরে সুন্দরভাবে থাকবে */
 }
 
+.p-img-box span {
+    font-size: 60px; /* ইমোজি আইকন সাইজ */
+}
 
 .p-info .name {
     font-size: 14px;
     font-weight: bold;
-    height: 35px;
+    height: 40px;
     overflow: hidden;
+    margin-bottom: 5px;
 }
 
 .p-info .price {
     color: #B12704;
     font-size: 18px;
     font-weight: bold;
-    margin: 10px 0;
 }
 
 .add-btn-main {
@@ -289,103 +251,72 @@ body {
     padding: 8px;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 10px;
+}
+
+/* --- ৬. ফুটার স্টাইল --- */
+.main-footer {
+    background-color: var(--amazon-light);
+    color: white;
+    margin-top: 50px;
+}
+
+.back-to-top {
+    background: #37475a;
+    text-align: center;
+    padding: 15px;
+    cursor: pointer;
     font-size: 13px;
 }
 
-/* --- ৬. রেসপনসিভনেস (Mobile Fix) --- */
-
-/* মোবাইল রেসপন্সিভ ব্লকের জন্য এটিই চূড়ান্ত কোড */
-
-@media (max-width: 768px) {
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* ৩টি কলাম নিশ্চিত করা */
-        gap: 5px; /* গ্যাপ কমিয়ে দিলে কলামগুলো বেশি জায়গা পাবে */
-        padding: 3px; /* কন্টেইনারের চারপাশে একটু জায়গা রাখা */
-    }
-
-    /* কার্ডের ভেতরের লেখাগুলো ছোট করা জরুরি, নাহলে জায়গা কুলাবে না */
-    .p-card {
-        padding: 4px; /* কার্ডের ভেতরের প্যাডিং কমালাম */
-    }
-
-    /* প্রোডাক্টের নাম ছোট করে দেয়া যাতে ৩ কলামে টেক্সট ভেঙে না যায় */
-    .p-info .name {
-        font-size: 10px; 
-        height: 15px; /* উচ্চতা কমালাম */
-        overflow: hidden;
-    }
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 40px 15px;
+    gap: 30px;
 }
 
+.footer-column h4 { margin-bottom: 15px; font-size: 16px; }
+.footer-column ul { list-style: none; }
+.footer-column ul li { color: #ccc; font-size: 14px; margin-bottom: 8px; cursor: pointer; }
 
-    /* ২. হিরো সেকশন (একবারই লেখা হয়েছে যাতে কোনো কনফ্লিক্ট না হয়) */
-    .hero-section {
-        height: auto; 
-        padding: 15px;
-        text-align: center;
-    }
-    
-    .hero-section h1 {
-        font-size: 18px;
-    }
+.footer-bottom {
+    background: var(--amazon-dark);
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #3a4553;
+}
 
-    /* হিরো সেকশনের ভেতরের প্যারাগ্রাফ বা বর্ণনার লেখা ছোট করার জন্য */
-    .hero-section p {
-        font-size: 15px;
-        margin-bottom: 10px;
-    }
-
-    .main-title {
-        font-size: 22px; 
-        margin: 10px 0;
-    }
-
-    /* ৩. হেডার ও ন্যাভিগেশন ফিক্স (এগুলোই আপনার মোবাইলে ভেঙে যাচ্ছে) */
-      /* হেডারের মেইন কন্টেইনার */
+/* --- ৭. রেসপনসিভনেস (Mobile View Fix) --- */
+@media (max-width: 768px) {
+    /* হেডার: লোগো ডানে, কার্ট বামে, সার্চ নিচে */
     .main-nav {
-        flex-wrap: wrap; /* মোবাইলে ভেঙে ২ লাইন হবে */
-        justify-content: space-between; /* লোগো বামে, কার্ট ডানে রাখবে */
-        padding: 10px;
-    }
-
-    /* ১. লোগো বামে থাকবে */
-    .nav-left {
-        order: 1;
-        width: auto;
-    }
-
-    /* ২. অ্যাকাউন্ট ও কার্ট ডানে থাকবে */
-    .nav-right {
-        order: 3;
-        width: auto;
-    }
-
-    .nav-fill {
-        order: 2;
-        width: 100%;
-        margin: 10px 0 5px 0;
-    }
-
-   
-    .logo-box {
-        font-size: 18px;
-    }
-    
-    .nav-item, .cart-icon-box {
-        font-size: 10px;
-    }
-
-
-
-    .search-box { width: 100%; order: 3; margin: 5px 0; }
-    
-    /* ন্যাভিগেশন লিংকগুলো ছোট করা */
-    .nav-links {
-        font-size: 11px;
-        gap: 5px;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: space-between;
     }
 
+    .nav-left { order: 1; }
+    .nav-right { order: 2; }
+    .nav-fill { 
+        order: 3; 
+        width: 100%; 
+        margin-top: 8px;
+    }
 
+    /* মোবাইলে ৩ কলাম গ্রিড নিশ্চিত করা */
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 5px;
+    }
+
+    .p-card { padding: 8px; }
+    .p-img-box { height: 100px; } /* মোবাইলে ফ্রেম একটু ছোট */
+    .p-img-box span { font-size: 40px; }
     
+    .p-info .name { font-size: 11px; height: 30px; }
+    .p-info .price { font-size: 14px; }
+    .add-btn-main { font-size: 10px; padding: 5px; }
+
+    .hide-mobile { display: none !important; }
+}
