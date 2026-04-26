@@ -108,3 +108,24 @@ function handleAddToCart() {
         console.log("Product added to cart. Current count: " + currentCartCount);
     }
 }
+
+// পপআপ খোলার জন্য
+const accountIcon = document.querySelector('.nav-item'); // আপনার আইকনের ক্লাস ধরে
+const modal = document.getElementById('regModal');
+
+accountIcon.onclick = function() {
+    modal.style.display = "block";
+}
+
+// পপআপ বন্ধ করার জন্য
+function closeModal() {
+    modal.style.display = "none";
+}
+
+// পপআপের বাইরের ফাঁকা জায়গায় ক্লিক করলেও বন্ধ হবে
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
