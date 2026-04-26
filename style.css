@@ -404,12 +404,12 @@ body {
 
     /* ২. হিরো সেকশন (ব্যানার) এর জন্য */
     .hero-section {
-        margin-top: 1px; /* হেডারের সাথে ব্যানারের দূরত্ব তৈরি করবে */
+        margin-top: .5px; /* হেডারের সাথে ব্যানারের দূরত্ব তৈরি করবে */
         padding-top: 10px;
         min-height: 200px; /* ব্যানারের হাইট অটোমেটিক না রেখে একটা মিনিমাম হাইট দিন */
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        box-sizing: content-box;
         
     }
 
