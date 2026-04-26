@@ -29,7 +29,7 @@ body {
     padding: 0 15px;
 }
 
-/* --- ২. আমাজন স্টাইল হেডার ডিজাইন --- */
+/* --- ২. আমাজন স্টাইল হেডার ডিজাইন (ডেস্কটপ ফিক্স) --- */
 .amazon-header {
     background-color: var(--amazon-dark);
     color: var(--white);
@@ -39,17 +39,24 @@ body {
 .main-nav {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px;
+
+    flex-wrap: nowrap; /* এটি নিশ্চিত করবে যে উপাদানগুলো এক লাইনে থাকবে */
     gap: 15px;
 }
 
-/* লোগো সেকশন */
+/* ১. বাম পাশের লোগো সেকশন */
+.nav-left {
+    flex: 0 0 auto; /* লোগো যতটুকু দরকার ততটুকু জায়গা নিবে */
+
+}
+
 .logo-box {
     font-size: 22px;
     font-weight: bold;
     color: var(--amazon-gold);
     cursor: pointer;
-    white-space: nowrap;
+    white-space: nowrap; /* লেখা ভেঙে নিচে যাবে না */
 }
 
 .location-box {
@@ -61,7 +68,13 @@ body {
 .location-box span { color: #ccc; }
 
 /* সার্চ বার ডিজাইন */
-.nav-fill { flex: 1; }
+/* ২. মাঝখানের সার্চ বার (এটিই সবচেয়ে বেশি জায়গা নিবে) */
+.nav-fill { 
+    flex: 1; /* খালি সব জায়গা দখল করবে */
+    max-width: 600px; /* অতিরিক্ত বড় হওয়া রোধ করবে */
+    min-width:50px;
+    /* margin: 0 15px; */
+}
 
 .search-wrapper {
     display: flex;
@@ -100,11 +113,15 @@ body {
 .search-wrapper button:hover { background: #f3a847; }
 
 /* ডান দিকের আইটেম ও কার্ট */
+/* ৩. ডান দিকের আইটেম ও কার্ট */
 .nav-right {
+    flex: 0 0 auto; /* কার্ট যতটুকু দরকার ততটুকু জায়গা নিবে */
     display: flex;
     align-items: center;
     gap: 15px;
+    white-space: nowrap;
 }
+
 
 .nav-item { font-size: 12px; cursor: pointer; }
 .nav-item strong { display: block; font-size: 14px; }
@@ -326,48 +343,40 @@ body {
     /* ৩. হেডার ও ন্যাভিগেশন ফিক্স (এগুলোই আপনার মোবাইলে ভেঙে যাচ্ছে) */
       /* হেডারের মেইন কন্টেইনার */
     .main-nav {
-        display: flex;
-        flex-wrap: wrap; /* সার্চ বারকে নিচে নামানোর জন্য এটি জরুরি */
-        align-items: center;
-        justify-content: space-between;
+        flex-wrap: wrap; /* মোবাইলে ভেঙে ২ লাইন হবে */
+        justify-content: space-between; /* লোগো বামে, কার্ট ডানে রাখবে */
         padding: 10px;
     }
 
-    /* ১. লোগো বা মেইন টাইটেল - বামে থাকবে */
+    /* ১. লোগো বামে থাকবে */
     .nav-left {
         order: 1;
-        flex: 1; /* লোগো কিছুটা জায়গা নিবে */
+        width: auto;
     }
 
-    /* ২. লগইন ও কার্ট - ডানে থাকবে এবং ২য় লাইনে যাবে না */
+    /* ২. অ্যাকাউন্ট ও কার্ট ডানে থাকবে */
     .nav-right {
-        order: 2;
-        margin-left: auto; /* সব খালি জায়গা বামে নিয়ে কার্টকে ডানে ঠেলে দিবে */
-        white-space: nowrap; /* লেখাগুলো পাশাপাশি থাকবে, নিচে নামবে না */
-        display: flex;
-        gap: 10px;
-        font-size: 12px;
-    }
-
-    /* ৩. সার্চ বক্স - পুরো ২য় লাইন দখল করবে */
-    .nav-fill {
         order: 3;
-        width: 100%; /* সার্চ বক্সকে বাধ্য করবে নিচে নামতে */
-        margin-top: 10px;
+        width: auto;
     }
 
-    /* লোগো এবং টেক্সট ছোট করা */
-    .nav-item {
-        font-size: 10px;
+    .nav-fill {
+        order: 2;
+        width: 100%;
+        margin: 10px 0 5px 0;
     }
-}
 
-
-    /* লোগো এবং সার্চ বক্সের সাইজ ছোট করা */
+   
     .logo-box {
         font-size: 18px;
-        font-weight: bold;
-  }
+    }
+    
+    .nav-item, .cart-icon-box {
+        font-size: 10px;
+    }
+
+
+
     .search-box { width: 100%; order: 3; margin: 5px 0; }
     
     /* ন্যাভিগেশন লিংকগুলো ছোট করা */
@@ -379,6 +388,4 @@ body {
     }
 
 
-    .hide-mobile {
-        display: none;
-    }
+    
