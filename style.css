@@ -113,7 +113,55 @@ body {
     gap: 15px;
 }
 
-.nav-item { font-size: 12px; cursor: pointer; }
+
+/* আইকন স্টাইল */
+.nav-item {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+.nav-item:hover {
+    color: hwb(310 6% 7%); /* হোভার করলে আমাজন কালার হবে */
+}
+
+/* পপআপ বা মডাল স্টাইল */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 8px;
+    color: #333;
+    text-align: center;
+    position: relative;
+}
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.btn-submit {
+    background: #f08804;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
 .nav-item strong { display: block; font-size: 14px; }
 
 .nav-cart {
@@ -165,12 +213,13 @@ body {
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
     background-size: cover;
     background-position: center;
-    height: 300px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     text-align: center;
+    overflow: hidden;
 }
 
 .main-title { font-size: 32px; margin-bottom: 10px; }
@@ -186,8 +235,21 @@ body {
 
 /* --- ৫. প্রোডাক্ট গ্রিড (ফটো ও আইকন সেম ফ্রেম) --- */
 .content-area {
-    margin-top: -30px;
-    padding-bottom: 50px;
+    margin-top: 1px;       /* নেগেটিভ মার্জিন (-) একদম বাদ দিয়েছি */
+    padding-bottom: 5px;
+    background-color: var(--bg-color);
+}
+
+.section-header {
+    margin-bottom: 0;
+    padding: 10px 0;  /* banner and product space */
+    border-bottom: 2px solid #ddd; /* একটি বর্ডার দিলে সেকশনটি আলাদা দেখাবে */
+}
+
+.section-header h3 {
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
 }
 
 .grid-container {
@@ -320,3 +382,5 @@ body {
 
     .hide-mobile { display: none !important; }
 }
+
+
