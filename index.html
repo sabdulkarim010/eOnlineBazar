@@ -3,45 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>eonlinebazar</title>
-        <link rel="icon" href="images/favicon.png" type="image/png">
+    
+    <title>eOnlineBazar | Best Online Shopping Experience</title>
+    <meta name="description" content="eOnlineBazar - বাংলাদেশের সেরা অনলাইন শপিং প্ল্যাটফর্ম। প্রিমিয়াম কোয়ালিটি পণ্য এখন আপনার হাতের নাগালে।">
+    <meta name="keywords" content="Shopping, Ecommerce, Bangladesh, eOnlineBazar, Grocery, Fashion">
+    <meta name="author" content="Your Name"> <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="eOnlineBazar | Shop Best Quality Products">
+    <meta property="og:description" content="সাশ্রয়ী মূল্যে সেরা পণ্য কিনুন eOnlineBazar থেকে।">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.eonlinebazar.com">
+
+    <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
-   
 </head>
 <body>
 
-<!-- amazon-header -->
     <header class="amazon-header">
         <div class="container main-nav">
-            
             <div class="nav-left">
                 <div class="logo-box" onclick="location.reload()">EonlineBazar</div>
                 <div class="location-box hide-mobile">
-                    <div class="loc-text">
-                        <span>Deliver to</span>
-                        <strong>Bangladesh</strong>
-                    </div>
+                    <span>Deliver to</span>
+                    <strong>Bangladesh</strong>
                 </div>
             </div>
 
-<!-- search-wrapper -->
             <div class="nav-fill">
                 <div class="search-wrapper">
-                    <select class="search-category">
+                    <select class="search-category hide-mobile">
                         <option>All</option>
                         <option>Grocery</option>
                         <option>Fashion</option>
-                        <option>Electric</option>
                     </select>
-                    <input type="text" id="mainSearch" placeholder="Search anything">
+                    <input type="text" id="mainSearch" placeholder="Search eonlinebazar.com">
                     <button id="searchBtn">GO</button>
                 </div>
             </div>
 
-<!-- nav-right -->
             <div class="nav-right">
-                <div class="nav-item hide-mobile">
-                    <span>Login</span>
+                <div class="nav-item">
+                    <span class="hide-mobile">Hello, Sign in</span>
                     <strong>Account</strong>
                 </div>
                 <div class="nav-cart" id="cartTrigger">
@@ -54,7 +56,6 @@
             </div>
         </div>
 
- <!-- sub-nav -->
         <nav class="sub-nav">
             <div class="container sub-flex">
                 <div class="all-menu">☰ All</div>
@@ -63,22 +64,18 @@
                     <li>Fashion</li>
                     <li>Best Sellers</li>
                     <li>Fresh</li>
-                    <li>Super Market</li>
-                 
                     <li class="hide-mobile">Electronics</li>
                 </ul>
             </div>
         </nav>
     </header>
 
-
-<!-- hero-section -->
     <section class="hero-section">
         <div class="hero-overlay">
             <div class="container">
                 <div class="hero-content">
-                    <h1 class="main-title">Coming soon: A Revolution in Shopping</h1>
-                    <p class="sub-text">আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য।</p>
+                    <h1 class="main-title">A New Era of Shopping</h1>
+                    <p class="sub-text">সেরা মানের পণ্য, দ্রুত ডেলিভারি।</p>
                     <button class="btn-shop-now">Shop Now</button>
                 </div>
             </div>
@@ -93,6 +90,38 @@
         <div id="productGrid" class="grid-container">
             </div>
     </main>
+
+    <footer class="main-footer">
+        <div class="back-to-top" onclick="window.scrollTo(0,0)">Back to top</div>
+        
+        <div class="footer-content container">
+            <div class="footer-column">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li>About Us</li>
+                    <li>Careers</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect with Us</h4>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li>Your Account</li>
+                    <li>Help Center</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">EonlineBazar</div>
+            <p>&copy; 2026 eOnlineBazar. Designed by <strong>Your Name</strong></p> </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
