@@ -312,6 +312,12 @@ body {
         font-size: 18px;
     }
 
+    /* হিরো সেকশনের ভেতরের প্যারাগ্রাফ বা বর্ণনার লেখা ছোট করার জন্য */
+    .hero-section p {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
     .main-title {
         font-size: 22px; 
         margin: 10px 0;
