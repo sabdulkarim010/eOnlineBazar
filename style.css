@@ -259,6 +259,15 @@ body {
     gap: 15px;
 }
 
+/* গ্রিড কন্টেইনার ফিক্স */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 30px; /* পজিটিভ মার্জিন যাতে ব্যানারের নিচে থাকে */
+    padding: 10px;
+}
+
 .p-card {
     background: var(--white);
     padding: 15px;
@@ -370,6 +379,11 @@ body {
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         padding: 5px;
+    }
+
+.category-grid {
+        grid-template-columns: repeat(3, 1fr); /* মোবাইলে ৩টি কলাম */
+        gap: 8px;
     }
 
     .p-card { padding: 8px; }
