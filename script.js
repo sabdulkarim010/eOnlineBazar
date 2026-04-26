@@ -1,6 +1,7 @@
 /**
  * Project: eOnlineBazar
- * Author: Your Name
+ * Author: Abdul Karim Sheikh
+ * Mobile: 01521377735
  * Description: Product Rendering, Search, and Cart Logic
  */
 
@@ -15,17 +16,17 @@ const products = [
     { id: 7, name: "Fresh Green Tea", price: 220, icon: "🍵" },
     { id: 8, name: "Organic Ghee (500g)", price: 850, icon: "🧈" },
     { id: 9, name: "Premium Cotton T-Shirt 01", price: 450, images: "t-shirt-1.jpg" },
-    { id: 10, name: "Premium Cotton T-Shirt 02", price: 470, images: "t-shirt-2.jpg" },
-    { id: 11, name: "Premium Cotton T-Shirt 03", price: 750, images: "t-shirt-3.jpg" },
-    { id: 12, name: "Premium Cotton T-Shirt 04", price: 400, images: "t-shirt-4.jpg" },
-    { id: 13, name: "Premium Cotton T-Shirt 05", price: 460, images: "t-shirt-5.jpg" },
-    { id: 14, name: "Premium Cotton T-Shirt 06", price: 850, images: "t-shirt-6.jpg" },
-    { id: 15, name: "Premium Cotton T-Shirt 07", price: 250, images: "t-shirt-7.jpg" },
-    { id: 16, name: "Premium Cotton T-Shirt 08", price: 850, images: "t-shirt-8.jpg" },
-    { id: 17, name: "Premium Cotton T-Shirt 09", price: 650, images: "t-shirt-9.jpg" },
-    { id: 18, name: "Premium Cotton T-Shirt 10", price: 950, images: "t-shirt-10.jpg" },
-    { id: 19, name: "Premium Cotton T-Shirt 10", price: 1450, images: "afia.jpg" },
-    { id: 20, name: "Premium Cotton T-Shirt 10", price: 500, images: "Rafia.jpg" },
+    { id: 10, name: "Premium Cotton T-Shirt 02", price: 450, images: "t-shirt-2.jpg" },
+    { id: 11, name: "Premium Cotton T-Shirt 03", price: 450, images: "t-shirt-3.jpg" },
+    { id: 12, name: "Premium Cotton T-Shirt 04", price: 450, images: "t-shirt-4.jpg" },
+    { id: 13, name: "Premium Cotton T-Shirt 05", price: 450, images: "t-shirt-5.jpg" },
+    { id: 14, name: "Premium Cotton T-Shirt 06", price: 450, images: "t-shirt-6.jpg" },
+    { id: 15, name: "Premium Cotton T-Shirt 07", price: 450, images: "t-shirt-7.jpg" },
+    { id: 16, name: "Premium Cotton T-Shirt 08", price: 450, images: "t-shirt-8.jpg" },
+    { id: 17, name: "Premium Cotton T-Shirt 09", price: 450, images: "t-shirt-9.jpg" },
+    { id: 18, name: "Premium Cotton T-Shirt 10", price: 450, images: "t-shirt-10.jpg" },
+    { id: 17, name: "Afia Cotton T-Shirt 09", price: 450, images: "afia.jpg" },
+    { id: 18, name: "Rafia Cotton T-Shirt 10", price: 450, images: "rafia.jpg" },
 ];
 
 // কার্ট আইটেম কাউন্ট রাখার জন্য ভেরিয়েবল
