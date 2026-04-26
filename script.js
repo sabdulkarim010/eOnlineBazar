@@ -26,7 +26,7 @@ const products = [
     { id: 17, name: "Premium Cotton T-Shirt 09", price: 450, images: "t-shirt-9.jpg" },
     { id: 18, name: "Premium Cotton T-Shirt 10", price: 450, images: "t-shirt-10.jpg" },
     { id: 17, name: "Afia Cotton T-Shirt 09", price: 450, images: "afia.jpg" },
-    { id: 18, name: "Rafia Cotton T-Shirt 10", price: 450, images: "rafia.jpg" },
+    { id: 18, name: "Rafia Cotton T-Shirt 10", price: 450, images: "Rafia.jpg" },
 ];
 
 // কার্ট আইটেম কাউন্ট রাখার জন্য ভেরিয়েবল
