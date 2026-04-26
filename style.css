@@ -354,11 +354,6 @@ body {
         margin-top: 10px;
     }
 
-    /* লোকেশন বক্স যেন না দেখায় */
-    .location-box {
-        display: none !important;
-    }
-
 
     /* লোগো এবং টেক্সট ছোট করা */
     .nav-item {
