@@ -409,6 +409,7 @@ body {
         min-height: 200px; /* ব্যানারের হাইট অটোমেটিক না রেখে একটা মিনিমাম হাইট দিন */
         display: flex;
         align-items: center;
+        margin-bottom: 10px;
         
     }
 
