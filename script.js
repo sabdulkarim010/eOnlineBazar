@@ -1,9 +1,10 @@
 /**
- * Project: eOnlineBazar - Minimal Logic
- * এখানে শুধুমাত্র প্রোডাক্ট দেখানো এবং সার্চ করার লজিক রাখা হয়েছে।
+ * Project: eOnlineBazar
+ * Author: Your Name
+ * Description: Product Rendering, Search, and Cart Logic
  */
 
-// --- ১. ডাটাবেস সেকশন (পণ্য তালিকা) ---
+// --- ১. প্রোডাক্ট ডাটাবেস (Database) ---
 const products = [
     { id: 1, name: "Premium Miniket Rice (5kg)", price: 490, icon: "🍚" },
     { id: 2, name: "Pure Mustard Oil (1L)", price: 280, icon: "🍶" },
@@ -13,54 +14,97 @@ const products = [
     { id: 6, name: "Soybean Oil (2L)", price: 340, icon: "🧪" },
     { id: 7, name: "Fresh Green Tea", price: 220, icon: "🍵" },
     { id: 8, name: "Organic Ghee (500g)", price: 850, icon: "🧈" },
-    { id: 9, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-1.jpg"},
-    { id: 10, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-2.jpg"},
-    { id: 11, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-3.jpg"},
-    { id: 12, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-4.jpg"},
-    { id: 13, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-5.jpg"},
-    { id: 14, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-6.jpg"},
-    { id: 15, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-7.jpg"},
-    { id: 16, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-8.jpg"},
-    { id: 17, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-9.jpg"},
-    { id: 18, name: "Organic Ghee (500g)", price: 850, images: "t-shirt-10.jpg"}, 
+    { id: 9, name: "Premium Cotton T-Shirt 01", price: 450, images: "t-shirt-1.jpg" },
+    { id: 10, name: "Premium Cotton T-Shirt 02", price: 450, images: "t-shirt-2.jpg" },
+    { id: 11, name: "Premium Cotton T-Shirt 03", price: 450, images: "t-shirt-3.jpg" },
+    { id: 12, name: "Premium Cotton T-Shirt 04", price: 450, images: "t-shirt-4.jpg" },
+    { id: 13, name: "Premium Cotton T-Shirt 05", price: 450, images: "t-shirt-5.jpg" },
+    { id: 14, name: "Premium Cotton T-Shirt 06", price: 450, images: "t-shirt-6.jpg" },
+    { id: 15, name: "Premium Cotton T-Shirt 07", price: 450, images: "t-shirt-7.jpg" },
+    { id: 16, name: "Premium Cotton T-Shirt 08", price: 450, images: "t-shirt-8.jpg" },
+    { id: 17, name: "Premium Cotton T-Shirt 09", price: 450, images: "t-shirt-9.jpg" },
+    { id: 18, name: "Premium Cotton T-Shirt 10", price: 450, images: "t-shirt-10.jpg" },
 ];
 
-// পেজ লোড হওয়ার সাথে সাথে পণ্যগুলো গ্রিড আকারে দেখাবে
-window.onload = () => { 
-    renderProducts(products); 
-};
+// কার্ট আইটেম কাউন্ট রাখার জন্য ভেরিয়েবল
+let currentCartCount = 0;
 
-// --- ২. পণ্য প্রদর্শনী লজিক (Rendering) ---
+// পেজ পুরোপুরি লোড হওয়ার পর কাজ শুরু হবে
+document.addEventListener('DOMContentLoaded', () => {
+    renderProducts(products); // শুরুতে সব প্রোডাক্ট দেখাবে
+    setupSearchFunctionality(); // সার্চ লজিক চালু করবে
+});
+
+// --- ২. প্রোডাক্ট রেন্ডারিং ফাংশন ---
 function renderProducts(items) {
-    const grid = document.getElementById('productGrid');
-    // যদি HTML এ productGrid না থাকে তবে কোডটি এখানেই থেমে যাবে
-    if (!grid) return;
+    const gridContainer = document.getElementById('productGrid');
+    if (!gridContainer) return;
 
-    // লুপ চালিয়ে প্রতিটি পণ্যের জন্য কার্ড তৈরি করা
-grid.innerHTML = items.map(p => `
-    <div class="p-card">
-        <div class="p-img-box">
-            ${p.images ? `<img src="images/${p.images}" alt="${p.name}" style="width: 100px; height: 100px; object-fit: cover;">` : p.icon}
+    // যদি সার্চে কিছু না পাওয়া যায়
+    if (items.length === 0) {
+        gridContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #555;">
+                <h3>দুঃখিত, কোনো পণ্য খুঁজে পাওয়া যায়নি!</h3>
+                <p>অন্য কিছু লিখে সার্চ করুন।</p>
+            </div>
+        `;
+        return;
+    }
+
+    // প্রোডাক্ট কার্ড তৈরি করা
+    gridContainer.innerHTML = items.map(product => `
+        <div class="p-card">
+            <div class="p-img-box">
+                ${product.images 
+                    ? `<img src="images/${product.images}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">` 
+                    : `<span>${product.icon}</span>`
+                }
+            </div>
+            <div class="p-info">
+                <div class="name" title="${product.name}">${product.name}</div>
+                <div class="price">৳ ${product.price}</div>
+            </div>
+            <button class="add-btn-main" onclick="handleAddToCart()">Add to Cart</button>
         </div>
-        <div class="p-info">
-            <div class="name">${p.name}</div>
-            <div class="price">৳ ${p.price}</div>
-        </div>
-        <button class="add-btn-main">View Details</button>
-    </div>
-`).join('');
-
-
+    `).join('');
 }
 
-// --- ৩. সার্চ ফাংশন (Search Logic) ---
-// সার্চ বাটনে ক্লিক করলে পণ্য ফিল্টার হবে
-document.getElementById('searchBtn').onclick = () => {
-    const query = document.getElementById('mainSearch').value.toLowerCase();
+// --- ৩. সার্চ ফাংশনালিটি ---
+function setupSearchFunctionality() {
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.getElementById('mainSearch');
+
+    if (!searchBtn || !searchInput) return;
+
+    // সার্চ করার মেইন ফাংশন
+    const runSearch = () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const filteredProducts = products.filter(p => 
+            p.name.toLowerCase().includes(searchTerm)
+        );
+        renderProducts(filteredProducts);
+    };
+
+    // বাটনে ক্লিক করলে সার্চ হবে
+    searchBtn.addEventListener('click', runSearch);
+
+    // কি-বোর্ডের 'Enter' প্রেস করলে সার্চ হবে
+    searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            runSearch();
+        }
+    });
+}
+
+// --- ৪. অ্যাড টু কার্ট ফাংশন ---
+function handleAddToCart() {
+    currentCartCount++;
+    const cartBadge = document.getElementById('uniqueCartCount');
     
-    // নামের সাথে মিল আছে এমন পণ্যগুলো খুঁজে বের করা
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query));
-    
-    // ফিল্টার করা পণ্যগুলো আবার স্ক্রিনে দেখানো
-    renderProducts(filtered);
-};
+    if (cartBadge) {
+        cartBadge.innerText = currentCartCount;
+        
+        // বাটন ক্লিক করলে একটি ছোট কনফার্মেশন (ঐচ্ছিক)
+        console.log("Product added to cart. Current count: " + currentCartCount);
+    }
+}
