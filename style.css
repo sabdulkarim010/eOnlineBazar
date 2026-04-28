@@ -47,11 +47,11 @@ body {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 
 .logo-box {
-    font-size: 22px;
+    font-size: 50px;
     font-weight: bold;
     color: var(--amazon-gold);
     cursor: pointer;
@@ -59,9 +59,24 @@ body {
 }
 
 .location-box {
-    font-size: 12px;
+    box-sizing: border-box;
+    justify-content: center;
+    height: 25px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    line-height: 1.3;
+    padding-left: 10px;
+    font-weight: ;
+}
+.location-box span:first-child{
+   
+}
+
+.location-box span:last-child{
     cursor: pointer;
-    line-height: 1.2;
+    color: greenyellow; 
 }
 
 .location-box span { color: #ccc; }
@@ -195,16 +210,24 @@ body {
 .sub-flex {
     display: flex;
     align-items: center;
-    gap: 15px;
-    font-size: 14px;
     color: white;
+}
+
+.container.sub-flex{
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 0px;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    padding-left: 10px;
 }
+
+
 
 .nav-links li:hover { text-decoration: underline; cursor: pointer; }
 
@@ -213,7 +236,8 @@ body {
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
     background-size: cover;
     background-position: center;
-    height: 200px;
+    min-height: 200px;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -358,6 +382,16 @@ body {
     border-top: 1px solid #3a4553;
 }
 
+
+
+
+
+
+
+
+
+
+
 /* --- ৭. রেসপনসিভনেস (Mobile View Fix) --- */
 @media (max-width: 768px) {
     /* হেডার: লোগো ডানে, কার্ট বামে, সার্চ নিচে */
@@ -398,35 +432,48 @@ body {
 
 
     /* ১. হেডারের জন্য */
-    .amazon-header {
+.amazon-header {
         position: relative; /* হেডারকে নরমাল পজিশনে রাখুন */
     }
 
     /* ২. হিরো সেকশন (ব্যানার) এর জন্য */
-    .hero-section {
+.hero-section {
         margin-top: .5px; /* হেডারের সাথে ব্যানারের দূরত্ব তৈরি করবে */
         padding-top: 10px;
-        min-height: 200px; /* ব্যানারের হাইট অটোমেটিক না রেখে একটা মিনিমাম হাইট দিন */
+        min-height: 300px; /* ব্যানারের হাইট অটোমেটিক না রেখে একটা মিনিমাম হাইট দিন */
         display: flex;
         align-items: center;
         box-sizing: content-box;
         
     }
 
-.hero-section h1{
-
-    font-size: 20px;
-}
-.hero-section p{
-
-    font-size: 15px;
-}
+.hero-section h1{ font-size: 20px;}
+.hero-section p{font-size: 15px;}
 
     /* ৩. কন্টেন্ট যেন ভেঙে না যায় */
     .hero-content {
         padding: 0 15px; /* দুই পাশে একটু জায়গা ছাড়বে */
         text-align: center; /* মোবাইলে লেখাগুলো সেন্টারে ভালো দেখাবে */
     }
+
+    .logo-box {
+        font-size: 30px;
+    }
 }
 
 
+@media screen and (max-width: 480px) {
+    .container.sub-flex {
+    }
+      .nav-links {
+        gap: 10px;
+    }
+    
+    .nav-links li {
+        font-size: 14px;
+    }
+    .logo-box {
+        font-size: 25px;
+    }
+
+}
