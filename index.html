@@ -44,9 +44,10 @@
 
             <div class="nav-right">
                 <div class="nav-item">
-                    <i class="fa-solid fa-user"></i>
-                    <strong class="hide-mobile">You</strong>
-
+                    <div class="user">
+                        <i class="fa-solid fa-user"></i>
+                        <strong class="hide-mobile">Account</strong>
+                    </div>
                 </div>
                 <div class="nav-cart" id="cartTrigger">
                     <div class="cart-icon-box">
@@ -92,15 +93,56 @@
              </div>
     </main>
 
-    <div id="regModal" class="modal">
+<!-- regModal এর ভেতরে শুধু এই অংশটুকু আপডেট করুন -->
+<div id="regModal" class="modal">
     <div class="modal-content">
-        <span onclick="closeModal()" style="float:right; cursor:pointer;">&times;</span>
-        <h3>Create Account</h3>
-        <input type="text" placeholder="Full Name">
-        <input type="email" placeholder="Gmail Address">
-        <input type="tel" placeholder="Mobile Number">
-        <input type="password" placeholder="Password">
-        <button class="btn-submit">Register</button>
+        <span onclick="closeModal()" class="close-btn" style="float:right; cursor:pointer; font-size: 28px;">&times;</span>
+        
+        <div class="auth-card">
+            <!-- Login Section -->
+            <div id="login-section">
+             <h2>Login</h2>
+                <div class="input-group">
+                  <input type="email" id="loginEmail" placeholder="Email Address">
+                    <div id="login-email-error" class="error-msg"></div> <!-- এরর মেসেজ এখানে আসবে -->
+                     </div>
+                 <div class="input-group">
+             <input type="password" id="loginPass" placeholder="Password">
+         <div id="login-pass-error" class="error-msg"></div> <!-- এরর মেসেজ এখানে আসবে -->
+    </div>
+    <button class="btn-primary" onclick="handleLogin()">Login</button>
+    <p class="toggle-link">Don't have an account? <span onclick="showRegister()">Register here</span></p>
+</div>
+
+            <!-- Register Section -->
+            <div id="register-section" style="display: none;">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <input type="text" id="fullName" placeholder="Full Name">
+                    <div id="name-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="mobile" placeholder="Mobile (e.g. 017xxxxxxxx)" maxlength="11">
+                    <div id="mobile-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email (abc@gmail.com)">
+                    <div id="email-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="address" placeholder="Full Address">
+                    <div id="address-error" class="error-msg"></div>
+                </div>
+                <button type="button" class="btn-primary" onclick="submitRegister()">Register Now</button>
+                <p class="toggle-link">Already have an account? <span onclick="showLogin()">Login here</span></p>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" style="display: none; text-align: center; padding: 20px;">
+                <h2 style="color: #28a745;">স্বাগতম! 🎉</h2>
+                <p>আপনার রেজিস্ট্রেশন সফল হয়েছে। আপনাকে মেইন পেজে নিয়ে যাওয়া হচ্ছে...</p>
+            </div>
+        </div>
     </div>
 </div>
     
@@ -139,3 +181,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
