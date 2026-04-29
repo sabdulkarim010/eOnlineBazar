@@ -128,6 +128,12 @@ body {
     gap: 15px;
 }
 
+.user{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+}
 
 /* আইকন স্টাইল */
 .nav-item {
@@ -141,39 +147,120 @@ body {
 }
 
 /* পপআপ বা মডাল স্টাইল */
+/* --- পপআপ (Modal) এবং অথেন্টিকেশন কার্ড ডিজাইন আপডেট --- */
+
+/* ১. মডাল কন্টেইনার */
 .modal {
     display: none; 
     position: fixed; 
-    z-index: 1000; 
-    left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    z-index: 2000; /* হেডারের উপরে থাকার জন্য */
+    left: 0; top: 0; 
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center; /* ফ্লেক্স ব্যবহার করে সেন্টারিং */
+    align-items: center;
 }
+
+/* ২. কার্ড ডিজাইন */
 .modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    width: 300px;
-    border-radius: 8px;
-    color: #333;
-    text-align: center;
+    background: #ffffff;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: relative;
+    text-align: left; /* কন্টেন্ট বাম দিক থেকে শুরু */
 }
-.modal-content input {
+
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+/* ৩. ইনপুট গ্রুপ ও ফিল্ডস */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.auth-card input {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: block;
 }
-.btn-submit {
-    background: #f08804;
+
+.auth-card input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.2);
+}
+
+/* ৪. বাটন ডিজাইন */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
     color: white;
-    padding: 10px;
-    width: 100%;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
 }
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* ৫. এরর ও ভ্যালিডেশন স্টাইল */
+.error-msg {
+    color: #d9534f;
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 15px;
+}
+
+input.is-invalid {
+    border-color: #d9534f !important;
+    background-color: #fff6f6;
+}
+
+input.is-valid {
+    border-color: #28a745 !important;
+    background-color: #f6fff9;
+}
+
+/* ৬. লিঙ্ক ও মেসেজ */
+.toggle-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.toggle-link span {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.toggle-link span:hover {
+    text-decoration: underline;
+}
+
+#success-message h2 {
+    margin-bottom: 10px;
+}
+/* end modal */
 
 
 
