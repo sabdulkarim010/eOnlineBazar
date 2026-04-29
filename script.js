@@ -113,22 +113,186 @@ function handleAddToCart() {
 }
 
 // পপআপ খোলার জন্য
-const accountIcon = document.querySelector('.nav-item'); // আপনার আইকনের ক্লাস ধরে
-const modal = document.getElementById('regModal');
+// --- ৫. অথেন্টিকেশন এবং পপআপ লজিক (আপডেটেড) ---
 
-accountIcon.onclick = function() {
-    modal.style.display = "block";
+// পপআপ কন্ট্রোল
+const modal = document.getElementById('regModal');
+const accountIcon = document.querySelector('.nav-item');
+
+if (accountIcon) {
+    accountIcon.onclick = function() {
+        modal.style.display = "flex";
+        showLogin(); // খোলার সময় ডিফল্ট লগইন দেখাবে
+    }
 }
 
-// পপআপ বন্ধ করার জন্য
 function closeModal() {
     modal.style.display = "none";
 }
 
-// পপআপের বাইরের ফাঁকা জায়গায় ক্লিক করলেও বন্ধ হবে
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    if (event.target == modal) closeModal();
+}
+
+// লগইন এবং রেজিস্ট্রেশন সুইচিং
+function showRegister() {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('register-section').style.display = 'block';
+    document.getElementById('success-message').style.display = 'none';
+}
+
+
+function showLogin() {
+    // সেকশনগুলো টগল করা
+    document.getElementById('login-section').style.display = 'block';
+    document.getElementById('register-section').style.display = 'none';
+    document.getElementById('success-message').style.display = 'none';
+    
+    // কনসোলে চেক করার জন্য (ঐচ্ছিক)
+    console.log("Switching to Login Section");
+}
+
+
+function handleLogin() {
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPass');
+    const emailError = document.getElementById('login-email-error');
+    const passError = document.getElementById('login-pass-error');
+    const loginBtn = document.querySelector('#login-section .btn-primary');
+
+    // এরর পরিষ্কার করা
+    emailError.innerText = "";
+    passError.innerText = "";
+    emailInput.classList.remove('is-invalid');
+    passInput.classList.remove('is-invalid');
+
+    let isValid = true;
+
+    // ১. ইমেইল ফরম্যাট চেক
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(emailInput.value)) {
+        emailError.innerText = "সঠিক ইমেইল ফরম্যাট দিন (যেমন: example@mail.com)";
+        emailInput.classList.add('is-invalid');
+        isValid = false;
+    }
+
+    // ২. পাসওয়ার্ড চেক (কমপক্ষে ৬ ডিজিট ধরে নিলাম)
+    if (passInput.value.length < 6) {
+        passError.innerText = "পাসওয়ার্ড কমপক্ষে ৬ ডিজিটের হতে হবে";
+        passInput.classList.add('is-invalid');
+        isValid = false;
+    }
+
+    if (!isValid) return; // ভুল থাকলে সামনে এগোবে না
+
+    // সব ঠিক থাকলে এনিমেশন শুরু
+    loginBtn.innerText = "Checking...";
+    loginBtn.disabled = true;
+
+    setTimeout(() => {
+        document.getElementById('login-section').style.display = 'none';
+        const successMsg = document.getElementById('success-message');
+        successMsg.style.display = 'block';
+        successMsg.innerHTML = `
+            <h2 style="color: #28a745;">লগইন সফল! 🎉</h2>
+            <p>স্বাগতম! আপনার ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...</p>
+        `;
+
+        setTimeout(() => {
+            closeModal();
+            // এখানে চাইলে রিফ্রেশ বা অন্য পেজে যাওয়ার কোড দিতে পারেন
+        }, 2500);
+    }, 1500);
+}
+
+
+
+
+// রিয়েল-টাইম ভ্যালিডেশন ফাংশন
+function validateField(inputElement, errorElement, isValid, errorMessage) {
+    if (!inputElement) return;
+    if (inputElement.value.trim() === "") {
+        inputElement.classList.remove('is-valid', 'is-invalid');
+        errorElement.innerText = "";
+        return;
+    }
+    if (isValid) {
+        inputElement.classList.add('is-valid');
+        inputElement.classList.remove('is-invalid');
+        errorElement.innerText = "";
+    } else {
+        inputElement.classList.add('is-invalid');
+        inputElement.classList.remove('is-valid');
+        errorElement.innerText = errorMessage;
+    }
+}
+
+// ইনপুট লিসেনার সেটআপ (DOM লোড হওয়ার পর)
+document.addEventListener('DOMContentLoaded', () => {
+    const fullName = document.getElementById('fullName');
+    const mobile = document.getElementById('mobile');
+    const email = document.getElementById('email');
+    const address = document.getElementById('address');
+
+    if (fullName) {
+        fullName.addEventListener('input', () => {
+            const isValid = fullName.value.trim().split(/\s+/).length >= 2;
+            validateField(fullName, document.getElementById('name-error'), isValid, "নাম কমপক্ষে দুটি শব্দের হতে হবে");
+        });
+    }
+
+    if (mobile) {
+        mobile.addEventListener('input', () => {
+            const isValid = /^01[3-9]\d{8}$/.test(mobile.value);
+            validateField(mobile, document.getElementById('mobile-error'), isValid, "সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন");
+        });
+    }
+
+    if (email) {
+        email.addEventListener('input', () => {
+            const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value);
+            validateField(email, document.getElementById('email-error'), isValid, "সঠিক ইমেইল ফরম্যাট দিন");
+        });
+    }
+
+    if (address) {
+        address.addEventListener('input', () => {
+            const isValid = address.value.trim().split(/\s+/).length >= 3;
+            validateField(address, document.getElementById('address-error'), isValid, "ঠিকানা কমপক্ষে তিনটি শব্দের হতে হবে");
+        });
+    }
+});
+
+// রেজিস্ট্রেশন সাবমিট লজিক
+function submitRegister() {
+    const fn = document.getElementById('fullName');
+    const mb = document.getElementById('mobile');
+    const em = document.getElementById('email');
+    const ad = document.getElementById('address');
+    
+    let isFormValid = true;
+
+    if (fn.value.trim().split(/\s+/).length < 2) {
+        document.getElementById('name-error').innerText = "নাম কমপক্ষে দুটি শব্দের হতে হবে।";
+        isFormValid = false;
+    }
+    if (!/^01[3-9]\d{8}$/.test(mb.value)) {
+        document.getElementById('mobile-error').innerText = "সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন।";
+        isFormValid = false;
+    }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.value)) {
+        document.getElementById('email-error').innerText = "সঠিক ইমেইল ফরম্যাট দিন।";
+        isFormValid = false;
+    }
+    if (ad.value.trim().split(/\s+/).length < 3) {
+        document.getElementById('address-error').innerText = "ঠিকানা কমপক্ষে তিনটি শব্দের হতে হবে।";
+        isFormValid = false;
+    }
+
+    if (isFormValid) {
+        document.getElementById('register-section').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
+        setTimeout(() => { window.location.reload(); }, 4000);
     }
 }
 
