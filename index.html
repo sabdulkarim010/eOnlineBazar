@@ -37,8 +37,9 @@
                         <option>Grocery</option>
                         <option>Fashion</option>
                     </select>
-                    <input type="text" id="mainSearch" placeholder="Search eonlinebazar.com">
-                    <button id="searchBtn">GO</button>
+                  <input type="text" id="mainSearch" onkeyup="searchProducts()" placeholder="Search eonlinebazar.com">
+
+<button id="searchBtn" onclick="searchProducts()">GO</button>
                 </div>
             </div>
 
@@ -61,13 +62,9 @@
 
         <nav class="sub-nav">
             <div class="container sub-flex">
-                <div class="all-menu">☰  All</div>
-                <ul class="nav-links">
-                    <li>Super Market</li>
-                    <li>Fashion</li>
-                    <li>Best Sellers</li>
-                    <li>Fresh</li>
-                    <li class="hide-mobile">Electronics</li>
+                
+                <ul id="navCategories" class="nav-links">
+                     
                 </ul>
             </div>
         </nav>
@@ -85,6 +82,8 @@
         </div>
     </section>
 
+
+
     <main class="container content-area">
         <div class="section-header">
             <h3>Featured Categories</h3>
@@ -92,6 +91,7 @@
                  <div id="productGrid" class="category-grid">
              </div>
     </main>
+
 
 <!-- regModal এর ভেতরে শুধু এই অংশটুকু আপডেট করুন -->
 <div id="regModal" class="modal">
@@ -162,7 +162,7 @@
                 <ul>
                     <li>Facebook</li>
                     <li>Twitter</li>
-                    <li>Tiktok</li>
+                     <li>Tiktok</li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -182,5 +182,4 @@
     <script src="script.js"></script>
 </body>
 </html>
-
 
