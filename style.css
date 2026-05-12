@@ -23,12 +23,21 @@ body {
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 99%;
     margin: 0 auto;
     padding: 0 15px;
+    width: 100%;
 }
 
 /* --- ২. প্রফেশনাল হেডার (ডেস্কটপ মোড - ১ লাইনে) --- */
+    header{
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: #131921;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
 .amazon-header {
     background-color: var(--amazon-dark);
     color: var(--white);
@@ -293,7 +302,7 @@ input.is-valid {
 /* --- ৩. সাব ন্যাভিগেশন --- */
 /* প্রফেশনাল সাব-নেভিগেশন স্টাইল */
 .sub-nav {
-    background-color: #232f3e; /* প্রফেশনাল ডার্ক ব্লু-ব্ল্যাক */
+    background-color: #13202d; /* প্রফেশনাল ডার্ক ব্লু-ব্ল্যাক */
     padding: 4px 0;
 }
 
@@ -303,7 +312,7 @@ input.is-valid {
     gap: 5px;
     align-items: center;
     margin: 0;
-    padding: 5px 10px;
+    padding: 4px 8px;
     overflow-x: auto; /* মোবাইলে স্ক্রল করার সুবিধা */
     overflow-y: hidden;
     white-space: nowrap;
@@ -325,7 +334,7 @@ input.is-valid {
     color: #ffffff; /* লেখা হবে সাদা */
     font-size: 14px;
     font-weight: 500;
-    padding: 8px 10px;
+    padding: 5px 10px;
     border-radius: 4px;
     transition: all 0.3s ease;
     border: 1px solid transparent;
@@ -420,7 +429,7 @@ input.is-valid {
 /* গ্রিড কন্টেইনার ফিক্স */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 20px;
     margin-top: 0; /* পজিটিভ মার্জিন যাতে ব্যানারের নিচে থাকে */
     padding: 0;
@@ -428,7 +437,7 @@ input.is-valid {
 
 .p-card {
     background: var(--white);
-    padding: 15px;
+    padding: 8px;
     border-radius: 4px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -548,11 +557,6 @@ input.is-valid {
 
 
 
-
-
-
-
-
 /* --- ৭. রেসপনসিভনেস (Mobile View Fix) --- */
 @media (max-width: 768px) {
     /* হেডার: লোগো ডানে, কার্ট বামে, সার্চ নিচে */
@@ -614,6 +618,7 @@ input.is-valid {
 
 
     /* ১. হেডারের জন্য */
+
 .amazon-header {
         position: relative; /* হেডারকে নরমাল পজিশনে রাখুন */
     }
