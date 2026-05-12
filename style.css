@@ -585,7 +585,7 @@ input.is-valid {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 350px;
+        height: 200px;
         padding: 8px; 
         border: 1px solid #eee;
         transition: transfer 0.3s ease;
