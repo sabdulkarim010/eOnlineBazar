@@ -363,3 +363,4 @@ function searchProducts() {
     // ফিল্টার করা রেজাল্ট স্ক্রিনে দেখানো
     renderProducts(filteredProducts);
 }
+
