@@ -1,661 +1,365 @@
-/* --- ১. রুট ভেরিয়েবল এবং বেসিক রিসেট --- */
-:root {
-    --amazon-dark: #131921;     /* মেইন ডার্ক ব্লু */
-    --amazon-light: #232f3e;    /* সাব-বার ব্লু */
-    --amazon-gold: #febd69;     /* সার্চ বাটন কালার */
-    --amazon-orange: #f08804;   /* হাইলাইট কালার */
-    --bg-color: #eaeded;        /* ব্যাকগ্রাউন্ড গ্রে */
-    --white: #ffffff;
-    --text-color: #111111;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif; 
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    overflow-x: hidden;
-}
-
-.container {
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* --- ২. প্রফেশনাল হেডার (ডেস্কটপ মোড - ১ লাইনে) --- */
-.amazon-header {
-    background-color: var(--amazon-dark);
-    color: var(--white);
-    width: 100%;
-}
-
-.main-nav {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    flex-wrap: nowrap; /* ডেস্কটপে ভাঙবে না */
-    gap: 15px;
-}
-
-.nav-left {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.logo-box {
-    font-size: 50px;
-    font-weight: bold;
-    color: var(--amazon-gold);
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.location-box {
-    box-sizing: border-box;
-    justify-content: center;
-    height: 25px;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    font-size: 16px;
-    line-height: 1.3;
-    padding-left: 10px;
-    font-weight: ;
-}
-.location-box span:first-child{
-   
-}
-
-.location-box span:last-child{
-    cursor: pointer;
-    color: greenyellow; 
-}
-
-.location-box span { color: #ccc; }
-
-/* সার্চ বার (মাঝখানের অংশ) */
-.nav-fill { 
-    flex: 1;
-    max-width: 800px; 
-}
-
-.search-wrapper {
-    display: flex;
-    background: var(--white);
-    border-radius: 4px;
-    overflow: hidden;
-    height: 40px;
-}
-
-.search-category {
-    background: #f3f3f3;
-    border: none;
-    padding: 0 10px;
-    border-right: 1px solid #ccc;
-    outline: none;
-    cursor: pointer;
-}
-
-.search-wrapper input {
-    flex: 1;
-    border: none;
-    padding: 0 12px;
-    outline: none;
-    font-size: 14px;
-}
-
-.search-wrapper button {
-    background: var(--amazon-gold);
-    border: none;
-    padding: 0 15px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* ডান পাশের আইটেম */
-.nav-right {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user{
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    align-items: center;
-    gap: 5px
-}
-
-/* আইকন স্টাইল */
-.nav-item {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s;
-}
-.nav-item:hover {
-    color: hwb(310 6% 7%); /* হোভার করলে আমাজন কালার হবে */
-}
-
-/* পপআপ বা মডাল স্টাইল */
-/* --- পপআপ (Modal) এবং অথেন্টিকেশন কার্ড ডিজাইন আপডেট --- */
-
-/* ১. মডাল কন্টেইনার */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 2000; /* হেডারের উপরে থাকার জন্য */
-    left: 0; top: 0; 
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center; /* ফ্লেক্স ব্যবহার করে সেন্টারিং */
-    align-items: center;
-}
-
-/* ২. কার্ড ডিজাইন */
-.modal-content {
-    background: #ffffff;
-    width: 90%;
-    max-width: 400px;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    position: relative;
-    text-align: left; /* কন্টেন্ট বাম দিক থেকে শুরু */
-}
-
-.auth-card h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 24px;
-}
-
-/* ৩. ইনপুট গ্রুপ ও ফিল্ডস */
-.input-group {
-    margin-bottom: 15px;
-}
-
-.auth-card input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    display: block;
-}
-
-.auth-card input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.2);
-}
-
-/* ৪. বাটন ডিজাইন */
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 10px;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-/* ৫. এরর ও ভ্যালিডেশন স্টাইল */
-.error-msg {
-    color: #d9534f;
-    font-size: 12px;
-    margin-top: 4px;
-    min-height: 15px;
-}
-
-input.is-invalid {
-    border-color: #d9534f !important;
-    background-color: #fff6f6;
-}
-
-input.is-valid {
-    border-color: #28a745 !important;
-    background-color: #f6fff9;
-}
-
-/* ৬. লিঙ্ক ও মেসেজ */
-.toggle-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-}
-
-.toggle-link span {
-    color: #007bff;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.toggle-link span:hover {
-    text-decoration: underline;
-}
-
-#success-message h2 {
-    margin-bottom: 10px;
-}
-/* end modal */
-
-
-
-.nav-item strong { display: block; font-size: 14px; }
-
-.nav-cart {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.cart-icon-box {
-    position: relative;
-    font-size: 22px;
-}
-
-.cart-num {
-    position: absolute;
-    top: -8px;
-    right: -5px;
-    background: var(--amazon-dark);
-    color: var(--amazon-orange);
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* --- ৩. সাব ন্যাভিগেশন --- */
-/* প্রফেশনাল সাব-নেভিগেশন স্টাইল */
-.sub-nav {
-    background-color: #232f3e; /* প্রফেশনাল ডার্ক ব্লু-ব্ল্যাক */
-    padding: 4px 0;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    margin: 0;
-    padding: 5px 10px;
-    overflow-x: auto; /* মোবাইলে স্ক্রল করার সুবিধা */
-    overflow-y: hidden;
-    white-space: nowrap;
-}
-
-/* প্রফেশনাল ট্রিক: স্ক্রলবারটি লুকিয়ে ফেলা (কিন্তু কাজ করবে) */
-.nav-links::-webkit-scrollbar {
-    display: none; /* Chrome, Safari এবং Opera-তে স্ক্রলবার দেখাবে না */
-}
-
-.nav-links {
-    -ms-overflow-style: none;  /* IE এবং Edge-এর জন্য */
-    scrollbar-width: none;  /* Firefox-এর জন্য */
-}
-
-/* মেনু বাটনগুলোর ডিজাইন */
-.nav-links li a {
-    text-decoration: none;
-    color: #ffffff; /* লেখা হবে সাদা */
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 10px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-    display: inline-block;
-    transition: all 0.3s ease;
-}
-
-/* হোভার করলে বা মাউস নিলে যা হবে */
-.nav-links li a:hover {
-    border: 1px solid #ffffff; /* চারদিকে সাদা বর্ডার আসবে */
-    color: #febd69; /* হালকা কমলা আভা (অ্যামাজন স্টাইল) */
-    font-weight: 550px;
-    font-size: 16px;
-}
-
-/* এক্টিভ ক্যাটাগরি বাটন (ঐচ্ছিক) */
-.nav-links li a:active {
-    background-color: #37475a;
-}
-
-
-.sub-flex {
-    display: flex;
-    align-items: center;
-    color: white;
-}
-
-.container.sub-flex{
-    display: flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    gap: 0px;
-}
-
-
-
-
-.nav-links li:hover { text-decoration: underline; cursor: pointer; }
-
-/* --- ৪. হিরো সেকশন (সেন্টার এলাইনড) --- */
-.hero-section {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80');
-    background-size: cover;
-    background-position: center;
-    min-height: 200px;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    overflow: hidden;
-}
-
-.main-title { font-size: 32px; margin-bottom: 10px; }
-.sub-text { font-size: 16px; margin-bottom: 20px; max-width: 600px; }
-.btn-shop-now {
-    background: var(--amazon-gold);
-    border: none;
-    padding: 10px 30px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* --- ৫. প্রোডাক্ট গ্রিড (ফটো ও আইকন সেম ফ্রেম) --- */
-.content-area {
-    margin-top: 1px;       /* নেগেটিভ মার্জিন (-) একদম বাদ দিয়েছি */
-    padding-bottom: 5px;
-    background-color: var(--bg-color);
-}
-
-.section-header {
-    margin-bottom: 0;
-    padding: 10px 0;  /* banner and product space */
-    border-bottom: 2px solid #ddd; /* একটি বর্ডার দিলে সেকশনটি আলাদা দেখাবে */
-}
-
-.section-header h3 {
-    font-size: 22px;
-    color: #333;
-    font-weight: bold;
-}
-
-.grid-container {
-    display: grid;
-    /* ডেস্কটপে স্ক্রিন অনুযায়ী অটো কলাম */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-/* গ্রিড কন্টেইনার ফিক্স */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 0; /* পজিটিভ মার্জিন যাতে ব্যানারের নিচে থাকে */
-    padding: 0;
-}
-
-.p-card {
-    background: var(--white);
-    padding: 15px;
-    border-radius: 4px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.p-img-box {
-    width: 100%;
-    height: 180px; /* নির্দিষ্ট ফ্রেম সাইজ */
-    background: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-.p-img-box img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* ছবি ফ্রেমের ভেতরে সুন্দরভাবে থাকবে */
-}
-
-.p-img-box span {
-    font-size: 60px; /* ইমোজি আইকন সাইজ */
-}
-
-.p-info .name {
-    font-size: 14px;
-    font-weight: bold;
-    height: 40px;
-    overflow: hidden;
-    margin-bottom: 5px;
-}
-
-.p-info .price {
-    color: #B12704;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.add-btn-main {
-    background: #ffd814;
-    border: 1px solid #fcd200;
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-/* --- ৬. ফুটার স্টাইল --- */
-.main-footer {
-    background-color: var(--amazon-light);
-    color: white;
-    margin-top: 50px;
-}
-
-.back-to-top {
-    background: #37475a;
-    text-align: center;
-    padding: 15px;
-    cursor: pointer;
-    font-size: 13px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    padding: 40px 15px;
-    gap: 30px;
-}
-
-.footer-column h4 { margin-bottom: 15px; font-size: 16px; }
-.footer-column ul { list-style: none; }
-.footer-column ul li { color: #ccc; font-size: 14px; margin-bottom: 8px; cursor: pointer; }
-
-.footer-bottom {
-    background: var(--amazon-dark);
-    padding: 20px;
-    text-align: center;
-    border-top: 1px solid #3a4553;
-}
-
-
-/* ক্যাটাগরি বাটনগুলোর স্টাইল */
-.category-tabs {
-    display: flex;
-    justify-content: center; /* মাঝখানে রাখার জন্য */
-    flex-wrap: wrap; /* অনেকগুলো হলে নিচে নিচে আসবে */
-    gap: 12px;
-    padding: 20px;
-}
-
-/* প্রফেশনাল বাটন স্টাইল */
-.cat-btn {
-    padding: 6px 15px;
-    background: transparent; /* ব্যাকগ্রাউন্ড কালার সরিয়ে ফেলা */
-    border: 1px solid #ddd;
-    color: #333;
-    font-size: 14px;
-    border-radius: 4px; /* রাউন্ডের বদলে হালকা চারকোনা */
-    transition: 0.2s;
-}
-
-.cat-btn:hover {
-    background: #28a745;
-    color: #fff;
-    border-color: #28a745;
-}
-
-
-
-
-
-
-
-
-
-
-
-/* --- ৭. রেসপনসিভনেস (Mobile View Fix) --- */
-@media (max-width: 768px) {
-    /* হেডার: লোগো ডানে, কার্ট বামে, সার্চ নিচে */
-    .main-nav {
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-
-    .nav-left { order: 1; }
-    .nav-right { order: 2; }
-    .nav-fill { 
-        order: 3; 
-        width: 100%; 
-        margin-top: 8px;
-    }
-
-    /* মোবাইলে ৩ কলাম গ্রিড নিশ্চিত করা */
-    .grid-container {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 5px;
-    }
-
-.category-grid {
-        grid-template-columns: repeat(3, 1fr); /* মোবাইলে ৩টি কলাম */
-        gap: 8px;
-    }
-
-    .p-card { 
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 350px;
-        padding: 8px; 
-        border: 1px solid #eee;
-        transition: transfer 0.3s ease;
-
-    }
-    .p-img-box { 
-        width: 100%;
-        height: 100px; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f9f9f9;
-    }
-    .p-img-box img{
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    .p-img-box span { font-size: 40px; }
-    
-    .p-info .name { font-size: 11px; height: 30px; }
-    .p-info .price { font-size: 14px; }
-    .add-btn-main { font-size: 10px; padding: 5px; }
-
-    .hide-mobile { display: none !important; }
-
-
-    /* ১. হেডারের জন্য */
-.amazon-header {
-        position: relative; /* হেডারকে নরমাল পজিশনে রাখুন */
-    }
-
-    /* ২. হিরো সেকশন (ব্যানার) এর জন্য */
-.hero-section {
-        margin-top: .5px; /* হেডারের সাথে ব্যানারের দূরত্ব তৈরি করবে */
-        padding-top: 10px;
-        min-height: 300px; /* ব্যানারের হাইট অটোমেটিক না রেখে একটা মিনিমাম হাইট দিন */
-        display: flex;
-        align-items: center;
-        box-sizing: content-box;
+/**
+ * Project: eOnlineBazar
+ * Author: Abdul Karim Sheikh
+ * Mobile: 01521377735
+ * Description: Product Rendering, Search, and Cart Logic
+ */
+
+// --- ১. প্রোডাক্ট ডাটাবেস (Database) ---
+
+/**
+ * Project: eOnlineBazar
+ */
+
+// ১. একদম শুরুতে আগের বিশাল products লিস্ট ডিলিট করে এই লাইনটি লিখুন
+let products = []; // শুরুতে এটি ঘোষণা করে নিন যাতে সব ফাংশন একে ব্যবহার করতে পারে
+let currentCartCount=0
+
+// ২. JSON থেকে ডাটা আনার ফাংশন
+
+async function fetchProducts() {
+    try {
+        const response = await fetch('products.json');
+        const products = await response.json(); 
         
-    }
-
-.hero-section h1{ font-size: 20px;}
-.hero-section p{font-size: 15px;}
-
-    /* ৩. কন্টেন্ট যেন ভেঙে না যায় */
-    .hero-content {
-        padding: 0 15px; /* দুই পাশে একটু জায়গা ছাড়বে */
-        text-align: center; /* মোবাইলে লেখাগুলো সেন্টারে ভালো দেখাবে */
-    }
-
-    .logo-box {
-        font-size: 30px;
+        allProducts = products; // ফিল্টার করার জন্য সব ডাটা সেভ রাখা
+        
+        renderProducts(products); // পণ্যগুলো দেখাবে
+        displayCategoryButtons(products); // এই ফাংশনটিই বাটনগুলো তৈরি করবে
+        
+    } catch (error) {
+        console.error("ডাটা লোড হতে সমস্যা হয়েছে:", error);
     }
 }
 
 
-@media screen and (max-width: 480px) {
-    .container.sub-flex {
-    }
-      .nav-links {
-        gap: 10px;
-    }
-    
-    .nav-links li {
-        font-size: 14px;
-    }
-    .logo-box {
-        font-size: 25px;
+
+// ৫. DOMContentLoaded এর ভেতরে শুধু সার্চ বা অন্যান্য লজিক রাখুন
+document.addEventListener('DOMContentLoaded', () => {
+    fetchProducts();
+
+    setupSearchFunctionality();
+    setupFormValidation();
+});
+
+// ৬. আপনার আগের রেন্ডার ফাংশনটি যেমন আছে তেমনই থাকবে
+function renderProducts(items) {
+    const gridContainer = document.getElementById('productGrid');
+    if (!gridContainer) return;
+
+    if (items.length === 0) {
+        gridContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 50px;"><h3>দুঃখিত, কোনো পণ্য খুঁজে পাওয়া যায়নি!</h3></div>`;
+        return;
     }
 
+    gridContainer.innerHTML = items.map(product => {
+        let displayMedia = "";
+        
+        // ১. ফটো লজিক
+        if (product.images) {
+            // সমাধান: এখানে শুধু সিঙ্গেল কোট ব্যবহার করা হয়েছে, কোনো ব্যাকস্ল্যাশ নেই।
+            displayMedia = `<img src="images/${product.images}" alt="" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=p-icon>${product.icon || '❌'}</span>';">`;
+        } 
+        // ২. সরাসরি Emoji লজিক
+        else if (product.icon) {
+            displayMedia = `<span class="p-icon">${product.icon}</span>`;
+        } 
+        // ৩. কিছুই না থাকলে লাল ক্রস
+        else {
+            displayMedia = `<span class="p-icon" style="color: red;">❌</span>`;
+        }
+
+        // ৪. রিটার্ন এবং ব্যাকটিক এক লাইনে
+        return `<div class="p-card">
+                <div class="p-img-box">
+                    ${displayMedia}
+                </div>
+                <div class="p-info">
+                    <div class="name" title="${product.name}">${product.name}</div>
+                    <div class="price">৳ ${product.price}</div>
+                </div>
+                <button class="add-btn-main" onclick="handleAddToCart()">Add to Cart</button>
+            </div>`;
+    }).join('');
+}
+
+
+
+// --- ৩. সার্চ ফাংশনালিটি ---
+function setupSearchFunctionality() {
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.getElementById('mainSearch');
+
+    if (!searchBtn || !searchInput) return;
+
+    // সার্চ করার মেইন ফাংশন
+    const runSearch = () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const filteredProducts = products.filter(p => 
+            p.name.toLowerCase().includes(searchTerm)
+        );
+        renderProducts(filteredProducts);
+    };
+
+    // বাটনে ক্লিক করলে সার্চ হবে
+    searchBtn.addEventListener('click', runSearch);
+
+    // কি-বোর্ডের 'Enter' প্রেস করলে সার্চ হবে
+    searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            runSearch();
+        }
+    });
+}
+
+// --- ৪. অ্যাড টু কার্ট ফাংশন ---
+function handleAddToCart() {
+    currentCartCount++;
+    const cartBadge = document.getElementById('uniqueCartCount');
+    
+    if (cartBadge) {
+        cartBadge.innerText = currentCartCount;
+        
+        // বাটন ক্লিক করলে একটি ছোট কনফার্মেশন (ঐচ্ছিক)
+        console.log("Product added to cart. Current count: " + currentCartCount);
+    }
+}
+
+// পপআপ খোলার জন্য
+// --- ৫. অথেন্টিকেশন এবং পপআপ লজিক (আপডেটেড) ---
+
+// পপআপ কন্ট্রোল
+const modal = document.getElementById('regModal');
+const accountIcon = document.querySelector('.nav-item');
+
+if (accountIcon) {
+    accountIcon.onclick = function() {
+        modal.style.display = "flex";
+        showLogin(); // খোলার সময় ডিফল্ট লগইন দেখাবে
+    }
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) closeModal();
+}
+
+// লগইন এবং রেজিস্ট্রেশন সুইচিং
+function showRegister() {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('register-section').style.display = 'block';
+    document.getElementById('success-message').style.display = 'none';
+}
+
+
+function showLogin() {
+    // সেকশনগুলো টগল করা
+    document.getElementById('login-section').style.display = 'block';
+    document.getElementById('register-section').style.display = 'none';
+    document.getElementById('success-message').style.display = 'none';
+    
+    // কনসোলে চেক করার জন্য (ঐচ্ছিক)
+    console.log("Switching to Login Section");
+}
+
+
+function handleLogin() {
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPass');
+    const emailError = document.getElementById('login-email-error');
+    const passError = document.getElementById('login-pass-error');
+    const loginBtn = document.querySelector('#login-section .btn-primary');
+
+    // এরর পরিষ্কার করা
+    emailError.innerText = "";
+    passError.innerText = "";
+    emailInput.classList.remove('is-invalid');
+    passInput.classList.remove('is-invalid');
+
+    let isValid = true;
+
+    // ১. ইমেইল ফরম্যাট চেক
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(emailInput.value)) {
+        emailError.innerText = "সঠিক ইমেইল ফরম্যাট দিন (যেমন: example@mail.com)";
+        emailInput.classList.add('is-invalid');
+        isValid = false;
+    }
+
+    // ২. পাসওয়ার্ড চেক (কমপক্ষে ৬ ডিজিট ধরে নিলাম)
+    if (passInput.value.length < 6) {
+        passError.innerText = "পাসওয়ার্ড কমপক্ষে ৬ ডিজিটের হতে হবে";
+        passInput.classList.add('is-invalid');
+        isValid = false;
+    }
+
+    if (!isValid) return; // ভুল থাকলে সামনে এগোবে না
+
+    // সব ঠিক থাকলে এনিমেশন শুরু
+    loginBtn.innerText = "Checking...";
+    loginBtn.disabled = true;
+
+    setTimeout(() => {
+        document.getElementById('login-section').style.display = 'none';
+        const successMsg = document.getElementById('success-message');
+        successMsg.style.display = 'block';
+        successMsg.innerHTML = `
+            <h2 style="color: #28a745;">লগইন সফল! 🎉</h2>
+            <p>স্বাগতম! আপনার ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...</p>
+        `;
+
+        setTimeout(() => {
+            closeModal();
+            // এখানে চাইলে রিফ্রেশ বা অন্য পেজে যাওয়ার কোড দিতে পারেন
+        }, 2500);
+    }, 1500);
+}
+
+
+
+
+// রিয়েল-টাইম ভ্যালিডেশন ফাংশন
+function validateField(inputElement, errorElement, isValid, errorMessage) {
+    if (!inputElement) return;
+    if (inputElement.value.trim() === "") {
+        inputElement.classList.remove('is-valid', 'is-invalid');
+        errorElement.innerText = "";
+        return;
+    }
+    if (isValid) {
+        inputElement.classList.add('is-valid');
+        inputElement.classList.remove('is-invalid');
+        errorElement.innerText = "";
+    } else {
+        inputElement.classList.add('is-invalid');
+        inputElement.classList.remove('is-valid');
+        errorElement.innerText = errorMessage;
+    }
+}
+
+// ইনপুট লিসেনার সেটআপ (DOM লোড হওয়ার পর)
+document.addEventListener('DOMContentLoaded', () => {
+    const fullName = document.getElementById('fullName');
+    const mobile = document.getElementById('mobile');
+    const email = document.getElementById('email');
+    const address = document.getElementById('address');
+
+    if (fullName) {
+        fullName.addEventListener('input', () => {
+            const isValid = fullName.value.trim().split(/\s+/).length >= 2;
+            validateField(fullName, document.getElementById('name-error'), isValid, "নাম কমপক্ষে দুটি শব্দের হতে হবে");
+        });
+    }
+
+    if (mobile) {
+        mobile.addEventListener('input', () => {
+            const isValid = /^01[3-9]\d{8}$/.test(mobile.value);
+            validateField(mobile, document.getElementById('mobile-error'), isValid, "সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন");
+        });
+    }
+
+    if (email) {
+        email.addEventListener('input', () => {
+            const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value);
+            validateField(email, document.getElementById('email-error'), isValid, "সঠিক ইমেইল ফরম্যাট দিন");
+        });
+    }
+
+    if (address) {
+        address.addEventListener('input', () => {
+            const isValid = address.value.trim().split(/\s+/).length >= 3;
+            validateField(address, document.getElementById('address-error'), isValid, "ঠিকানা কমপক্ষে তিনটি শব্দের হতে হবে");
+        });
+    }
+});
+
+// রেজিস্ট্রেশন সাবমিট লজিক
+function submitRegister() {
+    const fn = document.getElementById('fullName');
+    const mb = document.getElementById('mobile');
+    const em = document.getElementById('email');
+    const ad = document.getElementById('address');
+    
+    let isFormValid = true;
+
+    if (fn.value.trim().split(/\s+/).length < 2) {
+        document.getElementById('name-error').innerText = "নাম কমপক্ষে দুটি শব্দের হতে হবে।";
+        isFormValid = false;
+    }
+    if (!/^01[3-9]\d{8}$/.test(mb.value)) {
+        document.getElementById('mobile-error').innerText = "সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন।";
+        isFormValid = false;
+    }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(em.value)) {
+        document.getElementById('email-error').innerText = "সঠিক ইমেইল ফরম্যাট দিন।";
+        isFormValid = false;
+    }
+    if (ad.value.trim().split(/\s+/).length < 3) {
+        document.getElementById('address-error').innerText = "ঠিকানা কমপক্ষে তিনটি শব্দের হতে হবে।";
+        isFormValid = false;
+    }
+
+    if (isFormValid) {
+        document.getElementById('register-section').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
+        setTimeout(() => { window.location.reload(); }, 4000);
+    }
+}
+
+
+// ১. বাটনগুলো তৈরি করার ফাংশন
+function displayCategoryButtons(products) {
+    const navContainer = document.getElementById('navCategories');
+    if (!navContainer) return;
+
+    // ১. আপনার JSON থেকে সব ইউনিক ক্যাটাগরি বের করা
+    const uniqueCategories = [...new Set(products.map(p => p.category))];
+    
+    // ২. 'All' বাটনসহ সব ক্যাটাগরিকে একটি লিস্টে সাজানো
+    // এখানে 'All' ক্লিক করলে সব পণ্য (allProducts) দেখাবে
+    let menuHtml = `<li><a href="#" onclick="filterByCategory('All')">All</a></li>`;
+
+    // ৩. বাকি ক্যাটাগরিগুলো লুপ চালিয়ে যোগ করা
+    menuHtml += uniqueCategories.map(cat => `
+        <li><a href="#" onclick="filterByCategory('${cat}')">${cat}</a></li>
+    `).join('');
+
+    // ৪. পুরো মেনুটা নেভিগেশন বারে বসিয়ে দেওয়া
+    navContainer.innerHTML = menuHtml;
+}
+
+// ২. কোনো বাটনে ক্লিক করলে সেই ক্যাটাগরির পণ্য দেখানোর ফাংশন
+function filterByCategory(category) {
+    if (category === 'All') {
+        renderProducts(allProducts); // 'All' হলে সব দেখাবে
+    } else {
+        const filtered = allProducts.filter(p => p.category === category);
+        renderProducts(filtered); // নির্দিষ্ট ক্যাটাগরি দেখাবে
+    }
+}
+
+// ১. এন্টার বাটন চাপলে সার্চ করার জন্য এই ফাংশন
+// এন্টার বাটন হ্যান্ডেল করার জন্য
+function handleSearch(event) {
+    if (event.key === "Enter") {
+        searchProducts(); // এন্টার চাপলে সার্চ ফাংশন কল হবে
+    }
+}
+
+// মূল সার্চ ফাংশন
+function searchProducts() {
+    // HTML এর id 'mainSearch' থেকে লেখাটি সংগ্রহ করা
+    const searchTerm = document.getElementById('mainSearch').value.toLowerCase();
+    
+    // সব পণ্যের ভেতর থেকে নাম বা ক্যাটাগরি মিলিয়ে দেখা
+    const filteredProducts = allProducts.filter(product => {
+        return product.name.toLowerCase().includes(searchTerm) || 
+               product.category.toLowerCase().includes(searchTerm);
+    });
+
+    // ফিল্টার করা রেজাল্ট স্ক্রিনে দেখানো
+    renderProducts(filteredProducts);
 }
