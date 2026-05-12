@@ -618,6 +618,13 @@ input.is-valid {
 
 
     /* ১. হেডারের জন্য */
+    header{
+        position: sticky !important;
+        top: 0;
+        z-index: 2000;
+        width: 100%;
+    }
+
 
 .amazon-header {
         position: relative; /* হেডারকে নরমাল পজিশনে রাখুন */
