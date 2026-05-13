@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - eOnlineBazar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="checkout-bg">
+
+    <div class="checkout-main-container">
+        <a href="javascript:void(0)" onclick="history.back()" class="back-link-nav">← Back</a>
+        
+        <h1 class="page-title">অর্ডার সম্পন্ন করুন</h1>
+
+        <div class="checkout-flex-grid">
+            
+            <div class="checkout-left-side">
+                <div class="pro-card">
+
+    <h3>Shipping Address</h3>
+    <div class="input-container">
+        <input type="text" id="custName" class="checkout-input" placeholder="Full Name" oninput="validateLive('custName', 'name')">
+        <span id="custNameError" class="error-hint"></span>
+    </div>
+    <div class="input-container">
+        <input type="number" id="custPhone" class="checkout-input" placeholder="Mobile Number (11 digits)" oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11); validateLive('custPhone', 'phone')">
+        <span id="custPhoneError" class="error-hint"></span>
+    </div>
+    <div class="input-container">
+        <textarea id="custAddress" class="checkout-input" rows="3" placeholder="Full Address (Village, Post, District)" oninput="validateLive('custAddress', 'address')"></textarea>
+        <span id="custAddressError" class="error-hint"></span>
+    </div>
+    <div class="input-container">
+        <input type="text" id="orderNote" class="checkout-input" placeholder="Note for Courier (Optional)">
+    </div>
+</div>
+                
+
+                <div class="pro-card">
+                    <h3><span class="step-num">২</span> শর্তাবলী</h3>
+                    <ul class="pro-policy-list">
+                        <li>পণ্য বুঝে পাওয়ার ৭ দিনের মধ্যে রিটার্ন করা যাবে।</li>
+                        <li>অরিজিনাল প্যাকেজিং ও ট্যাগ থাকতে হবে।</li>
+                        <li>অরিজিনাল প্যাকেজিং ও ট্যাগ থাকতে হবে।</li>
+                        <li>অরিজিনাল প্যাকেজিং ও ট্যাগ থাকতে হবে।</li>
+                        <li>অরিজিনাল প্যাকেজিং ও ট্যাগ থাকতে হবে।</li>
+                        <li>অরিজিনাল প্যাকেজিং ও ট্যাগ থাকতে হবে।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="checkout-right-side">
+                <div class="pro-card sticky-sidebar">
+                    <h3>আপনার পণ্যসমূহ</h3>
+                    <div id="checkoutCartItems">
+                        </div>
+                    
+                    <div class="total-summary-box">
+                        <div class="total-line">
+                            <span>মোট বিল:</span>
+                            <span id="checkoutTotal" class="price-amount">৳ 0</span>
+                        </div>
+                    </div>
+
+                    <button class="pro-order-btn" onclick="confirmOrder()">অর্ডার কনফার্ম করুন</button>
+                    <p class="safe-checkout-text">🔒 ১০০% নিরাপদ চেকআউট</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="success-overlay" style="display:none;">
+        <div class="success-box">
+            <div class="check-icon">✓</div>
+            <h2>অভিনন্দন!</h2>
+            <p>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</p>
+            <button onclick="window.location.href='index.html'" class="pro-order-btn">হোম পেজে ফিরুন</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            if(typeof renderCheckout === "function") renderCheckout();
+        };
+    </script>
+</body>
+</html>
