@@ -552,7 +552,373 @@ input.is-valid {
     border-color: #28a745;
 }
 
+/* Checkout option working css */
+/* প্রডাক্ট উড়ে যাওয়ার অ্যানিমেশন */
+.fly-item {
+    position: fixed;
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.42, 0, 0.58, 1);
+}
 
+/* সাকসেস টোস্ট মেসেজ */
+.toast-msg {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #232f3e;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 10000;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+
+/* সাইড কার্ট ড্রয়ারের মেইন ডিজাইন */
+/* ১. ড্রয়ারের মূল বডি */
+.side-cart {
+    position: fixed;
+    top: 0;
+    right: -400px; /* শুরুতে স্ক্রিনের বাইরে থাকবে */
+    width: 350px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+    z-index: 3000;
+    transition: 0.4s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ২. ড্রয়ার যখন একটিভ হবে তখন সামনে আসবে */
+.side-cart.active {
+    right: 0;
+}
+
+/* ৩. ড্রয়ারের ওপরের অংশ (হেডার) */
+.side-cart-header {
+    padding: 20px;
+    background: #232f3e;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 28px;
+}
+
+/* ৪. মাঝখানের পণ্যের লিস্ট এরিয়া */
+.side-cart-body {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto; /* পণ্য বেশি হলে স্ক্রল হবে */
+}
+
+/* ৫. নিচের টোটাল ও বাটন এরিয়া */
+.side-cart-footer {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.checkout-btn {
+    background: #ff9900;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+/* ৬. পেছনের ডার্ক ওভারলে */
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 2999;
+}
+
+.cart-overlay.active {
+    display: block;
+}
+
+/* চেকআউট কার্ডের জন্য প্রফেশনাল লুক */
+/* --- প্রফেশনাল চেকআউট ডিজাইন --- */
+/* --- প্রফেশনাল চেকআউট লেআউট --- */
+/* --- প্রফেশনাল চেকআউট ডিজাইন --- */
+.checkout-bg { background-color: #f6f9fc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+.checkout-main-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.back-link-nav { text-decoration: none; color: #007185; font-weight: bold; margin-bottom: 20px; display: inline-block; }
+.page-title { margin-bottom: 30px; color: #232f3e; border-left: 5px solid #ff9900; padding-left: 15px; }
+
+.checkout-flex-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 25px; }
+
+.pro-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #eef0f2;
+    margin-bottom: 20px;
+}
+
+.step-num {
+    background: #ff9900;
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.pro-input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #dce1e7;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.pro-input:focus { border-color: #ff9900; outline: none; box-shadow: 0 0 8px rgba(255,153,0,0.1); }
+
+.sticky-sidebar { position: sticky; top: 20px; }
+
+.total-summary-box { margin-top: 20px; padding-top: 15px; border-top: 2px dashed #eee; }
+.total-line { display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; color: #B12704; }
+
+.pro-order-btn {
+    width: 100%;
+    background: linear-gradient(180deg, #ffb700, #ff9900);
+    border: 1px solid #a88734;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.pro-order-btn:hover { background: #f7dfa1; border-color: #a88734; }
+
+.safe-checkout-text { text-align: center; font-size: 12px; color: #777; margin-top: 15px; }
+
+/* সাকসেস পপআপ */
+.success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+.success-box { background: #fff; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.check-icon { font-size: 50px; color: #28a745; margin-bottom: 20px; }
+
+@media (max-width: 850px) {
+    .checkout-flex-grid { grid-template-columns: 1fr; }
+    .sticky-sidebar { position: static; }
+}
+
+/* প্রফেশনাল চেকআউট কার্ড এবং আইটেম স্টাইল */
+.checkout-item-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #eee;
+    gap: 15px;
+}
+
+.item-checkbox { transform: scale(1.3); cursor: pointer; }
+
+.item-img-box {
+    width: 70px; height: 70px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+
+.item-details { flex: 1; }
+.item-details h4 { margin: 0; font-size: 16px; color: #333; }
+.item-details p { margin: 5px 0; color: #777; font-size: 13px; }
+
+/* আধুনিক পরিমাণ নিয়ন্ত্রক বাটন */
+.qty-control { display: flex; align-items: center; gap: 10px; }
+.qty-btn-pro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f1f1;
+    border: 1.5px solid #bbb;
+    width: 25px; height: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+    line-height: 1;
+    padding: 0;
+}
+.qty-btn-pro:hover { background: #ff9900; color: #fff; border-color: red; }
+
+.delete-btn-pro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    cursor: pointer;
+    width: 25px; height: 25px;
+    font-size: 18px;
+    padding: 0;
+    border: none;
+}
+
+.price-calculation { text-align: right; min-width: 100px; }
+.total-item-price { font-weight: bold; color: #B12704; font-size: 16px; }
+
+
+.item-media-box {
+    width: 70px;
+    height: 70px;
+    background: #f4f6f8;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.emoji-style {
+    font-size: 35px; /* ইমোজি বড় করার জন্য */
+}
+
+.pro-img-style {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+/* --- Live Validation Styles --- */
+.pro-input.input-valid {
+    background-color: #f0fff0 !important; /* Light Green */
+    border-color: #28a745 !important;
+}
+
+.pro-input.input-invalid {
+    background-color: #fff0f0 !important; /* Light Red */
+    border-color: #dc3545 !important;
+}
+
+/* --- Pricing Breakdown Styles --- */
+.total-summary-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #555;
+}
+
+.subtotal-bold {
+    font-size: 19px;
+    font-weight: bold;
+    color: #232f3e;
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* --- Professional Alert Shadow --- */
+.input-error-border {
+    border: 2px solid #dc3545 !important;
+    animation: shake 0.2s;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    50% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+/* এরর মেসেজের স্টাইল */
+/* ইনপুট ফিল্ডের সাধারণ ডিজাইন */
+.pro-input-field {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* সঠিক হলে সবুজ বর্ডার ও ব্যাকগ্রাউন্ড */
+/* সাধারণ ইনপুট স্টাইল */
+.checkout-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* সঠিক হলে: হালকা সবুজ ব্যাকগ্রাউন্ড ও বর্ডার */
+.field-success {
+    border-color: #28a745 !important;
+    background-color: #f0fff4 !important;
+}
+
+/* ভুল হলে: হালকা লাল ব্যাকগ্রাউন্ড ও বর্ডার */
+.field-error {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+}
+
+/* এরর মেসেজ স্টাইল (নিচে লাল লেখা) */
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+    min-height: 16px; /* জায়গা ধরে রাখার জন্য */
+}
 
 
 
@@ -670,4 +1036,20 @@ input.is-valid {
         font-size: 25px;
     }
 
+}
+
+/* মোবাইল ভার্সনের জন্য রেসপন্সিভ ডিজাইন */
+@media screen and (max-width: 480px) {
+    .side-cart {
+        width: 100%;    /* মোবাইলে পুরো স্ক্রিন জুড়ে থাকবে */
+        right: -100%;   /* শুরুতে স্ক্রিনের ডান পাশে পুরোপুরি লুকিয়ে থাকবে */
+    }
+    
+    .side-cart.active {
+        right: 0;
+    }
+    
+    .side-cart-header h3 {
+        font-size: 18px; /* মোবাইলে ফন্ট একটু ছোট হবে */
+    }
 }
