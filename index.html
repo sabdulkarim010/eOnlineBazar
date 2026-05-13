@@ -49,12 +49,13 @@
                         <strong class="hide-mobile">Account</strong>
                     </div>
                 </div>
-                <div class="nav-cart" id="cartTrigger">
-                    <div class="cart-icon-box">
-                        <span id="uniqueCartCount" class="cart-num">0</span>
-                        🛒
-                    </div>
-                    <strong class="hide-mobile">Cart</strong>
+                <div class="nav-cart" id="cartTrigger" onclick="toggleCart()" style="cursor: pointer;">
+    <div class="cart-icon-box">
+        <span id="uniqueCartCount" class="cart-num">0</span>
+        🛒
+    </div>
+    <strong class="hide-mobile">Cart</strong>
+</div>
                 </div>
             </div>
         </div>
@@ -179,7 +180,22 @@
     </footer>
 
 <!-- cart section -->
+<div id="sideCart" class="side-cart">
+    <div class="side-cart-header">
+        <h3>আপনার ব্যাগ</h3>
+        <span class="close-btn" onclick="toggleCart()">&times;</span>
+    </div>
+    
+    <div id="cartItemsList" class="side-cart-body">
+        </div>
+    
+    <div class="side-cart-footer">
+        <h4>মোট: <span id="drawerTotal">৳ 0</span></h4>
+        <button class="checkout-btn" onclick="window.location.href='checkout.html'">চেকআউট করুন</button>
+    </div>
+</div>
 
+<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
 
 
 
