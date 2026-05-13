@@ -17,15 +17,19 @@ let currentCartCount=0
 
 // ২. JSON থেকে ডাটা আনার ফাংশন
 
+// ১. ফাইলের একদম শুরুতে এই ভেরিয়েবলটি নিশ্চিত করুন
+
+// ২. আপডেট করা fetchProducts ফাংশন
 async function fetchProducts() {
     try {
         const response = await fetch('products.json');
-        const products = await response.json(); 
         
-        allProducts = products; // ফিল্টার করার জন্য সব ডাটা সেভ রাখা
+        // সরাসরি মেইন ভেরিয়েবল 'allProducts' এ ডাটা রাখুন
+        allProducts = await response.json(); 
         
-        renderProducts(products); // পণ্যগুলো দেখাবে
-        displayCategoryButtons(products); // এই ফাংশনটিই বাটনগুলো তৈরি করবে
+        // এখন সব জায়গায় এই allProducts ব্যবহার করুন
+        renderProducts(allProducts); 
+        displayCategoryButtons(allProducts); 
         
     } catch (error) {
         console.error("ডাটা লোড হতে সমস্যা হয়েছে:", error);
@@ -78,7 +82,7 @@ function renderProducts(items) {
                     <div class="name" title="${product.name}">${product.name}</div>
                     <div class="price">৳ ${product.price}</div>
                 </div>
-                <button class="add-btn-main" onclick="handleAddToCart()">Add to Cart</button>
+                <button class="add-btn-main" onclick="handleAddToCart(${product.id}, event)">Add to Cart</button>
             </div>`;
     }).join('');
 }
@@ -113,17 +117,106 @@ function setupSearchFunctionality() {
 }
 
 // --- ৪. অ্যাড টু কার্ট ফাংশন ---
-function handleAddToCart() {
-    currentCartCount++;
-    const cartBadge = document.getElementById('uniqueCartCount');
+// --- ৪. অ্যাড টু কার্ট ফাংশন (পুরোপুরি ঠিক করা কোড) ---
+
+function handleAddToCart(productId, event) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
     
-    if (cartBadge) {
-        cartBadge.innerText = currentCartCount;
+    // সমস্যা সমাধান: এখানে 'items' এর বদলে 'allProducts' ব্যবহার করতে হবে
+    const product = allProducts.find(p => p.id === productId); 
+    
+    if (!product) {
+        console.error("Product not found!");
+        return;
+    }
+
+    // ১. অ্যানিমেশন লজিক
+    const btn = event.currentTarget;
+    const cartIcon = document.getElementById('cartTrigger'); 
+    
+    // প্রডাক্টের ছবি বা ইমোজি খুঁজে বের করা
+    const imgToFly = btn.closest('.p-card').querySelector('.p-img-box span, .p-img-box img');
+    if (imgToFly && cartIcon) {
+        const clone = imgToFly.cloneNode(true);
+        const rect = imgToFly.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
         
-        // বাটন ক্লিক করলে একটি ছোট কনফার্মেশন (ঐচ্ছিক)
-        console.log("Product added to cart. Current count: " + currentCartCount);
+        Object.assign(clone.style, {
+            position: 'fixed',
+            left: rect.left + 'px',
+            top: rect.top + 'px',
+            width: rect.width + 'px',
+            height: rect.height + 'px',
+            zIndex: '1000',
+            transition: 'all 0.8s ease-in-out'
+        });
+        
+        document.body.appendChild(clone);
+        
+        setTimeout(() => {
+            Object.assign(clone.style, {
+                left: cartRect.left + 'px',
+                top: cartRect.top + 'px',
+                width: '10px',
+                height: '10px',
+                opacity: '0'
+            });
+        }, 10);
+        setTimeout(() => clone.remove(), 800);
+    }
+
+    // ২. কার্ট ডেটা আপডেট লজিক
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        // এখানে ইউনিক আইটেম হিসেবে পুশ করা হচ্ছে
+        cart.push({ 
+            id: product.id, 
+            name: product.name, 
+            price: product.price, 
+            quantity: 1, 
+            image: product.images ? `images/${product.images}` : null,
+            icon: product.icon || null 
+        });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    
+    // ৩. টোস্ট মেসেজ দেখানো
+    showToast(`${product.name} কার্টে যোগ হয়েছে!`);
+}
+
+function showToast(msg) {
+    let toast = document.getElementById('toast');
+    if(!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast-msg';
+        document.body.appendChild(toast);
+    }
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2500);
+}
+
+// কার্ট আইকনের সংখ্যা আপডেট করার ফাংশন
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const uniqueCount = cart.length; // ইউনিক আইটেমের সংখ্যা
+    
+    // আপনার স্ক্রিনশটের আইডি অনুযায়ী: uniqueCartCount
+    const countElement = document.getElementById('uniqueCartCount');
+    if (countElement) {
+        countElement.innerText = uniqueCount;
     }
 }
+
+// পেজ লোড হওয়ার সাথে সাথে সংখ্যা দেখানোর জন্য এটি কল করুন
+window.onload = function() {
+    updateCartCount();
+};
 
 // পপআপ খোলার জন্য
 // --- ৫. অথেন্টিকেশন এবং পপআপ লজিক (আপডেটেড) ---
@@ -364,3 +457,315 @@ function searchProducts() {
     renderProducts(filteredProducts);
 }
 
+
+
+
+// চেকআউট পেজে কার্ট দেখানোর ফাংশন
+// --- Function 1: Live Validation for Input Fields ---
+function validateLive(id, type) {
+    const field = document.getElementById(id);
+    const errorSpan = document.getElementById(id + 'Error');
+    const val = field.value.trim();
+
+    if (val === "") {
+        errorSpan.innerText = "This field cannot be empty.";
+        field.classList.add('field-error');
+        field.classList.remove('field-success');
+        return false;
+    }
+
+    let isValid = false;
+    let message = "";
+
+    if (type === 'name') {
+        // শুধু সাধারণ অক্ষর এবং কমপক্ষে ২ শব্দ। হিজিবিজি অক্ষর আটকাতে লজিক:
+        const nameRegex = /^[A-Za-z\s]+$/; 
+        const words = val.split(/\s+/).filter(w => w.length >= 2);
+        
+        if (!nameRegex.test(val) || words.length < 2) {
+            message = "Please enter a valid English name (Min 2 words).";
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+    }
+
+    if (type === 'phone') {
+        if (val.length !== 11) {
+            message = "Mobile number must be exactly 11 digits.";
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+    }
+
+    if (type === 'address') {
+        if (val.split(/\s+/).length < 3) {
+            message = "Please provide a more detailed address.";
+            isValid = false;
+        } else {
+            isValid = true;
+        }
+    }
+
+    if (isValid) {
+        field.classList.add('field-success');
+        field.classList.remove('field-error');
+        errorSpan.innerText = "";
+    } else {
+        field.classList.add('field-error');
+        field.classList.remove('field-success');
+        errorSpan.innerText = message;
+    }
+    return isValid;
+}
+
+// অর্ডার কনফার্ম করার নতুন প্রফেশনাল ফাংশন
+function confirmOrder() {
+    const isNameOk = validateLive('custName', 'name');
+    const isPhoneOk = validateLive('custPhone', 'phone');
+    const isAddressOk = validateLive('custAddress', 'address');
+
+    if (isNameOk && isPhoneOk && isAddressOk) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // শুধু সিলেক্টেড আইটেমগুলো অর্ডার হবে
+        const remainingCart = cart.filter(item => item.selected === false);
+        localStorage.setItem('cart', JSON.stringify(remainingCart));
+
+        // সাকসেস মেসেজ
+        document.getElementById('successModal').style.display = 'flex';
+    } else {
+        // কোনো অ্যালার্ট ছাড়াই সরাসরি এরর ফোকাস করবে
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+// অর্ডার কনফার্ম বাটন
+function confirmOrder() {
+    const isNameOk = validateField('custName', 'name');
+    const isPhoneOk = validateField('custPhone', 'phone');
+    const isAddressOk = validateField('custAddress', 'address');
+
+    if (isNameOk && isPhoneOk && isAddressOk) {
+        // শুধু সিলেক্ট করা পণ্য কার্ট থেকে সরানো
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const remainingCart = cart.filter(item => item.selected === false);
+        localStorage.setItem('cart', JSON.stringify(remainingCart));
+
+        // সাকসেস মেসেজ দেখানো
+        document.getElementById('successModal').style.display = 'flex';
+    } else {
+        // কোনো অ্যালার্ট ছাড়াই ইউজারকে লাল ঘরগুলো ঠিক করতে বলা
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+
+
+function renderCheckout() {
+    const container = document.getElementById('checkoutCartItems');
+    const totalBox = document.getElementById('checkoutTotal'); 
+    
+    // লোকাল স্টোরেজ থেকে ডাটা নেওয়া
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let subtotal = 0;
+    let deliveryCharge = 60; 
+
+    if (cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center; padding:20px; color:red;'>Your cart is empty!</p>";
+        if(totalBox) totalBox.innerHTML = "Subtotal: ৳ 0";
+        return;
+    }
+
+    container.innerHTML = cart.map((item, index) => {
+        const isSelected = item.selected !== false;
+        const itemTotal = item.price * item.quantity;
+        if(isSelected) subtotal += itemTotal;
+
+        let mediaHTML = (item.images && item.images !== "") 
+            ? `<img src="images/${item.images}" class="pro-img-style" onerror="this.parentElement.innerHTML='${item.icon || '📦'}'">` 
+            : `<span class="emoji-style">${item.icon || '📦'}</span>`;
+
+        return `
+            <div class="checkout-item-card" style="opacity: ${isSelected ? '1' : '0.5'}">
+                <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleItemSelection(${index})">
+                <div class="item-media-box">${mediaHTML}</div>
+                <div class="item-details">
+                    <h4>${item.name}</h4>
+                    <p style="font-size:13px; color:#555;">${item.price} x ${item.quantity} = <strong>৳${itemTotal}</strong></p>
+                    <div class="qty-control">
+                        <button class="qty-btn-pro" onclick="updateQty(${index}, -1)">&minus;</button>
+                        <span class="qty-num">${item.quantity}</span>
+                        <button class="qty-btn-pro" onclick="updateQty(${index}, 1)">&plus;</button>
+                        <button class="delete-btn-pro" onclick="removeCheckoutItem(${index})"><span class="trash-icon">🗑️</span></button>
+                    </div>
+                </div>
+                <div class="price-side"><div class="total-price-text">৳${itemTotal}</div></div>
+            </div>`;
+    }).join('');
+
+    // সামারি আপডেট
+    if(totalBox) {
+        totalBox.innerHTML = `
+            <div class="total-summary-box" style="margin-top:15px; padding:15px; background:#f9f9f9; border-radius:10px; border:1px solid #ddd;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Delivery Charge:</span> <span>৳${deliveryCharge}</span></div>
+                <hr style="border:0.2px solid #eee;">
+                <div style="display:flex; justify-content:space-between; font-size:19px; font-weight:bold;"><span>Subtotal:</span> <span>৳${subtotal + deliveryCharge}</span></div>
+            </div>`;
+    }
+}
+
+
+// ১. পরিমাণ কমানো বা বাড়ানো
+// পরিমাণ পরিবর্তন
+function updateQty(index, change) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart[index].quantity + change > 0) {
+        cart[index].quantity += change;
+        localStorage.setItem('cart', JSON.stringify(cart)); // স্টোরেজে সেভ
+        renderCheckout(); // ভিউ আপডেট
+    }
+}
+
+// আইটেম রিমুভ করা
+function removeCheckoutItem(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // ওই আইটেমটি বাদ দেওয়া
+    localStorage.setItem('cart', JSON.stringify(cart)); // আপডেট সেভ করা
+    renderCheckout();
+}
+
+// টিক মার্ক পরিবর্তন
+function toggleItemSelection(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // যদি selected প্রপার্টি না থাকে তবে সেটি তৈরি করবে এবং টগল করবে
+    cart[index].selected = (cart[index].selected === undefined) ? false : !cart[index].selected;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCheckout(); // দাম আপডেট করার জন্য
+}
+
+// ২. আইটেম সিলেক্ট বা আন-সিলেক্ট করা
+function toggleItemSelection(index) {
+    let cart = JSON.parse(localStorage.getItem('cart'));
+    cart[index].selected = (cart[index].selected === false) ? true : false;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCheckout();
+}
+
+// ৩. আইটেম ডিলিট করা
+function removeCheckoutItem(index) {
+    if(confirm("আপনি কি এই পণ্যটি বাদ দিতে চান?")) {
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCheckout();
+        // ইনডেক্স পেজের কার্ট কাউন্ট আপডেট করতে চাইলে নিচের ফাংশনটি কল করতে পারেন
+        if(typeof updateCartCount === "function") updateCartCount();
+    }
+}
+
+
+function updateTotalDisplay(total) {
+    document.getElementById('checkoutTotal').innerText = `৳ ${total}`;
+}
+
+// ইনপুট ভ্যালিডেশন
+function validateInput(id, type) {
+    const input = document.getElementById(id);
+    const value = input.value.trim();
+    let isValid = false;
+
+    if (type === 'name') isValid = value.split(' ').length >= 2;
+    if (type === 'phone') isValid = value.length === 11;
+    if (type === 'address') isValid = value.split(' ').length >= 3;
+
+    input.style.borderColor = isValid ? "#2ecc71" : "#e74c3c";
+}
+
+// অর্ডার কনফার্ম করা
+// --- Function 3: Final Validation and Success Notification ---
+function confirmOrder() {
+    const nameValid = document.getElementById('custName').classList.contains('status-success');
+    const phoneValid = document.getElementById('custPhone').classList.contains('status-success');
+    const addressValid = document.getElementById('custAddress').classList.contains('status-success');
+
+    if (!nameValid || !phoneValid || !addressValid) {
+        alert("Please provide correct shipping information in English.");
+        return;
+    }
+
+    // কার্ট থেকে শুধু সিলেক্টেড আইটেম ডিলিট করা
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const remainingItems = cart.filter(item => item.selected === false);
+    localStorage.setItem('cart', JSON.stringify(remainingItems));
+
+    // সাকসেস মডেল দেখানো
+    document.getElementById('successModal').style.display = 'flex';
+}
+
+
+// ১. কার্ট ড্রয়ার খোলা বা বন্ধ করা
+function toggleCart() {
+    document.getElementById('sideCart').classList.toggle('active');
+    document.getElementById('cartOverlay').classList.toggle('active');
+    renderSideCart(); // ড্রয়ার খুললেই লিস্ট আপডেট হবে
+}
+
+// ২. ড্রয়ারের ভেতরে পণ্যের লিস্ট দেখানো
+function renderSideCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cartItemsList');
+    const totalEl = document.getElementById('drawerTotal');
+    let total = 0;
+
+    if (cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>আপনার ব্যাগ খালি!</p>";
+        totalEl.innerText = "৳ 0";
+        return;
+    }
+
+    container.innerHTML = cart.map((item, index) => {
+        total += item.price * item.quantity;
+        return `
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <div>
+                    <strong style="font-size:14px;">${item.name}</strong><br>
+                    <small>৳${item.price} x ${item.quantity}</small>
+                </div>
+                <button onclick="removeItem(${index})" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button>
+            </div>
+        `;
+    }).join('');
+
+    totalEl.innerText = `৳ ${total}`;
+}
+
+// ৩. চেকআউট পেজে পাঠানো
+function goToCheckout() {
+    window.location.href = "checkout.html";
+}
+
+// ৪. আইটেম মুছে ফেলা
+function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderSideCart();
+    updateCartCount();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderCheckout(); // পেজ লোড হলেই কার্ট দেখাবে
+});
