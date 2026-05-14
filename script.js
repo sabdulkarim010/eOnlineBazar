@@ -461,104 +461,148 @@ function searchProducts() {
 
 
 // চেকআউট পেজে কার্ট দেখানোর ফাংশন
-// --- Function 1: Live Validation for Input Fields ---
-function validateLive(id, type) {
-    const field = document.getElementById(id);
-    const errorSpan = document.getElementById(id + 'Error');
-    const val = field.value.trim();
-
-    if (val === "") {
-        errorSpan.innerText = "This field cannot be empty.";
-        field.classList.add('field-error');
-        field.classList.remove('field-success');
-        return false;
-    }
-
+/**
+ * ১. লাইভ ভ্যালিডেশন ফাংশন (Live Validation)
+ * ইনপুট দেওয়ার সাথে সাথে এটি চেক করবে এবং CSS ক্লাস যোগ/বিয়োগ করবে
+ */
+function validateLive(fieldId, type) {
+    const input = document.getElementById(fieldId);
+    const errorDisplay = document.getElementById(fieldId + 'Error');
+    const value = input.value.trim();
     let isValid = false;
     let message = "";
 
+    // ভ্যালিডেশন লজিক
     if (type === 'name') {
-        // শুধু সাধারণ অক্ষর এবং কমপক্ষে ২ শব্দ। হিজিবিজি অক্ষর আটকাতে লজিক:
-        const nameRegex = /^[A-Za-z\s]+$/; 
-        const words = val.split(/\s+/).filter(w => w.length >= 2);
-        
-        if (!nameRegex.test(val) || words.length < 2) {
-            message = "Please enter a valid English name (Min 2 words).";
-            isValid = false;
-        } else {
+        if (value.length >= 3) {
             isValid = true;
+        } else {
+            message = "দয়া করে অন্তত ৩ অক্ষরের পূর্ণ নাম লিখুন।";
+        }
+    } 
+    else if (type === 'phone') {
+        const phoneRegex = /^01[3-9]\d{8}$/; // বাংলাদেশি নম্বর ফরম্যাট
+        if (phoneRegex.test(value)) {
+            isValid = true;
+        } else {
+            message = "সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)।";
+        }
+    } 
+    else if (type === 'address') {
+        if (value.length >= 10) {
+            isValid = true;
+        } else {
+            message = "দয়া করে বিস্তারিত ঠিকানা দিন (গ্রাম, পোস্ট, জেলা)।";
         }
     }
 
-    if (type === 'phone') {
-        if (val.length !== 11) {
-            message = "Mobile number must be exactly 11 digits.";
-            isValid = false;
-        } else {
-            isValid = true;
-        }
-    }
-
-    if (type === 'address') {
-        if (val.split(/\s+/).length < 3) {
-            message = "Please provide a more detailed address.";
-            isValid = false;
-        } else {
-            isValid = true;
-        }
-    }
-
+    // CSS ক্লাস এবং এরর মেসেজ আপডেট করা
     if (isValid) {
-        field.classList.add('field-success');
-        field.classList.remove('field-error');
-        errorSpan.innerText = "";
+        input.classList.remove('field-error');
+        input.classList.add('field-success');
+        if (errorDisplay) {
+            errorDisplay.innerText = "";
+            errorDisplay.classList.remove('error-message');
+        }
     } else {
-        field.classList.add('field-error');
-        field.classList.remove('field-success');
-        errorSpan.innerText = message;
+        input.classList.remove('field-success');
+        if (value.length > 0) { // কিছু লিখলে তবেই এরর দেখাবে
+            input.classList.add('field-error');
+            if (errorDisplay) {
+                errorDisplay.innerText = message;
+                errorDisplay.classList.add('error-message');
+            }
+        } else {
+            input.classList.remove('field-error');
+            if (errorDisplay) errorDisplay.innerText = "";
+        }
     }
-    return isValid;
 }
 
-// অর্ডার কনফার্ম করার নতুন প্রফেশনাল ফাংশন
+/**
+ * ২. অর্ডার কনফার্ম করার সময় ফাইনাল চেক
+ */
 function confirmOrder() {
-    const isNameOk = validateLive('custName', 'name');
-    const isPhoneOk = validateLive('custPhone', 'phone');
-    const isAddressOk = validateLive('custAddress', 'address');
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custAddress').value.trim();
 
-    if (isNameOk && isPhoneOk && isAddressOk) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // সব ফিল্ড ঠিক আছে কি না চেক করা
+    if (name.length < 3 || phone.length !== 11 || address.length < 10) {
+        alert("দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন। লাল চিহ্নিত ফিল্ডগুলো চেক করুন।");
         
-        // শুধু সিলেক্টেড আইটেমগুলো অর্ডার হবে
-        const remainingCart = cart.filter(item => item.selected === false);
-        localStorage.setItem('cart', JSON.stringify(remainingCart));
+        // ভুল ফিল্ডগুলোতে এনিমেশন দেওয়া (Shake effect)
+        if (name.length < 3) document.getElementById('custName').classList.add('input-error-border');
+        if (phone.length !== 11) document.getElementById('custPhone').classList.add('input-error-border');
+        if (address.length < 10) document.getElementById('custAddress').classList.add('input-error-border');
+        
+        return;
+    }
 
-        // সাকসেস মেসেজ
-        document.getElementById('successModal').style.display = 'flex';
+    // সব ঠিক থাকলে সাকসেস মেসেজ দেখানো
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        localStorage.removeItem('cart'); // কার্ট খালি করা
     } else {
-        // কোনো অ্যালার্ট ছাড়াই সরাসরি এরর ফোকাস করবে
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        alert("অভিনন্দন! আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।");
+        window.location.href = 'index.html';
     }
 }
-// অর্ডার কনফার্ম বাটন
-function confirmOrder() {
-    const isNameOk = validateField('custName', 'name');
-    const isPhoneOk = validateField('custPhone', 'phone');
-    const isAddressOk = validateField('custAddress', 'address');
 
-    if (isNameOk && isPhoneOk && isAddressOk) {
-        // শুধু সিলেক্ট করা পণ্য কার্ট থেকে সরানো
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const remainingCart = cart.filter(item => item.selected === false);
-        localStorage.setItem('cart', JSON.stringify(remainingCart));
+/**
+ * ৩. প্রাইসিং ব্রেকডাউন রেন্ডার (Pricing Breakdown)
+ * চেকআউট পেজে টাকার হিসেব দেখানোর জন্য
+ */
+function renderCheckout() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('checkoutCartItems');
+    const totalEl = document.getElementById('checkoutTotal');
+    let subtotal = 0;
+    const deliveryCharge = 60; // ডেলিভারি চার্জ নির্দিষ্ট করে দিলাম
 
-        // সাকসেস মেসেজ দেখানো
-        document.getElementById('successModal').style.display = 'flex';
-    } else {
-        // কোনো অ্যালার্ট ছাড়াই ইউজারকে লাল ঘরগুলো ঠিক করতে বলা
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!container) return;
+
+    if (cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>আপনার কার্ট খালি!</p>";
+        totalEl.innerText = "৳ 0";
+        return;
     }
+
+    // আইটেম লিস্ট দেখানো
+    container.innerHTML = cart.map(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        return `
+            <div class="summary-line">
+                <span>${item.name} (x${item.quantity})</span>
+                <span>৳ ${itemTotal}</span>
+            </div>`;
+    }).join('');
+
+    // টোটাল হিসেব সেকশন (আপনার CSS এর সাথে মিল রেখে)
+    const summaryHtml = `
+        <div class="total-summary-box">
+            <div class="summary-line">
+                <span>পণ্যর দাম (Subtotal):</span>
+                <span>৳ ${subtotal}</span>
+            </div>
+            <div class="summary-line">
+                <span>ডেলিভারি চার্জ:</span>
+                <span>৳ ${deliveryCharge}</span>
+            </div>
+            <div class="summary-line subtotal-bold">
+                <span>সর্বমোট (Grand Total):</span>
+                <span>৳ ${subtotal + deliveryCharge}</span>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML += summaryHtml;
+    totalEl.innerText = `৳ ${subtotal + deliveryCharge}`;
 }
+
+
 
 
 
@@ -682,26 +726,7 @@ function validateInput(id, type) {
     input.style.borderColor = isValid ? "#2ecc71" : "#e74c3c";
 }
 
-// অর্ডার কনফার্ম করা
-// --- Function 3: Final Validation and Success Notification ---
-function confirmOrder() {
-    const nameValid = document.getElementById('custName').classList.contains('status-success');
-    const phoneValid = document.getElementById('custPhone').classList.contains('status-success');
-    const addressValid = document.getElementById('custAddress').classList.contains('status-success');
 
-    if (!nameValid || !phoneValid || !addressValid) {
-        alert("Please provide correct shipping information in English.");
-        return;
-    }
-
-    // কার্ট থেকে শুধু সিলেক্টেড আইটেম ডিলিট করা
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const remainingItems = cart.filter(item => item.selected === false);
-    localStorage.setItem('cart', JSON.stringify(remainingItems));
-
-    // সাকসেস মডেল দেখানো
-    document.getElementById('successModal').style.display = 'flex';
-}
 
 
 // ১. কার্ট ড্রয়ার খোলা বা বন্ধ করা
