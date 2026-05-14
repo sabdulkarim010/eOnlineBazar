@@ -1,140 +1,204 @@
-/**
- * ১. লাইভ ভ্যালিডেশন ফাংশন (Live Validation)
- * ইনপুট দেওয়ার সাথে সাথে এটি চেক করবে এবং CSS ক্লাস যোগ/বিয়োগ করবে
- */
-function validateLive(fieldId, type) {
-    const input = document.getElementById(fieldId);
-    const errorDisplay = document.getElementById(fieldId + 'Error');
-    const value = input.value.trim();
-    let isValid = false;
-    let message = "";
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>eOnlineBazar | Best Online Shopping Experience</title>
+    <meta name="description" content="eOnlineBazar - বাংলাদেশের সেরা অনলাইন শপিং প্ল্যাটফর্ম। প্রিমিয়াম কোয়ালিটি পণ্য এখন আপনার হাতের নাগালে।">
+    <meta name="keywords" content="Shopping, Ecommerce, Bangladesh, eOnlineBazar, Grocery, Fashion">
+    <meta name="author" content="Abdul Karim Sheikh"> <meta name="Abdul Karim" content="index, follow">
 
-    // ভ্যালিডেশন লজিক
-    if (type === 'name') {
-        if (value.length >= 3) {
-            isValid = true;
-        } else {
-            message = "দয়া করে অন্তত ৩ অক্ষরের পূর্ণ নাম লিখুন।";
-        }
-    } 
-    else if (type === 'phone') {
-        const phoneRegex = /^01[3-9]\d{8}$/; // বাংলাদেশি নম্বর ফরম্যাট
-        if (phoneRegex.test(value)) {
-            isValid = true;
-        } else {
-            message = "সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)।";
-        }
-    } 
-    else if (type === 'address') {
-        if (value.length >= 10) {
-            isValid = true;
-        } else {
-            message = "দয়া করে বিস্তারিত ঠিকানা দিন (গ্রাম, পোস্ট, জেলা)।";
-        }
-    }
+    <meta property="og:title" content="eOnlineBazar | Shop Best Quality Products">
+    <meta property="og:description" content="সাশ্রয়ী মূল্যে সেরা পণ্য কিনুন eOnlineBazar থেকে।">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.eonlinebazar.com">
 
-    // CSS ক্লাস এবং এরর মেসেজ আপডেট করা
-    if (isValid) {
-        input.classList.remove('field-error');
-        input.classList.add('field-success');
-        if (errorDisplay) {
-            errorDisplay.innerText = "";
-            errorDisplay.classList.remove('error-message');
-        }
-    } else {
-        input.classList.remove('field-success');
-        if (value.length > 0) { // কিছু লিখলে তবেই এরর দেখাবে
-            input.classList.add('field-error');
-            if (errorDisplay) {
-                errorDisplay.innerText = message;
-                errorDisplay.classList.add('error-message');
-            }
-        } else {
-            input.classList.remove('field-error');
-            if (errorDisplay) errorDisplay.innerText = "";
-        }
-    }
-}
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- icon -->
+</head>
+<body>
 
-/**
- * ২. অর্ডার কনফার্ম করার সময় ফাইনাল চেক
- */
-function confirmOrder() {
-    const name = document.getElementById('custName').value.trim();
-    const phone = document.getElementById('custPhone').value.trim();
-    const address = document.getElementById('custAddress').value.trim();
-
-    // সব ফিল্ড ঠিক আছে কি না চেক করা
-    if (name.length < 3 || phone.length !== 11 || address.length < 10) {
-        alert("দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন। লাল চিহ্নিত ফিল্ডগুলো চেক করুন।");
-        
-        // ভুল ফিল্ডগুলোতে এনিমেশন দেওয়া (Shake effect)
-        if (name.length < 3) document.getElementById('custName').classList.add('input-error-border');
-        if (phone.length !== 11) document.getElementById('custPhone').classList.add('input-error-border');
-        if (address.length < 10) document.getElementById('custAddress').classList.add('input-error-border');
-        
-        return;
-    }
-
-    // সব ঠিক থাকলে সাকসেস মেসেজ দেখানো
-    const modal = document.getElementById('successModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        localStorage.removeItem('cart'); // কার্ট খালি করা
-    } else {
-        alert("অভিনন্দন! আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।");
-        window.location.href = 'index.html';
-    }
-}
-
-/**
- * ৩. প্রাইসিং ব্রেকডাউন রেন্ডার (Pricing Breakdown)
- * চেকআউট পেজে টাকার হিসেব দেখানোর জন্য
- */
-function renderCheckout() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const container = document.getElementById('checkoutCartItems');
-    const totalEl = document.getElementById('checkoutTotal');
-    let subtotal = 0;
-    const deliveryCharge = 60; // ডেলিভারি চার্জ নির্দিষ্ট করে দিলাম
-
-    if (!container) return;
-
-    if (cart.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>আপনার কার্ট খালি!</p>";
-        totalEl.innerText = "৳ 0";
-        return;
-    }
-
-    // আইটেম লিস্ট দেখানো
-    container.innerHTML = cart.map(item => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-        return `
-            <div class="summary-line">
-                <span>${item.name} (x${item.quantity})</span>
-                <span>৳ ${itemTotal}</span>
-            </div>`;
-    }).join('');
-
-    // টোটাল হিসেব সেকশন (আপনার CSS এর সাথে মিল রেখে)
-    const summaryHtml = `
-        <div class="total-summary-box">
-            <div class="summary-line">
-                <span>পণ্যর দাম (Subtotal):</span>
-                <span>৳ ${subtotal}</span>
+    <header class="amazon-header">
+        <div class="container main-nav">
+            <div class="nav-left">
+                <div class="logo-box" onclick="location.reload()">EonlineBazar</div>
+                    <div class="location-box hide-mobile">
+                        <span>Deliver to Narail</span>
+                        <span>Update location </span>
+                </div>
             </div>
-            <div class="summary-line">
-                <span>ডেলিভারি চার্জ:</span>
-                <span>৳ ${deliveryCharge}</span>
+
+            <div class="nav-fill">
+                <div class="search-wrapper">
+                    <select class="search-category hide-mobile">
+                        <option>All</option>
+                        <option>Grocery</option>
+                        <option>Fashion</option>
+                    </select>
+                    <input type="text" id="mainSearch" onkeyup="searchProducts()" placeholder="Search eonlinebazar.com">
+                    <button id="searchBtn" onclick="searchProducts()">GO</button>
+                </div>
             </div>
-            <div class="summary-line subtotal-bold">
-                <span>সর্বমোট (Grand Total):</span>
-                <span>৳ ${subtotal + deliveryCharge}</span>
+
+            <div class="nav-right">
+                <div class="nav-item">
+                    <div class="user">
+                        <i class="fa-solid fa-user"></i>
+                        <strong class="hide-mobile">Account</strong>
+                    </div>
+                </div>
+                <div class="nav-cart" id="cartTrigger" onclick="toggleCart()" style="cursor: pointer;">
+    <div class="cart-icon-box">
+        <span id="uniqueCartCount" class="cart-num">0</span>
+        🛒
+    </div>
+    <strong class="hide-mobile">Cart</strong>
+</div>
+                </div>
             </div>
         </div>
-    `;
+
+        <nav class="sub-nav">
+            <div class="container sub-flex">
+                
+                <ul id="navCategories" class="nav-links">
+                     
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-overlay">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="main-title">Coming Soon: A Revolation in Shopping!</h1>
+                    <p class="sub-text">আমরা নিয়ে আসছি আপনার পছন্দের স্বপ্নের অনলাইন মার্কেটপ্লেস। প্রতিটি পণ্য হবে বাছাইকৃত এবং প্রিমিয়াম কোয়ালিটির। ক্রেতার সন্তুষ্টিই আমাদের মূল লক্ষ্য</p>
+                    <button class="btn-shop-now">Shop Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <main class="container content-area">
+        <div class="section-header">
+            <h3>Featured Categories</h3>
+                </div>
+                 <div id="productGrid" class="category-grid">
+             </div>
+    </main>
+
+
+<!-- regModal এর ভেতরে শুধু এই অংশটুকু আপডেট করুন -->
+<div id="regModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" class="close-btn" style="float:right; cursor:pointer; font-size: 28px;">&times;</span>
+        
+        <div class="auth-card">
+            <!-- Login Section -->
+            <div id="login-section">
+             <h2>Login</h2>
+                <div class="input-group">
+                  <input type="email" id="loginEmail" placeholder="Email Address">
+                    <div id="login-email-error" class="error-msg"></div> <!-- এরর মেসেজ এখানে আসবে -->
+                     </div>
+                 <div class="input-group">
+             <input type="password" id="loginPass" placeholder="Password">
+         <div id="login-pass-error" class="error-msg"></div> <!-- এরর মেসেজ এখানে আসবে -->
+    </div>
+    <button class="btn-primary" onclick="handleLogin()">Login</button>
+    <p class="toggle-link">Don't have an account? <span onclick="showRegister()">Register here</span></p>
+</div>
+
+            <!-- Register Section -->
+            <div id="register-section" style="display: none;">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <input type="text" id="fullName" placeholder="Full Name">
+                    <div id="name-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="mobile" placeholder="Mobile (e.g. 017xxxxxxxx)" maxlength="11">
+                    <div id="mobile-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email (abc@gmail.com)">
+                    <div id="email-error" class="error-msg"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="address" placeholder="Full Address">
+                    <div id="address-error" class="error-msg"></div>
+                </div>
+                <button type="button" class="btn-primary" onclick="submitRegister()">Register Now</button>
+                <p class="toggle-link">Already have an account? <span onclick="showLogin()">Login here</span></p>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" style="display: none; text-align: center; padding: 20px;">
+                <h2 style="color: #28a745;">স্বাগতম! 🎉</h2>
+                <p>আপনার রেজিস্ট্রেশন সফল হয়েছে। আপনাকে মেইন পেজে নিয়ে যাওয়া হচ্ছে...</p>
+            </div>
+        </div>
+    </div>
+</div>
     
-    container.innerHTML += summaryHtml;
-    totalEl.innerText = `৳ ${subtotal + deliveryCharge}`;
-}
+    <footer class="main-footer">
+        <div class="back-to-top" onclick="window.scrollTo(0,0)">Back to top</div>
+        
+        <div class="footer-content container">
+            <div class="footer-column">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li>About Us</li>
+                    <li>Careers</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect with Us</h4>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                     <li>Tiktok</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li>Your Account</li>
+                    <li>Help Center</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">EonlineBazar</div>
+            <p>&copy; 2026 eOnlineBazar. Designed by <strong>Abdul Karim Sheikh</strong></p> </div>
+    </footer>
+
+<!-- cart section -->
+<div id="sideCart" class="side-cart">
+    <div class="side-cart-header">
+        <h3>আপনার ব্যাগ</h3>
+        <span class="close-btn" onclick="toggleCart()">&times;</span>
+    </div>
+    
+    <div id="cartItemsList" class="side-cart-body">
+        </div>
+    
+    <div class="side-cart-footer">
+        <h4>মোট: <span id="drawerTotal">৳ 0</span></h4>
+        <button class="checkout-btn" onclick="window.location.href='checkout.html'">চেকআউট করুন</button>
+    </div>
+</div>
+
+<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+
+
+    <script src="script.js"></script>
+</body>
+</html>
