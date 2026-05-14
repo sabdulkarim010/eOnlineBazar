@@ -16,25 +16,31 @@
         <div class="checkout-flex-grid">
             
             <div class="checkout-left-side">
-                <div class="pro-card">
-
+                
+<div class="pro-card">
     <h3>Shipping Address</h3>
+    
     <div class="input-container">
         <input type="text" id="custName" class="checkout-input" placeholder="Full Name" oninput="validateLive('custName', 'name')">
         <span id="custNameError" class="error-hint"></span>
     </div>
+
     <div class="input-container">
-        <input type="number" id="custPhone" class="checkout-input" placeholder="Mobile Number (11 digits)" oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11); validateLive('custPhone', 'phone')">
+        <input type="number" id="custPhone" class="checkout-input" placeholder="Mobile Number (11 digits)" 
+               oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11); validateLive('custPhone', 'phone')">
         <span id="custPhoneError" class="error-hint"></span>
     </div>
+
     <div class="input-container">
-        <textarea id="custAddress" class="checkout-input" rows="3" placeholder="Full Address (Village, Post, District)" oninput="validateLive('custAddress', 'address')"></textarea>
+        <textarea id="custAddress" class="checkout-input" rows="3" placeholder="Full Address (Village, Post, District)" 
+                  oninput="validateLive('custAddress', 'address')"></textarea>
         <span id="custAddressError" class="error-hint"></span>
     </div>
+
     <div class="input-container">
         <input type="text" id="orderNote" class="checkout-input" placeholder="Note for Courier (Optional)">
     </div>
-</div>
+</div> ```
                 
 
                 <div class="pro-card">
